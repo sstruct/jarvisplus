@@ -1,0 +1,60 @@
+{
+  "name": "swagger-typescript-client-generator",
+  "private": true,
+  "scripts": {
+    "build": "lerna exec --stream -- yarn build",
+    "pretest": "yarn build",
+    "test": "yarn test:lib && yarn test:petstore",
+    "test:lib": "lerna exec --stream -- yarn test",
+    "test:petstore": "yarn test:petstore:json && yarn test:petstore:yaml",
+    "test:petstore:json": "swagger-typescript-client-generator bundle PetStore -f ./tests/petstore.json > ./tests/petstore.json.snapshot.ts",
+    "test:petstore:yaml": "swagger-typescript-client-generator bundle PetStore -f ./tests/petstore.yaml > ./tests/petstore.yaml.snapshot.ts",
+    "format": "yarn run lint:prettier --write",
+    "lint": "yarn lint:prettier && yarn run lint:eslint",
+    "lint:eslint": "eslint ./packages/ --ext=.ts",
+    "lint:prettier": "prettier -l '**/*.{ts,json,md,yml}' .prettierrc"
+  },
+  "workspaces": [
+    "packages/swagger-typescript-client-generator",
+    "packages/swagger-typescript-client-generator-runtime"
+  ],
+  "dependencies": {
+    "lerna": "^3.20.2"
+  },
+  "devDependencies": {
+    "@types/node": "13.11.0",
+    "@typescript-eslint/eslint-plugin": "^2.14.0",
+    "@typescript-eslint/parser": "^2.14.0",
+    "commit-message-validator": "^0.1.11",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.1.2",
+    "prettier": "^2.0.3",
+    "typescript": "^3.7.4"
+  },
+  "config": {
+    "commit-message-validator": {
+      "pattern": "^(M|merge .*)|(v[0-9]+\\.[0-9]+\\.[0-9]+)|((revert: )?(feat|fix|docs|style|refactor|perf|test|chore)(\\(\\#[0-9]+\\))?: .{1,50})",
+      "errorMessage": "Commit does not follow semantic messages - please check https://dev.to/maxpou/enhance-your-git-log-with-conventional-commits-3ea4"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commit-message-validator",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "!(*.d).ts": [
+      "eslint --fix",
+      "prettier --write",
+      "git add "
+    ],
+    "*.(json|md)": [
+      "prettier --write",
+      "git add "
+    ]
+  }
+}
