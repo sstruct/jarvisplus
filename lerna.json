@@ -9,5 +9,5 @@
     "packages/jarvisplus",
     "packages/jarvisplus-runtime"
   ],
-  "version": "2.0.0-alpha"
+  "version": "2.0.0-alpha.0"
 }
