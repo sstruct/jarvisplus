@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var yargs = require("yargs");
 var path = require("path");
+var chalk = require("chalk");
 var writerFactory_1 = require("./writer/writerFactory");
 var readerFactory_1 = require("./fileReader/readerFactory");
 var commands_1 = require("./commands");
@@ -48,6 +49,12 @@ var commandCore = function (command, options) { return __awaiter(void 0, void 0,
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (options.swaggerUrl) {
+                    console.log("Generating SDK with remote url", chalk.green(options.swaggerUrl));
+                }
+                else if (options.file) {
+                    console.log("Generating SDK with swagger file", chalk.green(path.resolve(options.file)));
+                }
                 reader = readerFactory_1.readerFactory({
                     file: options.file,
                     swaggerUrl: options.swaggerUrl,

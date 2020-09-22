@@ -1,5 +1,6 @@
 import * as yargs from "yargs"
 import * as path from "path"
+import * as chalk from "chalk"
 import { Spec } from "swagger-schema-official"
 import { Command } from "./commands/command"
 import { writerFactory } from "./writer/writerFactory"
@@ -12,6 +13,17 @@ import { defaultCommand, bundleCommand } from "./commands"
 const pkg = require("../package.json")
 
 const commandCore = async (command, options) => {
+  if (options.swaggerUrl) {
+    console.log(
+      "Generating SDK with remote url",
+      chalk.green(options.swaggerUrl)
+    )
+  } else if (options.file) {
+    console.log(
+      "Generating SDK with swagger file",
+      chalk.green(path.resolve(options.file))
+    )
+  }
   const reader = readerFactory({
     file: options.file,
     swaggerUrl: options.swaggerUrl,
