@@ -1,6 +1,6 @@
 {
   "name": "@terminus/jarvisplus",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0",
   "description": "Tool to convert swagger 2.0 file to typescript client",
   "main": "lib/index.js",
   "bin": "bin/index.js",
@@ -21,7 +21,7 @@
     "registry": "https://registry.npm.terminus.io"
   },
   "dependencies": {
-    "@terminus/jarvisplus-runtime": "^2.0.0-alpha",
+    "@terminus/jarvisplus-runtime": "^2.0.0",
     "@types/swagger-schema-official": "^2.0.21",
     "js-yaml": "^3.13.1",
     "mustache": "^4.0.1",
