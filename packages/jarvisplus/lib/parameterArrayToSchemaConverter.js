@@ -38,7 +38,7 @@ var ParametersArrayToSchemaConverter = /** @class */ (function () {
             required: parameters
                 .filter(function (param) { return Boolean(param.required); })
                 .map(function (param) { return param.name; }),
-            properties: {}
+            properties: {},
         };
         parameters.forEach(function (param) {
             if (typeof param.title === "string") {
@@ -59,7 +59,7 @@ var ParametersArrayToSchemaConverter = /** @class */ (function () {
             throw new Error("invalid argument");
         }
         return {
-            allOf: parameters
+            allOf: parameters,
         };
     };
     return ParametersArrayToSchemaConverter;

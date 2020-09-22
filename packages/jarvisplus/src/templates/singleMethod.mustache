@@ -1,6 +1,8 @@
-{{#summary}}
-/** {{&summary}} */
-{{/summary}}
+/**
+ * @description {{&summary}}
+ * @url {{&path}}
+ * @method {{&method}}
+ */
 export const {{name}} = ({{parameters}}): Promise<{{&responseTypes}}> => {
   {{definePath}} path = '{{{path}}}'
   {{#pathParams}}
