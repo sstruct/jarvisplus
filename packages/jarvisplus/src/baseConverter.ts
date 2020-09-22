@@ -6,6 +6,8 @@ export interface BaseConverter {
 
   generateType(name: string, definition: Schema): string
 
+  generateDefinitionType(name: string, definition: Schema): string
+
   generateTypeValue(definition: Schema): string
 
   generateParameterTypesForOperation(

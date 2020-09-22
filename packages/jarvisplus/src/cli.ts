@@ -68,6 +68,7 @@ const args = yargs
       return reader() as ConfigType
     }
   )
+  .default("configFile", ".jarvis.yml")
   .option("allowVoidParameterTypes", {
     boolean: true,
     default: false,
@@ -85,15 +86,6 @@ const args = yargs
     (yargsBundle) => yargsBundle,
     useCommand(defaultCommand)
   )
-  // .command(
-  //   "bundle <name>",
-  //   "generate models and client",
-  //   (yargsBundle) =>
-  //     yargsBundle.positional("name", {
-  //       type: "string",
-  //     }),
-  //   useCommand(bundleCommand)
-  // )
   .version(pkg.version).argv
 
 if (process.env.DEBUG) {

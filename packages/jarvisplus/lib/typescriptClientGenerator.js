@@ -20,7 +20,7 @@ var TypescriptClientGenerator = /** @class */ (function () {
             .concat(Object.entries(this.swagger.responses || {}))
             .map(function (_a) {
             var name = _a[0], def = _a[1];
-            return _this.converter.generateType(name, def);
+            return _this.converter.generateDefinitionType(name, def);
         })
             .join("\n");
     };

@@ -17,7 +17,7 @@ export class TypescriptClientGenerator {
       .concat(Object.entries(this.swagger.definitions || {}))
       .concat(Object.entries(this.swagger.responses || {}))
       .map(([name, def]) => {
-        return this.converter.generateType(name, def)
+        return this.converter.generateDefinitionType(name, def)
       })
       .join("\n")
   }

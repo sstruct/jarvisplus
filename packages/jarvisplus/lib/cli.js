@@ -98,6 +98,7 @@ var args = yargs
     var reader = readerFactory_1.readerFactory({ file: file });
     return reader();
 })
+    .default("configFile", ".jarvis.yml")
     .option("allowVoidParameterTypes", {
     boolean: true,
     default: false,
@@ -110,15 +111,6 @@ var args = yargs
     required: false,
 })
     .command("$0", "generate models and client", function (yargsBundle) { return yargsBundle; }, useCommand(commands_1.defaultCommand))
-    // .command(
-    //   "bundle <name>",
-    //   "generate models and client",
-    //   (yargsBundle) =>
-    //     yargsBundle.positional("name", {
-    //       type: "string",
-    //     }),
-    //   useCommand(bundleCommand)
-    // )
     .version(pkg.version).argv;
 if (process.env.DEBUG) {
     // tslint:disable-next-line no-console

@@ -1,4 +1,9 @@
-import { Operation, Parameter, Spec } from "swagger-schema-official"
+import {
+  BodyParameter,
+  Operation,
+  Parameter,
+  Spec,
+} from "swagger-schema-official"
 import { ParametersJar } from "./parametersJar"
 import {
   PARAMETER_TYPE_BODY,
@@ -41,19 +46,7 @@ export class ParametersJarFactory {
   protected getOperationParameters(operation: Operation): Parameter[] {
     const parameters = this.mapParameters(operation)
     const authorization = this.mapAuthorization(operation)
-    return []
-      .concat(parameters)
-      .concat(authorization)
-      .filter(
-        (parameter: Parameter) =>
-          parameter &&
-          [
-            PARAMETER_TYPE_PATH,
-            PARAMETER_TYPE_QUERY,
-            PARAMETER_TYPE_BODY,
-            PARAMETER_TYPE_FORM_DATA,
-          ].includes(parameter.in)
-      )
+    return [].concat(parameters).concat(authorization)
   }
 
   protected getOperationParametersByType(
@@ -71,14 +64,14 @@ export class ParametersJarFactory {
 
   protected mapParameters(operation: Operation) {
     return (operation.parameters || []).map(
-      (parameter: Parameter & { $ref: string }) => {
-        if (parameter.$ref) {
-          const segments = parameter.$ref.split("/")
-          const referred = this.swagger.parameters[
+      (parameter: Parameter & BodyParameter) => {
+        if (typeof parameter?.schema?.$ref === "string") {
+          const segments = parameter.schema.$ref.split("/")
+          const referred = this.swagger.definitions[
             segments.length === 1 ? segments[0] : segments[2]
           ]
           if (!referred) {
-            throw new Error(`cannot find reference ${parameter.$ref}`)
+            throw new Error(`cannot find reference ${parameter.schema.$ref}`)
           }
           return referred
         }

@@ -19,18 +19,7 @@ var ParametersJarFactory = /** @class */ (function () {
     ParametersJarFactory.prototype.getOperationParameters = function (operation) {
         var parameters = this.mapParameters(operation);
         var authorization = this.mapAuthorization(operation);
-        return []
-            .concat(parameters)
-            .concat(authorization)
-            .filter(function (parameter) {
-            return parameter &&
-                [
-                    swaggerTypes_1.PARAMETER_TYPE_PATH,
-                    swaggerTypes_1.PARAMETER_TYPE_QUERY,
-                    swaggerTypes_1.PARAMETER_TYPE_BODY,
-                    swaggerTypes_1.PARAMETER_TYPE_FORM_DATA,
-                ].includes(parameter.in);
-        });
+        return [].concat(parameters).concat(authorization);
     };
     ParametersJarFactory.prototype.getOperationParametersByType = function (operation, type) {
         var parameters = this.mapParameters(operation);
@@ -43,11 +32,12 @@ var ParametersJarFactory = /** @class */ (function () {
     ParametersJarFactory.prototype.mapParameters = function (operation) {
         var _this = this;
         return (operation.parameters || []).map(function (parameter) {
-            if (parameter.$ref) {
-                var segments = parameter.$ref.split("/");
-                var referred = _this.swagger.parameters[segments.length === 1 ? segments[0] : segments[2]];
+            var _a;
+            if (typeof ((_a = parameter === null || parameter === void 0 ? void 0 : parameter.schema) === null || _a === void 0 ? void 0 : _a.$ref) === "string") {
+                var segments = parameter.schema.$ref.split("/");
+                var referred = _this.swagger.definitions[segments.length === 1 ? segments[0] : segments[2]];
                 if (!referred) {
-                    throw new Error("cannot find reference " + parameter.$ref);
+                    throw new Error("cannot find reference " + parameter.schema.$ref);
                 }
                 return referred;
             }

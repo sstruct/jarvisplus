@@ -1,10 +1,11 @@
-export declare type ParameterType = "path" | "body" | "formData" | "query" | "header" | "payload";
+import { BaseParameter } from "swagger-schema-official";
+export declare type ParameterType = BaseParameter["in"];
 export declare const PARAMETER_TYPE_PATH: ParameterType;
 export declare const PARAMETER_TYPE_BODY: ParameterType;
 export declare const PARAMETER_TYPE_FORM_DATA: ParameterType;
 export declare const PARAMETER_TYPE_QUERY: ParameterType;
 export declare const PARAMETER_TYPE_HEADER: ParameterType;
-export declare const PARAMETER_TYPE_PAYLOAD: ParameterType;
+export declare const PARAMETER_TYPE_PAYLOAD = "payload";
 export declare const DEFINITION_TYPE_ENUM = "enum";
 export declare const DEFINITION_TYPE_STRING = "string";
 export declare const DEFINITION_TYPE_NUMBER = "number";

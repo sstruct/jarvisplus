@@ -133,6 +133,11 @@ var TypescriptConverter = /** @class */ (function () {
         return output;
     };
     TypescriptConverter.prototype.generateType = function (name, definition) {
+        return "export type " + this.getNormalizer().normalize(name) + " = " + (typeof definition.title === "string"
+            ? this.getNormalizer().normalize(definition.title)
+            : this.generateTypeValue(definition)) + "\n";
+    };
+    TypescriptConverter.prototype.generateDefinitionType = function (name, definition) {
         return "export type " + this.getNormalizer().normalize(name) + " = " + this.generateTypeValue(definition) + "\n";
     };
     TypescriptConverter.prototype.generateTypeValue = function (definition) {
@@ -141,19 +146,6 @@ var TypescriptConverter = /** @class */ (function () {
             return this.generateTypeValue(definition.schema);
         }
         if (definition.$ref) {
-            // const segments = definition.$ref.split("/")
-            // const parameterName = segments[2]
-            // const name = this.getNormalizer().normalize(parameterName)
-            // const referred = this.swagger.definitions[parameterName]
-            // if (!referred) {
-            //   throw new Error(`cannot find reference ${definition.$ref}`)
-            // }
-            // if (this.generatedDefinitions.includes(name)) {
-            //   return name
-            // } else {
-            //   this.generatedDefinitions.push(name)
-            //   return this.generateTypeValue(referred)
-            // }
             return this.getNormalizer().normalize(definition.$ref.substring(definition.$ref.lastIndexOf("/") + 1));
         }
         if (Array.isArray(definition.allOf) && definition.allOf.length > 0) {

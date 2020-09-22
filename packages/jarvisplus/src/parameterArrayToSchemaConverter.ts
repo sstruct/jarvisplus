@@ -1,9 +1,26 @@
 import { Parameter, Schema } from "swagger-schema-official"
+import { PARAMETER_TYPE_BODY } from "./swaggerTypes"
 
 export class ParametersArrayToSchemaConverter {
-  public convertToObject(parameters: Parameter[]): Schema {
+  public convertToObject(
+    parameters: (Parameter & Schema & { schema?: Schema; in?: string })[]
+  ): Schema {
     if (!Array.isArray(parameters)) {
       throw new Error("invalid argument")
+    }
+
+    if (parameters.length === 1) {
+      const definition = parameters[0]
+      if (typeof definition.title === "string") {
+        definition.required = Object.keys(definition.properties)
+          .filter((param) => Boolean(definition.properties[param]?.required))
+          .map((param) => param) as boolean & string[]
+        definition.in = PARAMETER_TYPE_BODY
+        return definition
+      }
+      if (definition.schema) {
+        return definition
+      }
     }
 
     const schema: Schema = {
@@ -15,7 +32,18 @@ export class ParametersArrayToSchemaConverter {
     }
 
     parameters.forEach((param) => {
-      schema.properties[param.name] = (param as any) as Schema
+      if (typeof param.title === "string") {
+        const properties = param.properties
+        for (const property in properties) {
+          properties[property]["in"] = PARAMETER_TYPE_BODY
+        }
+        schema.properties = {
+          ...schema.properties,
+          ...properties,
+        }
+      } else {
+        schema.properties[param.name] = (param as any) as Schema
+      }
     })
 
     return schema

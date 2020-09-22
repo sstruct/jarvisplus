@@ -18,6 +18,8 @@
     "packages/jarvisplus",
     "packages/jarvisplus-runtime"
   ],
+  "author": "terminus",
+  "license": "ISC",
   "dependencies": {
     "lerna": "^3.20.2"
   },
@@ -32,7 +34,7 @@
     "husky": "^4.2.3",
     "lint-staged": "^10.1.2",
     "prettier": "^2.0.3",
-    "typescript": "^3.7.4"
+    "typescript": "^4.0.3"
   },
   "config": {
     "commit-message-validator": {

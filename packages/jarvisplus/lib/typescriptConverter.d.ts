@@ -26,6 +26,7 @@ export declare class TypescriptConverter implements BaseConverter {
     generateParameterTypesForOperation(path: string, method: string, operation: Operation): string;
     generateOperation(path: string, method: string, operation: Operation): string;
     generateType(name: string, definition: Schema): string;
+    generateDefinitionType(name: string, definition: Schema): string;
     generateTypeValue(definition: Schema & {
         schema?: Schema;
     }): string;
