@@ -72,6 +72,7 @@ var commandCore = function (command, options) { return __awaiter(void 0, void 0,
                 });
                 writer = writerFactory_1.writerFactory({ targetPath: options.targetPath });
                 writer(output);
+                console.log(chalk.green("🚀 SDK generated successfully for: "), chalk.green(options.swaggerUrl || options.file));
                 return [2 /*return*/];
         }
     });

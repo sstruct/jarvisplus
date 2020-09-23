@@ -45,6 +45,10 @@ const commandCore = async (command, options) => {
 
   const writer = writerFactory({ targetPath: options.targetPath })
   writer(output)
+  console.log(
+    chalk.green("🚀 SDK generated successfully for: "),
+    chalk.green(options.swaggerUrl || options.file)
+  )
 }
 
 const useCommand = (command: Command) => (args: CommandOptions) => {

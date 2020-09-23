@@ -3,7 +3,7 @@
  * @url {{&path}}
  * @method {{&method}}
  */
-export const {{name}} = ({{parameters}}): Promise<{{&responseTypes}}> => {
+export function {{name}} ({{parameters}}): Promise<{{&responseTypes}}> {
   {{definePath}} path = '{{{path}}}'
   {{#pathParams}}
       path = path.replace("{{pathParamName}}", String(payload['{{&name}}']));
