@@ -1,6 +1,6 @@
 {
   "name": "@terminus/jarvisplus-runtime",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Runtime modules for @terminus/jarvisplus",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
