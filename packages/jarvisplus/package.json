@@ -21,8 +21,6 @@
     "registry": "https://registry.npm.terminus.io"
   },
   "dependencies": {
-    "@terminus/jarvisplus-runtime": "^2.0.2",
-    "@types/swagger-schema-official": "^2.0.21",
     "chalk": "^4.1.0",
     "js-yaml": "^3.13.1",
     "mustache": "^4.0.1",

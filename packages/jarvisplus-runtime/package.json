@@ -33,9 +33,5 @@
   ],
   "dependencies": {
     "superagent": "^6.1.0"
-  },
-  "peerDependencies": {
-    "@types/superagent": "^4.1.10",
-    "supertest": "^6.1.0"
   }
 }
