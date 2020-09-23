@@ -73,6 +73,7 @@ export class ParametersJarFactory {
           if (!referred) {
             throw new Error(`cannot find reference ${parameter.schema.$ref}`)
           }
+          referred["in"] = parameter.in
           return referred
         }
         return parameter

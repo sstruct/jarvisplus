@@ -47,7 +47,7 @@ const commandCore = async (command, options) => {
   writer(output)
   console.log(
     chalk.green("🚀 SDK generated successfully for: "),
-    chalk.green(options.swaggerUrl || options.file)
+    chalk.green(options.swaggerUrl || path.resolve(options.file))
   )
 }
 
