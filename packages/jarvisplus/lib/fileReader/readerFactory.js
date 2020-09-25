@@ -8,7 +8,7 @@ var plainTextReader_1 = require("./plainTextReader");
 exports.readerFactory = function (options) {
     if (typeof options.file !== "string" &&
         typeof options.swaggerUrl !== "string") {
-        throw new Error("invalid type for file/swagger_url option, string expected");
+        throw new Error("invalid type for file/swaggerUrl option, string expected");
     }
     if (options.swaggerUrl) {
         return function () { return remoteJsonReader_1.remoteJsonReader(options); };

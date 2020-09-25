@@ -50,10 +50,10 @@ var commandCore = function (command, options) { return __awaiter(void 0, void 0,
         switch (_a.label) {
             case 0:
                 if (options.swaggerUrl) {
-                    console.log("Generating SDK with remote url", chalk.green(options.swaggerUrl));
+                    console.log("Generating SDK based on remote url: ", chalk.green(options.swaggerUrl));
                 }
                 else if (options.file) {
-                    console.log("Generating SDK with swagger file", chalk.green(path.resolve(options.file)));
+                    console.log("Generating SDK based on local file: ", chalk.green(path.resolve(options.file)));
                 }
                 reader = readerFactory_1.readerFactory({
                     file: options.file,
@@ -82,7 +82,7 @@ var useCommand = function (command) { return function (args) {
         args.swaggers.forEach(function (swagger) {
             commandCore(command, {
                 file: swagger.file,
-                swaggerUrl: swagger.swagger_url,
+                swaggerUrl: swagger.swaggerUrl,
                 backend: swagger.backend,
                 targetPath: swagger.targetPath,
                 template: args.template,

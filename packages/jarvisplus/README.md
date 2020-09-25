@@ -23,9 +23,9 @@ jarvisplus --configFile .jarvis.yml
 ```yml
 swaggers:
     # 后端swagger地址, url请带上 /v2/api-docs
-    - swagger_url?: string
+    - swaggerUrl?: string
     - file?: string
-    # 本地 swagger 文件, 支持 json/yml，有 swagger_url 时，优先使用 swagger_url
+    # 本地 swagger 文件, 支持 json/yml，有 swaggerUrl 时，优先使用 swaggerUrl
       backend?: string
       alias: string
       targetPath: string

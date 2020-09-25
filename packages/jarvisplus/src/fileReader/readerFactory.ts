@@ -9,7 +9,7 @@ export const readerFactory = (options: FileReaderOptions) => {
     typeof options.file !== "string" &&
     typeof options.swaggerUrl !== "string"
   ) {
-    throw new Error("invalid type for file/swagger_url option, string expected")
+    throw new Error("invalid type for file/swaggerUrl option, string expected")
   }
 
   if (options.swaggerUrl) {

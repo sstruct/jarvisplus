@@ -3,7 +3,7 @@ import { Spec } from "swagger-schema-official";
 export declare type FileReader<T = Spec> = (options: FileReaderOptions) => T;
 export declare type ConfigType = {
     swaggers: {
-        swagger_url?: string;
+        swaggerUrl?: string;
         file?: string;
         backend?: string;
         alias: string;

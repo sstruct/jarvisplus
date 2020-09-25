@@ -15,12 +15,12 @@ const pkg = require("../package.json")
 const commandCore = async (command, options) => {
   if (options.swaggerUrl) {
     console.log(
-      "Generating SDK with remote url",
+      "Generating SDK based on remote url: ",
       chalk.green(options.swaggerUrl)
     )
   } else if (options.file) {
     console.log(
-      "Generating SDK with swagger file",
+      "Generating SDK based on local file: ",
       chalk.green(path.resolve(options.file))
     )
   }
@@ -56,7 +56,7 @@ const useCommand = (command: Command) => (args: CommandOptions) => {
     args.swaggers.forEach((swagger) => {
       commandCore(command, {
         file: swagger.file,
-        swaggerUrl: swagger.swagger_url,
+        swaggerUrl: swagger.swaggerUrl,
         backend: swagger.backend,
         targetPath: swagger.targetPath,
         template: args.template,
