@@ -34,8 +34,8 @@ var ParametersJarFactory = /** @class */ (function () {
         return (operation.parameters || []).map(function (parameter) {
             var _a;
             if (typeof ((_a = parameter === null || parameter === void 0 ? void 0 : parameter.schema) === null || _a === void 0 ? void 0 : _a.$ref) === "string") {
-                var segments = parameter.schema.$ref.split("/");
-                var referred = _this.swagger.definitions[segments.length === 1 ? segments[0] : segments[2]];
+                var segments = parameter.schema.$ref.replace("#/definitions/", "");
+                var referred = _this.swagger.definitions[segments];
                 if (!referred) {
                     throw new Error("cannot find reference " + parameter.schema.$ref);
                 }

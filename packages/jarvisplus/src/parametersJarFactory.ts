@@ -66,10 +66,8 @@ export class ParametersJarFactory {
     return (operation.parameters || []).map(
       (parameter: Parameter & BodyParameter) => {
         if (typeof parameter?.schema?.$ref === "string") {
-          const segments = parameter.schema.$ref.split("/")
-          const referred = this.swagger.definitions[
-            segments.length === 1 ? segments[0] : segments[2]
-          ]
+          const segments = parameter.schema.$ref.replace("#/definitions/", "")
+          const referred = this.swagger.definitions[segments]
           if (!referred) {
             throw new Error(`cannot find reference ${parameter.schema.$ref}`)
           }
