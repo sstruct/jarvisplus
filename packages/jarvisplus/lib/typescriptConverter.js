@@ -34,7 +34,7 @@ var TypescriptConverter = /** @class */ (function () {
     }
     TypescriptConverter.prototype.generateParameterTypesForOperation = function (path, method, operation) {
         var _this = this;
-        var name = this.getNormalizer().normalize(method + "-" + path);
+        var name = this.getNormalizer().normalize(method + "::" + path);
         var _a = this.getParametersJarFactory().createFromOperation(operation), queryParams = _a.queryParams, bodyParams = _a.bodyParams, formDataParams = _a.formDataParams, headerParams = _a.headerParams, payloadParams = _a.payloadParams;
         var parameterTypes = [];
         var appendParameterTypes = function (params, suffix) {
@@ -56,7 +56,7 @@ var TypescriptConverter = /** @class */ (function () {
     };
     TypescriptConverter.prototype.generateOperation = function (path, method, operation) {
         var _this = this;
-        var name = this.getNormalizer().normalize(method + "-" + path);
+        var name = this.getNormalizer().normalize(method + "::" + path);
         var _a = this.getParametersJarFactory().createFromOperation(operation), payloadParams = _a.payloadParams, pathParams = _a.pathParams, queryParams = _a.queryParams, bodyParams = _a.bodyParams, formDataParams = _a.formDataParams, headerParams = _a.headerParams;
         var output = "";
         var parameters = [];

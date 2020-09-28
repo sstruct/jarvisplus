@@ -76,7 +76,7 @@ export class TypescriptConverter implements BaseConverter {
     method: string,
     operation: Operation
   ): string {
-    const name = this.getNormalizer().normalize(`${method}-${path}`)
+    const name = this.getNormalizer().normalize(`${method}::${path}`)
 
     const {
       queryParams,
@@ -110,7 +110,7 @@ export class TypescriptConverter implements BaseConverter {
   }
 
   public generateOperation(path: string, method: string, operation: Operation) {
-    const name = this.getNormalizer().normalize(`${method}-${path}`)
+    const name = this.getNormalizer().normalize(`${method}::${path}`)
     const {
       payloadParams,
       pathParams,
