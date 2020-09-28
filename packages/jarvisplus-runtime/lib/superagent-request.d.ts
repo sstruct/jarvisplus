@@ -12,7 +12,7 @@ export declare type RequestFactoryType = ({ path, payload, payloadIn, payloadInT
 }) => Promise<any>;
 export declare type SuperagentFunctionType = (input: RequestInfo, init?: RequestInit) => Promise<request.Response>;
 export interface SuperagentRequestFactoryOptions {
-    request?: request.SuperAgentRequest;
+    request?: request.Request;
     onResponse?(any: any): any;
     onError?(any: any): any;
 }

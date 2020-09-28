@@ -9,9 +9,9 @@ var TypescriptNameNormalizer = /** @class */ (function () {
             .split(/[/.::]/g)
             .filter(Boolean)
             .map(function (segment) {
-            if (segment.startsWith('{') && segment.endsWith('}')) {
+            if (segment.startsWith("{") && segment.endsWith("}")) {
                 segment =
-                    'By' +
+                    "By" +
                         segment[1].toUpperCase() +
                         segment.substring(2, segment.length - 1);
             }
@@ -21,12 +21,14 @@ var TypescriptNameNormalizer = /** @class */ (function () {
             // remove punctuations in name, e.g.:  "（），。,.", return "any" if nothing left
             // ref 1. https://stackoverflow.com/a/6671856/5121972
             // ref 2. http://www.regular-expressions.info/unicode.html#category
-            return str.replace(/[^\p{L}\p{N}^\p{Pd}\p{Pc}]*/gu, '').replace(/\p{Pd}\p{Pc}*/gu, '_') || 'any';
+            return (str
+                .replace(/[^\p{L}\p{N}^\p{Pd}\p{Pc}]*/gu, "")
+                .replace(/\p{Pd}\p{Pc}*/gu, "_") || "any");
         })
             .map(function (str, index) {
             return index === 0 ? str : str[0].toUpperCase() + str.substr(1);
         })
-            .join('');
+            .join("");
     };
     return TypescriptNameNormalizer;
 }());
