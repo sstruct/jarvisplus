@@ -27,8 +27,12 @@ export type SuperagentFunctionType = (
   init?: RequestInit
 ) => Promise<request.Response>
 
+type RequestCallback =
+  | (request.SuperAgentStatic & request.Request)
+  | request.SuperAgentStatic
+
 export interface SuperagentRequestFactoryOptions {
-  request?: request.Request
+  request?: RequestCallback
 
   onResponse?(any): any
 
@@ -87,10 +91,9 @@ const SuperagentRequestFactory = (
     }, new FormData())
   }
 
-  const callback: request.SuperAgentStatic | request.Request = [
-    "function",
-    "object",
-  ].includes(typeof options.request)
+  const callback: RequestCallback = ["function", "object"].includes(
+    typeof options.request
+  )
     ? options.request
     : request
 
