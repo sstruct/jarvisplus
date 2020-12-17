@@ -112,11 +112,16 @@ const SuperagentRequestFactory = (
 
   switch (agentMethod) {
     case "delete":
+      return callback[agentMethod](fullUrl)
+        .query(query)
+        .then((res) => handleResponse(res))
+        .catch((err) => handleError(err))
     case "get": {
-      if (fetchOptions.body) {
+      // compatible with historical apis
+      if (fetchOptions.body !== undefined) {
         return callback[agentMethod](fullUrl)
           .query(query)
-          .send(fetchOptions.body)
+          .query(fetchOptions.body)
           .then((res) => handleResponse(res))
           .catch((err) => handleError(err))
       }

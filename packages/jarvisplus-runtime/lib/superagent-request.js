@@ -56,11 +56,16 @@ var SuperagentRequestFactory = function (baseUrl, options) { return function (ar
     var agentMethod = method.toLocaleLowerCase();
     switch (agentMethod) {
         case "delete":
+            return callback[agentMethod](fullUrl)
+                .query(query)
+                .then(function (res) { return handleResponse(res); })
+                .catch(function (err) { return handleError(err); });
         case "get": {
-            if (fetchOptions.body) {
+            // compatible with historical apis
+            if (fetchOptions.body !== undefined) {
                 return callback[agentMethod](fullUrl)
                     .query(query)
-                    .send(fetchOptions.body)
+                    .query(fetchOptions.body)
                     .then(function (res) { return handleResponse(res); })
                     .catch(function (err) { return handleError(err); });
             }
