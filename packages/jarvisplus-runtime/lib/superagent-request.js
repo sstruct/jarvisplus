@@ -39,10 +39,7 @@ var SuperagentRequestFactory = function (baseUrl, options) { return function (ar
             return data;
         }, new FormData());
     }
-    var callback = [
-        "function",
-        "object",
-    ].includes(typeof options.request)
+    var callback = ["function", "object"].includes(typeof options.request)
         ? options.request
         : request;
     var handleResponse = function (response) {
@@ -59,11 +56,19 @@ var SuperagentRequestFactory = function (baseUrl, options) { return function (ar
     var agentMethod = method.toLocaleLowerCase();
     switch (agentMethod) {
         case "delete":
-        case "get":
+        case "get": {
+            if (fetchOptions.body) {
+                return callback[agentMethod](fullUrl)
+                    .query(query)
+                    .send(fetchOptions.body)
+                    .then(function (res) { return handleResponse(res); })
+                    .catch(function (err) { return handleError(err); });
+            }
             return callback[agentMethod](fullUrl)
                 .query(query)
                 .then(function (res) { return handleResponse(res); })
                 .catch(function (err) { return handleError(err); });
+        }
         default:
             return callback[agentMethod](fullUrl)
                 .query(query)

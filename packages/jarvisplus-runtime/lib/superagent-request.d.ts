@@ -11,8 +11,9 @@ export declare type RequestFactoryType = ({ path, payload, payloadIn, payloadInT
     method: string;
 }) => Promise<any>;
 export declare type SuperagentFunctionType = (input: RequestInfo, init?: RequestInit) => Promise<request.Response>;
+declare type RequestCallback = (request.SuperAgentStatic & request.Request) | request.SuperAgentStatic;
 export interface SuperagentRequestFactoryOptions {
-    request?: request.Request;
+    request?: RequestCallback;
     onResponse?(any: any): any;
     onError?(any: any): any;
 }
