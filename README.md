@@ -3,6 +3,16 @@
 - `@terminus/jarvisplus` 根据 swagger 文档生成 `typescript` 客户端代码
 - `@terminus/jarvisplus-runtime` jarvisplus 运行时依赖
 
+# 开发 & 发布
+
+`sh
+lerna run build
+
+# 根据提示操作
+
+lerna publish
+`
+
 ## TODO
 
 - [x] 支持单个方法导出（用于 tree shaking 和解构赋值）
