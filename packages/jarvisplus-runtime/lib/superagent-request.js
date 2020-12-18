@@ -77,7 +77,7 @@ var SuperagentRequestFactory = function (baseUrl, options) { return function (ar
         default:
             return callback[agentMethod](fullUrl)
                 .query(query)
-                .send(fetchOptions.body)
+                .send(fetchOptions.body || {})
                 .then(function (res) { return handleResponse(res); })
                 .catch(function (err) { return handleError(err); });
     }

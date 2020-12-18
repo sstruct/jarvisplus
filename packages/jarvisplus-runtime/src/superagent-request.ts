@@ -133,7 +133,7 @@ const SuperagentRequestFactory = (
     default:
       return callback[agentMethod](fullUrl)
         .query(query)
-        .send(fetchOptions.body)
+        .send(fetchOptions.body || {})
         .then((res) => handleResponse(res))
         .catch((err) => handleError(err))
   }
