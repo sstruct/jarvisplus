@@ -29,10 +29,13 @@ const commandCore = async (command, options) => {
     swaggerUrl: options.swaggerUrl,
   })
 
-  const customAgentRelativePath = path.relative(
-    path.dirname(options.targetPath),
-    options.customAgent
-  )
+  let customAgentRelativePath = null
+  if (options.customAgent) {
+    customAgentRelativePath = path.relative(
+      path.dirname(options.targetPath),
+      options.customAgent
+    )
+  }
 
   const spec = (await reader()) as Spec
   const output = command(spec, {
@@ -40,7 +43,9 @@ const commandCore = async (command, options) => {
     backend: options.backend,
     template: options.template,
     mergeParam: options.mergeParam,
-    customAgent: `./${customAgentRelativePath}`,
+    customAgent: customAgentRelativePath
+      ? `./${customAgentRelativePath}`
+      : null,
   })
 
   const writer = writerFactory({ targetPath: options.targetPath })

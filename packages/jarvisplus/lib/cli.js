@@ -59,7 +59,10 @@ var commandCore = function (command, options) { return __awaiter(void 0, void 0,
                     file: options.file,
                     swaggerUrl: options.swaggerUrl,
                 });
-                customAgentRelativePath = path.relative(path.dirname(options.targetPath), options.customAgent);
+                customAgentRelativePath = null;
+                if (options.customAgent) {
+                    customAgentRelativePath = path.relative(path.dirname(options.targetPath), options.customAgent);
+                }
                 return [4 /*yield*/, reader()];
             case 1:
                 spec = (_a.sent());
@@ -68,7 +71,7 @@ var commandCore = function (command, options) { return __awaiter(void 0, void 0,
                     backend: options.backend,
                     template: options.template,
                     mergeParam: options.mergeParam,
-                    customAgent: "./" + customAgentRelativePath,
+                    customAgent: customAgentRelativePath ? "./" + customAgentRelativePath : null,
                 });
                 writer = writerFactory_1.writerFactory({ targetPath: options.targetPath });
                 writer(output);
