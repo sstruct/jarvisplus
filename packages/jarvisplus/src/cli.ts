@@ -7,7 +7,7 @@ import { writerFactory } from "./writer/writerFactory"
 import { readerFactory } from "./fileReader/readerFactory"
 import { ConfigType } from "./fileReader/fileReader"
 import { CommandOptions } from "./commands/options"
-import { defaultCommand, bundleCommand } from "./commands"
+import { defaultCommand } from "./commands"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require("../package.json")

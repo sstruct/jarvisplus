@@ -30,7 +30,8 @@ lerna publish
 - [ ] 自动/批量替换当前接口
 - [ ] 支持模块分拆（包括相同类型提取）
 - [ ] 支持更新提示
-- [ ] 支持 mock
+- [ ] 支持 mock, proxy
+- [ ] 支持 init 初始化引导页面
 - [x] 生成 client API/type 顺序调整
 - [x] 保留函数/字段注释
 - [x] 请求函数参数格式优化，默认不传 undefined
