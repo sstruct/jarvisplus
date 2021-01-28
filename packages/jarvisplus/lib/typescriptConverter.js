@@ -78,7 +78,18 @@ var TypescriptConverter = /** @class */ (function () {
                         args[paramsType] = true;
                     }
                     else {
-                        payloadIn[paramsType] = params.map(function (param) { return param.name; });
+                        payloadIn[paramsType] = params.map(function (param) {
+                            var _a;
+                            if (typeof ((_a = param === null || param === void 0 ? void 0 : param.schema) === null || _a === void 0 ? void 0 : _a.$ref) === "string") {
+                                var segments = param.schema.$ref.replace("#/definitions/", "");
+                                var referred = _this.swagger.definitions[segments];
+                                if (!referred) {
+                                    throw new Error("cannot find reference " + param.schema.$ref);
+                                }
+                                return Object.keys(referred.properties);
+                            }
+                            return param.name;
+                        }).flat();
                         if (!payloadInType.includes(paramsType)) {
                             payloadInType.push(paramsType);
                         }
@@ -171,6 +182,18 @@ var TypescriptConverter = /** @class */ (function () {
                 return "Array<" + this.generateTypeValue(definition.items) + ">";
             }
         }
+        var getPropertyDescription = function (def) {
+            var output = '';
+            var description = def.description;
+            var defIn = def["in"];
+            if (description) {
+                output += "/** " + description + " " + (defIn ? "in " + defIn : "") + " */\n";
+            }
+            else if (defIn) {
+                output += "/** in " + defIn + " */\n";
+            }
+            return output;
+        };
         if (definition.type === swaggerTypes_1.DEFINITION_TYPE_OBJECT ||
             (!definition.type &&
                 (definition.allOf ||
@@ -178,27 +201,47 @@ var TypescriptConverter = /** @class */ (function () {
                     definition.additionalProperties))) {
             var output = "";
             var hasProperties = definition.properties && Object.keys(definition.properties).length > 0;
+            var schemaProperties_1 = {};
             if (hasProperties) {
                 output += "{\n";
                 output += Object.entries(definition.properties)
                     .map(function (_a) {
+                    var _b;
                     var name = _a[0], def = _a[1];
                     var output = "";
-                    var isRequired = (definition.required || []).indexOf(name);
-                    var description = def.description;
-                    var defIn = def["in"];
-                    if (description) {
-                        output += "/** " + description + " " + (defIn ? "in " + defIn : "") + " */\n";
+                    // TODO: add proper type
+                    // @ts-ignore
+                    if (typeof ((_b = def === null || def === void 0 ? void 0 : def.schema) === null || _b === void 0 ? void 0 : _b.$ref) === "string") {
+                        schemaProperties_1[name] = def;
                     }
-                    else if (defIn) {
-                        output += "/** in " + defIn + " */\n";
+                    else {
+                        var isRequired = (definition.required || []).indexOf(name);
+                        output += getPropertyDescription(def);
+                        output += "'" + name + "'" + (isRequired ? "?" : "") + ": " + _this.generateTypeValue(def);
                     }
-                    output += "'" + name + "'" + (isRequired ? "?" : "") + ": " + _this.generateTypeValue(def);
                     return output;
                 })
                     .join("\n");
                 output += "\n}";
             }
+            var isEmpty_1 = output.replace(/\n/g, "") === "{}";
+            if (isEmpty_1) {
+                output = "";
+            }
+            output += Object.entries(schemaProperties_1)
+                .map(function (_a) {
+                var name = _a[0], def = _a[1];
+                // @ts-ignore
+                var segments = def.schema.$ref.replace("#/definitions/", "");
+                var referred = _this.swagger.definitions[segments];
+                if (!referred) {
+                    // @ts-ignore
+                    throw new Error("cannot find reference " + def.schema.$ref);
+                }
+                var seg = "" + (isEmpty_1 ? '' : '& ') + _this.getNormalizer().normalize(segments) + " " + getPropertyDescription(def);
+                isEmpty_1 = false;
+                return seg;
+            }).join('');
             if (definition.additionalProperties &&
                 typeof definition.additionalProperties === "object") {
                 if (hasProperties) {

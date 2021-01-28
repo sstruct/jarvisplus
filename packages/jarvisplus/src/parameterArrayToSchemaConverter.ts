@@ -9,20 +9,6 @@ export class ParametersArrayToSchemaConverter {
       throw new Error("invalid argument")
     }
 
-    if (parameters.length === 1) {
-      const definition = parameters[0]
-      if (typeof definition.title === "string") {
-        definition.required = Object.keys(definition.properties)
-          .filter((param) => Boolean(definition.properties[param]?.required))
-          .map((param) => param) as boolean & string[]
-        definition.in = PARAMETER_TYPE_BODY
-        return definition
-      }
-      if (definition.schema) {
-        return definition
-      }
-    }
-
     const schema: Schema = {
       type: "object",
       required: parameters

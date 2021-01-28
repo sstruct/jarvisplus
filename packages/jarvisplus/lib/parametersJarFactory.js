@@ -30,18 +30,7 @@ var ParametersJarFactory = /** @class */ (function () {
             .filter(function (parameter) { return parameter && parameter.in === type; });
     };
     ParametersJarFactory.prototype.mapParameters = function (operation) {
-        var _this = this;
         return (operation.parameters || []).map(function (parameter) {
-            var _a;
-            if (typeof ((_a = parameter === null || parameter === void 0 ? void 0 : parameter.schema) === null || _a === void 0 ? void 0 : _a.$ref) === "string") {
-                var segments = parameter.schema.$ref.replace("#/definitions/", "");
-                var referred = _this.swagger.definitions[segments];
-                if (!referred) {
-                    throw new Error("cannot find reference " + parameter.schema.$ref);
-                }
-                referred["in"] = parameter.in;
-                return referred;
-            }
             return parameter;
         });
     };

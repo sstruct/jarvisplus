@@ -20,19 +20,6 @@ var ParametersArrayToSchemaConverter = /** @class */ (function () {
         if (!Array.isArray(parameters)) {
             throw new Error("invalid argument");
         }
-        if (parameters.length === 1) {
-            var definition_1 = parameters[0];
-            if (typeof definition_1.title === "string") {
-                definition_1.required = Object.keys(definition_1.properties)
-                    .filter(function (param) { var _a; return Boolean((_a = definition_1.properties[param]) === null || _a === void 0 ? void 0 : _a.required); })
-                    .map(function (param) { return param; });
-                definition_1.in = swaggerTypes_1.PARAMETER_TYPE_BODY;
-                return definition_1;
-            }
-            if (definition_1.schema) {
-                return definition_1;
-            }
-        }
         var schema = {
             type: "object",
             required: parameters

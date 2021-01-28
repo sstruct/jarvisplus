@@ -1,12 +1,12 @@
 import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/{{RequestFactoryName}}";
 
 {{#customAgent}}
-  import { default as customAgent, onResponse, onError } from '{{&customAgent}}'
+import { default as customAgent, onResponse, onError } from '{{&customAgent}}'
 
-  const request = requestFactory("{{&baseUrl}}", { request: customAgent, onResponse, onError });
+const request = requestFactory("{{&baseUrl}}", { request: customAgent, onResponse, onError });
 {{/customAgent}}
 
 {{^customAgent}}
-  const request = requestFactory("{{&baseUrl}}", {});
+const request = requestFactory("{{&baseUrl}}", {});
 {{/customAgent}}
 

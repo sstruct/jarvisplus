@@ -71,7 +71,9 @@ var commandCore = function (command, options) { return __awaiter(void 0, void 0,
                     backend: options.backend,
                     template: options.template,
                     mergeParam: options.mergeParam,
-                    customAgent: customAgentRelativePath ? "./" + customAgentRelativePath : null,
+                    customAgent: customAgentRelativePath
+                        ? "./" + customAgentRelativePath
+                        : null,
                 });
                 writer = writerFactory_1.writerFactory({ targetPath: options.targetPath });
                 writer(output);

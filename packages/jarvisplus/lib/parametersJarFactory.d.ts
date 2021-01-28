@@ -7,6 +7,6 @@ export declare class ParametersJarFactory {
     createFromOperation(operation: Operation): ParametersJar;
     protected getOperationParameters(operation: Operation): Parameter[];
     protected getOperationParametersByType(operation: Operation, type: ParameterType): Parameter[];
-    protected mapParameters(operation: Operation): (import("swagger-schema-official").Schema | BodyParameter)[];
+    protected mapParameters(operation: Operation): BodyParameter[];
     protected mapAuthorization(operation: Operation): import("swagger-schema-official").Security[];
 }

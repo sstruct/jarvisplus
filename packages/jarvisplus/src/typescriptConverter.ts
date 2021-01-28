@@ -148,7 +148,24 @@ export class TypescriptConverter implements BaseConverter {
             parameters.push(`${paramsType}: ${name}${paramsSuffix}`)
             args[paramsType] = true
           } else {
-            payloadIn[paramsType] = params.map((param) => param.name)
+            payloadIn[paramsType] = params
+              .map((param) => {
+                if (typeof param?.schema?.$ref === "string") {
+                  const segments = param.schema.$ref.replace(
+                    "#/definitions/",
+                    ""
+                  )
+                  const referred = this.swagger.definitions[segments]
+                  if (!referred) {
+                    throw new Error(
+                      `cannot find reference ${param.schema.$ref}`
+                    )
+                  }
+                  return Object.keys(referred.properties)
+                }
+                return param.name
+              })
+              .flat()
             if (!payloadInType.includes(paramsType)) {
               payloadInType.push(paramsType)
             }
@@ -281,6 +298,18 @@ export class TypescriptConverter implements BaseConverter {
       }
     }
 
+    const getPropertyDescription = (def) => {
+      let output = ""
+      const description = def.description
+      const defIn = def["in"]
+      if (description) {
+        output += `/** ${description} ${defIn ? `in ${defIn}` : ""} */\n`
+      } else if (defIn) {
+        output += `/** in ${defIn} */\n`
+      }
+      return output
+    }
+
     if (
       definition.type === DEFINITION_TYPE_OBJECT ||
       (!definition.type &&
@@ -292,28 +321,51 @@ export class TypescriptConverter implements BaseConverter {
 
       const hasProperties =
         definition.properties && Object.keys(definition.properties).length > 0
+      const schemaProperties = {}
 
       if (hasProperties) {
         output += "{\n"
         output += Object.entries(definition.properties)
           .map(([name, def]) => {
             let output = ""
-            const isRequired = (definition.required || []).indexOf(name)
-            const description = def.description
-            const defIn = def["in"]
-            if (description) {
-              output += `/** ${description} ${defIn ? `in ${defIn}` : ""} */\n`
-            } else if (defIn) {
-              output += `/** in ${defIn} */\n`
+            // TODO: add proper type
+            // @ts-ignore
+            if (typeof def?.schema?.$ref === "string") {
+              schemaProperties[name] = def
+            } else {
+              const isRequired = (definition.required || []).indexOf(name)
+              output += getPropertyDescription(def)
+              output += `'${name}'${
+                isRequired ? "?" : ""
+              }: ${this.generateTypeValue(def)}`
             }
-            output += `'${name}'${
-              isRequired ? "?" : ""
-            }: ${this.generateTypeValue(def)}`
             return output
           })
           .join("\n")
         output += "\n}"
       }
+
+      let isEmpty = output.replace(/\n/g, "") === "{}"
+      if (isEmpty) {
+        output = ""
+      }
+
+      output += Object.entries(schemaProperties)
+        .map(([name, def]) => {
+          // @ts-ignore
+          const segments = def.schema.$ref.replace("#/definitions/", "")
+          const referred = this.swagger.definitions[segments]
+          if (!referred) {
+            // @ts-ignore
+            throw new Error(`cannot find reference ${def.schema.$ref}`)
+          }
+          const seg = `${isEmpty ? "" : "& "}${this.getNormalizer().normalize(
+            segments
+          )} ${getPropertyDescription(def)}`
+          isEmpty = false
+          return seg
+        })
+        .join("")
 
       if (
         definition.additionalProperties &&
