@@ -43,6 +43,7 @@ const commandCore = async (command, options) => {
     backend: options.backend,
     template: options.template,
     mergeParam: options.mergeParam,
+    legacy: options.legacy,
     customAgent: customAgentRelativePath
       ? `./${customAgentRelativePath}`
       : null,
@@ -67,6 +68,7 @@ const useCommand = (command: Command) => (args: CommandOptions) => {
         template: args.template,
         mergeParam: args.mergeParam,
         customAgent: args.customAgent,
+        legacy: args.legacy,
       })
     })
   } else {
@@ -76,6 +78,7 @@ const useCommand = (command: Command) => (args: CommandOptions) => {
       targetPath: args.targetPath,
       template: args.template,
       mergeParam: args.mergeParam,
+      legacy: args.legacy,
     })
   }
 }
@@ -100,6 +103,12 @@ const args = yargs
     alias: "f",
     description: "swagger file",
     required: false,
+  })
+  .option("legacy", {
+    type: "boolean",
+    description: "enable legacy mode(NOT RECOMMENDED)",
+    required: false,
+    default: false,
   })
   .command(
     "$0",

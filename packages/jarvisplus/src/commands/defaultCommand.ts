@@ -14,13 +14,7 @@ export const defaultCommand: Command<DefaultCommandOptions> = (
 ) => {
   const generator = new TypescriptClientGenerator(
     swagger,
-    new TypescriptConverter(swagger, {
-      allowVoidParameters: options.allowVoidParameterTypes,
-      backend: options.backend,
-      template: options.template,
-      mergeParam: options.mergeParam,
-      customAgent: options.customAgent,
-    })
+    new TypescriptConverter(swagger, options)
   )
   return generator.generateSingleFile(options.name)
 }

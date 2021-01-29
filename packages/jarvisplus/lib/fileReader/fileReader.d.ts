@@ -18,4 +18,5 @@ export declare type ConfigType = {
     gateway_url: string;
     modelFolder: boolean;
     mergeParam?: boolean;
+    legacy?: boolean;
 };

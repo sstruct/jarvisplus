@@ -7,6 +7,7 @@ export interface CliCommandOptions {
   file?: string
   backend?: string
   targetPath?: string
+  legacy?: boolean
 }
 
 export type CommandOptions = CliCommandOptions &

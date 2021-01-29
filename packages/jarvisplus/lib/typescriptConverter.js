@@ -7,6 +7,7 @@ var parameterArrayToSchemaConverter_1 = require("./parameterArrayToSchemaConvert
 var parametersJarFactory_1 = require("./parametersJarFactory");
 var swaggerTypes_1 = require("./swaggerTypes");
 var typescriptNameNormalizer_1 = require("./typescriptNameNormalizer");
+var requestNameNormalizer_1 = require("./legacy/requestNameNormalizer");
 exports.TYPESCRIPT_TYPE_UNDEFINED = "undefined";
 exports.TYPESCRIPT_TYPE_VOID = "void";
 exports.TYPESCRIPT_TYPE_ANY = "any";
@@ -21,12 +22,15 @@ var TypescriptConverter = /** @class */ (function () {
     function TypescriptConverter(swagger, settings) {
         this.swagger = swagger;
         this.settings = settings;
-        this.normalizer = new typescriptNameNormalizer_1.TypescriptNameNormalizer();
         this.parametersJarFactory = new parametersJarFactory_1.ParametersJarFactory(this.swagger);
         this.parametersArrayToSchemaConverter = new parameterArrayToSchemaConverter_1.ParametersArrayToSchemaConverter();
+        this.normalizer = new typescriptNameNormalizer_1.TypescriptNameNormalizer({
+            customNormalizeRequestName: this.settings.legacy
+                ? function (method, path) { return requestNameNormalizer_1.default(path, method); }
+                : null,
+        });
         this.generatedDefinitions = [];
         this.settings = Object.assign({}, {
-            allowVoidParameters: true,
             backend: "",
             template: "superagent-request",
             mergeParam: false,
@@ -34,7 +38,7 @@ var TypescriptConverter = /** @class */ (function () {
     }
     TypescriptConverter.prototype.generateParameterTypesForOperation = function (path, method, operation) {
         var _this = this;
-        var name = this.getNormalizer().normalize(method + "::" + path);
+        var name = this.getNormalizer().normalizeRequestName(method, path);
         var _a = this.getParametersJarFactory().createFromOperation(operation), queryParams = _a.queryParams, bodyParams = _a.bodyParams, formDataParams = _a.formDataParams, headerParams = _a.headerParams, payloadParams = _a.payloadParams;
         var parameterTypes = [];
         var appendParameterTypes = function (params, suffix) {
@@ -56,7 +60,7 @@ var TypescriptConverter = /** @class */ (function () {
     };
     TypescriptConverter.prototype.generateOperation = function (path, method, operation) {
         var _this = this;
-        var name = this.getNormalizer().normalize(method + "::" + path);
+        var name = this.getNormalizer().normalizeRequestName(method, path);
         var _a = this.getParametersJarFactory().createFromOperation(operation), payloadParams = _a.payloadParams, pathParams = _a.pathParams, queryParams = _a.queryParams, bodyParams = _a.bodyParams, formDataParams = _a.formDataParams, headerParams = _a.headerParams;
         var output = "";
         var parameters = [];
@@ -78,7 +82,8 @@ var TypescriptConverter = /** @class */ (function () {
                         args[paramsType] = true;
                     }
                     else {
-                        payloadIn[paramsType] = params.map(function (param) {
+                        payloadIn[paramsType] = params
+                            .map(function (param) {
                             var _a;
                             if (typeof ((_a = param === null || param === void 0 ? void 0 : param.schema) === null || _a === void 0 ? void 0 : _a.$ref) === "string") {
                                 var segments = param.schema.$ref.replace("#/definitions/", "");
@@ -89,7 +94,8 @@ var TypescriptConverter = /** @class */ (function () {
                                 return Object.keys(referred.properties);
                             }
                             return param.name;
-                        }).flat();
+                        })
+                            .flat();
                         if (!payloadInType.includes(paramsType)) {
                             payloadInType.push(paramsType);
                         }
@@ -183,7 +189,7 @@ var TypescriptConverter = /** @class */ (function () {
             }
         }
         var getPropertyDescription = function (def) {
-            var output = '';
+            var output = "";
             var description = def.description;
             var defIn = def["in"];
             if (description) {
@@ -238,10 +244,11 @@ var TypescriptConverter = /** @class */ (function () {
                     // @ts-ignore
                     throw new Error("cannot find reference " + def.schema.$ref);
                 }
-                var seg = "" + (isEmpty_1 ? '' : '& ') + _this.getNormalizer().normalize(segments) + " " + getPropertyDescription(def);
+                var seg = "" + (isEmpty_1 ? "" : "& ") + _this.getNormalizer().normalize(segments) + " " + getPropertyDescription(def);
                 isEmpty_1 = false;
                 return seg;
-            }).join('');
+            })
+                .join("");
             if (definition.additionalProperties &&
                 typeof definition.additionalProperties === "object") {
                 if (hasProperties) {

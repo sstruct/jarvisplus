@@ -23,6 +23,7 @@ import {
   PARAMETER_TYPE_PAYLOAD,
 } from "./swaggerTypes"
 import { TypescriptNameNormalizer } from "./typescriptNameNormalizer"
+import legacyRequestNameNormalizer from "./legacy/requestNameNormalizer"
 
 export const TYPESCRIPT_TYPE_UNDEFINED = "undefined"
 export const TYPESCRIPT_TYPE_VOID = "void"
@@ -44,10 +45,10 @@ export interface SwaggerToTypescriptConverterSettings {
   template?: "whatwg-fetch" | "superagent-request" | string
   mergeParam?: boolean
   customAgent?: string
+  legacy?: boolean
 }
 
 export class TypescriptConverter implements BaseConverter {
-  protected normalizer: Normalizer = new TypescriptNameNormalizer()
   protected parametersJarFactory: ParametersJarFactory = new ParametersJarFactory(
     this.swagger
   )
@@ -60,7 +61,6 @@ export class TypescriptConverter implements BaseConverter {
     this.settings = Object.assign(
       {},
       {
-        allowVoidParameters: true,
         backend: "",
         template: "superagent-request",
         mergeParam: false,
@@ -69,6 +69,12 @@ export class TypescriptConverter implements BaseConverter {
     )
   }
 
+  protected normalizer: Normalizer = new TypescriptNameNormalizer({
+    customNormalizeRequestName: this.settings.legacy
+      ? (method, path) => legacyRequestNameNormalizer(path, method)
+      : null,
+  })
+
   protected generatedDefinitions: string[] = []
 
   public generateParameterTypesForOperation(
@@ -76,7 +82,7 @@ export class TypescriptConverter implements BaseConverter {
     method: string,
     operation: Operation
   ): string {
-    const name = this.getNormalizer().normalize(`${method}::${path}`)
+    const name = this.getNormalizer().normalizeRequestName(method, path)
 
     const {
       queryParams,
@@ -110,7 +116,7 @@ export class TypescriptConverter implements BaseConverter {
   }
 
   public generateOperation(path: string, method: string, operation: Operation) {
-    const name = this.getNormalizer().normalize(`${method}::${path}`)
+    const name = this.getNormalizer().normalizeRequestName(method, path)
     const {
       payloadParams,
       pathParams,

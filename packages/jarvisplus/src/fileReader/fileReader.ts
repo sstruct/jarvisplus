@@ -30,4 +30,6 @@ export type ConfigType = {
   modelFolder: boolean
   // 请求参数（path param, query, body, formData) 是否合并到一起，默认为 false
   mergeParam?: boolean
+  // 是否启用旧版模式（暂时仅支持请求方法命名）
+  legacy?: boolean
 }

@@ -6,5 +6,6 @@ export interface CliCommandOptions {
     file?: string;
     backend?: string;
     targetPath?: string;
+    legacy?: boolean;
 }
 export declare type CommandOptions = CliCommandOptions & Partial<yargs.Arguments<ConfigType>>;

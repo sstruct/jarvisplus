@@ -14,14 +14,15 @@ export interface SwaggerToTypescriptConverterSettings {
     template?: "whatwg-fetch" | "superagent-request" | string;
     mergeParam?: boolean;
     customAgent?: string;
+    legacy?: boolean;
 }
 export declare class TypescriptConverter implements BaseConverter {
     protected swagger: Spec;
     protected settings?: SwaggerToTypescriptConverterSettings;
-    protected normalizer: Normalizer;
     protected parametersJarFactory: ParametersJarFactory;
     protected parametersArrayToSchemaConverter: ParametersArrayToSchemaConverter;
     constructor(swagger: Spec, settings?: SwaggerToTypescriptConverterSettings);
+    protected normalizer: Normalizer;
     protected generatedDefinitions: string[];
     generateParameterTypesForOperation(path: string, method: string, operation: Operation): string;
     generateOperation(path: string, method: string, operation: Operation): string;

@@ -2,11 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TypescriptNameNormalizer = void 0;
 var TypescriptNameNormalizer = /** @class */ (function () {
-    function TypescriptNameNormalizer() {
+    function TypescriptNameNormalizer(prop) {
+        if (prop === void 0) { prop = {}; }
+        this.customNormalizeRequestName = prop.customNormalizeRequestName;
     }
     TypescriptNameNormalizer.prototype.normalize = function (name) {
         return name
-            .split(/[/.::]/g)
+            .split(/[/.]/g)
             .filter(Boolean)
             .map(function (segment) {
             if (segment.startsWith("{") && segment.endsWith("}")) {
@@ -29,6 +31,12 @@ var TypescriptNameNormalizer = /** @class */ (function () {
             return index === 0 ? str : str[0].toUpperCase() + str.substr(1);
         })
             .join("");
+    };
+    TypescriptNameNormalizer.prototype.normalizeRequestName = function (method, path) {
+        if (typeof this.customNormalizeRequestName === "function") {
+            return this.customNormalizeRequestName(method, path);
+        }
+        return this.normalize("" + method + path);
     };
     return TypescriptNameNormalizer;
 }());

@@ -48,4 +48,6 @@ gateway_url: string
 modelFolder: boolean
 # 请求参数（path param, query, body, formData) 是否合并到一起，默认为 false
 mergeParam?: boolean
+# 是否开启旧版模式（暂时仅支持旧版方法名生成规则，因为存在历史问题，不建议使用）
+legacy?: boolaen
 ```

@@ -1,9 +1,15 @@
-import { Normalizer } from "./normalizer"
+import { Normalizer, CustomNormalizeRequestName } from "./normalizer"
 
 export class TypescriptNameNormalizer implements Normalizer {
+  protected customNormalizeRequestName: CustomNormalizeRequestName
+  constructor(
+    prop: { customNormalizeRequestName?: CustomNormalizeRequestName } = {}
+  ) {
+    this.customNormalizeRequestName = prop.customNormalizeRequestName
+  }
   public normalize(name: string): string {
     return name
-      .split(/[/.::]/g)
+      .split(/[/.]/g)
       .filter(Boolean)
       .map((segment: string) => {
         if (segment.startsWith("{") && segment.endsWith("}")) {
@@ -28,5 +34,11 @@ export class TypescriptNameNormalizer implements Normalizer {
         return index === 0 ? str : str[0].toUpperCase() + str.substr(1)
       })
       .join("")
+  }
+  public normalizeRequestName(method: string, path: string): string {
+    if (typeof this.customNormalizeRequestName === "function") {
+      return this.customNormalizeRequestName(method, path)
+    }
+    return this.normalize(`${method}${path}`)
   }
 }

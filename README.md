@@ -32,6 +32,7 @@ lerna publish
 - [ ] 支持更新提示
 - [ ] 支持 mock, proxy
 - [ ] 支持 init 初始化引导页面
+- [x] 支持旧版 name normalizer
 - [x] 生成 client API/type 顺序调整
 - [x] 保留函数/字段注释
 - [x] 请求函数参数格式优化，默认不传 undefined

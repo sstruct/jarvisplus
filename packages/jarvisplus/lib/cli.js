@@ -71,6 +71,7 @@ var commandCore = function (command, options) { return __awaiter(void 0, void 0,
                     backend: options.backend,
                     template: options.template,
                     mergeParam: options.mergeParam,
+                    legacy: options.legacy,
                     customAgent: customAgentRelativePath
                         ? "./" + customAgentRelativePath
                         : null,
@@ -93,6 +94,7 @@ var useCommand = function (command) { return function (args) {
                 template: args.template,
                 mergeParam: args.mergeParam,
                 customAgent: args.customAgent,
+                legacy: args.legacy,
             });
         });
     }
@@ -103,6 +105,7 @@ var useCommand = function (command) { return function (args) {
             targetPath: args.targetPath,
             template: args.template,
             mergeParam: args.mergeParam,
+            legacy: args.legacy,
         });
     }
 }; };
@@ -122,6 +125,12 @@ var args = yargs
     alias: "f",
     description: "swagger file",
     required: false,
+})
+    .option("legacy", {
+    type: "boolean",
+    description: "enable legacy mode(NOT RECOMMENDED)",
+    required: false,
+    default: false,
 })
     .command("$0", "generate models and client", function (yargsBundle) { return yargsBundle; }, useCommand(commands_1.defaultCommand))
     .version(pkg.version).argv;
