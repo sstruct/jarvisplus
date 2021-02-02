@@ -263,10 +263,38 @@ export class TypescriptConverter implements BaseConverter {
   public generateDefinitionType(name: string, definition: Schema): string {
     return `export type ${this.getNormalizer().normalize(
       name
-    )} = ${this.generateTypeValue(definition)}\n`
+    )} = ${this.generateTypeValue(definition, { parentName: name })}\n
+    ${this.generateEnumForDefinitionType(name, definition)}\n`
   }
 
-  public generateTypeValue(definition: Schema & { schema?: Schema }): string {
+  public generateEnumForDefinitionType(
+    name: string,
+    definition: Schema
+  ): string {
+    const hasProperties =
+      definition.properties && Object.keys(definition.properties).length > 0
+    if (hasProperties) {
+      return Object.entries(definition.properties)
+        .map(([typeName, def]) => {
+          if (Array.isArray(def.enum)) {
+            const normalizedName = this.getNormalizer().normalize(
+              `${name}/${typeName}`
+            )
+            return `export enum ${normalizedName} {
+           ${def.enum.map((ele) => `"${ele}" = "${ele}"`).join(",")}
+        }`
+          }
+          return ""
+        })
+        .join("\n")
+    }
+    return ""
+  }
+
+  public generateTypeValue(
+    definition: Schema & { schema?: Schema },
+    options?: { parentName: string; name?: string }
+  ): string {
     if (definition.schema) {
       return this.generateTypeValue(definition.schema)
     }
@@ -275,6 +303,14 @@ export class TypescriptConverter implements BaseConverter {
       return this.getNormalizer().normalize(
         definition.$ref.substring(definition.$ref.lastIndexOf("/") + 1)
       )
+    }
+
+    if (Array.isArray(definition.enum)) {
+      if (options?.parentName && options?.name) {
+        return this.getNormalizer().normalize(
+          `${options.parentName}/${options.name}`
+        )
+      }
     }
 
     if (Array.isArray(definition.allOf) && definition.allOf.length > 0) {
@@ -287,15 +323,14 @@ export class TypescriptConverter implements BaseConverter {
 
     switch (definition.type) {
       case DEFINITION_TYPE_STRING: {
-        if (definition.enum) {
-          return `'${definition.enum.join("' | '")}'`
-        }
-        return definition.type
+        return definition.enum
+          ? definition.enum.map((ele) => `"${ele}"`).join("|")
+          : definition.type
       }
-      case DEFINITION_TYPE_NUMBER:
       case DEFINITION_TYPE_BOOLEAN: {
         return definition.type
       }
+      case DEFINITION_TYPE_NUMBER:
       case DEFINITION_TYPE_INTEGER: {
         return DEFINITION_TYPE_NUMBER
       }
@@ -343,7 +378,10 @@ export class TypescriptConverter implements BaseConverter {
               output += getPropertyDescription(def)
               output += `'${name}'${
                 isRequired ? "?" : ""
-              }: ${this.generateTypeValue(def)}`
+              }: ${this.generateTypeValue(def, {
+                parentName: options?.parentName,
+                name,
+              })}`
             }
             return output
           })

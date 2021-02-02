@@ -28,8 +28,12 @@ export declare class TypescriptConverter implements BaseConverter {
     generateOperation(path: string, method: string, operation: Operation): string;
     generateType(name: string, definition: Schema): string;
     generateDefinitionType(name: string, definition: Schema): string;
+    generateEnumForDefinitionType(name: string, definition: Schema): string;
     generateTypeValue(definition: Schema & {
         schema?: Schema;
+    }, options?: {
+        parentName: string;
+        name?: string;
     }): string;
     generateClient(name: string): string;
     getNormalizer(): Normalizer;

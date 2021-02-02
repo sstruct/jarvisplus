@@ -155,15 +155,37 @@ var TypescriptConverter = /** @class */ (function () {
             : this.generateTypeValue(definition)) + "\n";
     };
     TypescriptConverter.prototype.generateDefinitionType = function (name, definition) {
-        return "export type " + this.getNormalizer().normalize(name) + " = " + this.generateTypeValue(definition) + "\n";
+        return "export type " + this.getNormalizer().normalize(name) + " = " + this.generateTypeValue(definition, { parentName: name }) + "\n\n    " + this.generateEnumForDefinitionType(name, definition) + "\n";
     };
-    TypescriptConverter.prototype.generateTypeValue = function (definition) {
+    TypescriptConverter.prototype.generateEnumForDefinitionType = function (name, definition) {
+        var _this = this;
+        var hasProperties = definition.properties && Object.keys(definition.properties).length > 0;
+        if (hasProperties) {
+            return Object.entries(definition.properties)
+                .map(function (_a) {
+                var typeName = _a[0], def = _a[1];
+                if (Array.isArray(def.enum)) {
+                    var normalizedName = _this.getNormalizer().normalize(name + "/" + typeName);
+                    return "export enum " + normalizedName + " {\n           " + def.enum.map(function (ele) { return "\"" + ele + "\" = \"" + ele + "\""; }).join(",") + "\n        }";
+                }
+                return "";
+            })
+                .join("\n");
+        }
+        return "";
+    };
+    TypescriptConverter.prototype.generateTypeValue = function (definition, options) {
         var _this = this;
         if (definition.schema) {
             return this.generateTypeValue(definition.schema);
         }
         if (definition.$ref) {
             return this.getNormalizer().normalize(definition.$ref.substring(definition.$ref.lastIndexOf("/") + 1));
+        }
+        if (Array.isArray(definition.enum)) {
+            if ((options === null || options === void 0 ? void 0 : options.parentName) && (options === null || options === void 0 ? void 0 : options.name)) {
+                return this.getNormalizer().normalize(options.parentName + "/" + options.name);
+            }
         }
         if (Array.isArray(definition.allOf) && definition.allOf.length > 0) {
             return (definition.allOf
@@ -172,15 +194,14 @@ var TypescriptConverter = /** @class */ (function () {
         }
         switch (definition.type) {
             case swaggerTypes_1.DEFINITION_TYPE_STRING: {
-                if (definition.enum) {
-                    return "'" + definition.enum.join("' | '") + "'";
-                }
-                return definition.type;
+                return definition.enum
+                    ? definition.enum.map(function (ele) { return "\"" + ele + "\""; }).join("|")
+                    : definition.type;
             }
-            case swaggerTypes_1.DEFINITION_TYPE_NUMBER:
             case swaggerTypes_1.DEFINITION_TYPE_BOOLEAN: {
                 return definition.type;
             }
+            case swaggerTypes_1.DEFINITION_TYPE_NUMBER:
             case swaggerTypes_1.DEFINITION_TYPE_INTEGER: {
                 return swaggerTypes_1.DEFINITION_TYPE_NUMBER;
             }
@@ -223,7 +244,10 @@ var TypescriptConverter = /** @class */ (function () {
                     else {
                         var isRequired = (definition.required || []).indexOf(name);
                         output += getPropertyDescription(def);
-                        output += "'" + name + "'" + (isRequired ? "?" : "") + ": " + _this.generateTypeValue(def);
+                        output += "'" + name + "'" + (isRequired ? "?" : "") + ": " + _this.generateTypeValue(def, {
+                            parentName: options === null || options === void 0 ? void 0 : options.parentName,
+                            name: name,
+                        });
                     }
                     return output;
                 })
