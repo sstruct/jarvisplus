@@ -47,7 +47,17 @@ gateway_url: string
 # models存放的文件夹
 modelFolder: boolean
 # 请求参数（path param, query, body, formData) 是否合并到一起，默认为 false
+# 重要 ⚠️：此选项开启时，不支持 body 类型不为对象（如 Array, String, Boolean 等）且同时含有 `path, query` 等参数的接口
 mergeParam?: boolean
 # 是否开启旧版模式（暂时仅支持旧版方法名生成规则，因为存在历史问题，不建议使用）
 legacy?: boolaen
 ```
+
+## Changelog
+
+### 2.1.0-alpha.1
+
+- 支持 legacy 模式
+  - 支持旧版方法名生成规则（因为存在历史问题，不建议使用）
+- 单独生成 Model 中的 enum 类型，供外部使用
+- 优化请求参数中 schema 格式
