@@ -125,7 +125,7 @@ var TypescriptConverter = /** @class */ (function () {
             .join(" | ") || exports.TYPESCRIPT_TYPE_VOID;
         output += Mustache.render(templates_1.readerTemplate("singleMethod"), {
             // method summary
-            summary: operation.summary || false,
+            summary: this.getNormalizer().normalizeSummary(operation.summary) || false,
             // method name
             name: name,
             // method parameters

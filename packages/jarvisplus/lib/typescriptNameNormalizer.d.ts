@@ -6,4 +6,5 @@ export declare class TypescriptNameNormalizer implements Normalizer {
     });
     normalize(name: string): string;
     normalizeRequestName(method: string, path: string): string;
+    normalizeSummary(summary: string): string;
 }

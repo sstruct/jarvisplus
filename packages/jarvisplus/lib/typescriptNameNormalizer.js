@@ -38,6 +38,11 @@ var TypescriptNameNormalizer = /** @class */ (function () {
         }
         return this.normalize("" + method + path);
     };
+    TypescriptNameNormalizer.prototype.normalizeSummary = function (summary) {
+        if (!summary)
+            return summary;
+        return summary.replace("/*", "(").replace("*/", ")");
+    };
     return TypescriptNameNormalizer;
 }());
 exports.TypescriptNameNormalizer = TypescriptNameNormalizer;

@@ -225,7 +225,8 @@ export class TypescriptConverter implements BaseConverter {
 
     output += Mustache.render(readerTemplate("singleMethod"), {
       // method summary
-      summary: operation.summary || false,
+      summary:
+        this.getNormalizer().normalizeSummary(operation.summary) || false,
       // method name
       name,
       // method parameters

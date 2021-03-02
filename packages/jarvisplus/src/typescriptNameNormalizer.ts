@@ -41,4 +41,9 @@ export class TypescriptNameNormalizer implements Normalizer {
     }
     return this.normalize(`${method}${path}`)
   }
+
+  public normalizeSummary(summary: string): string {
+    if (!summary) return summary
+    return summary.replace("/*", "(").replace("*/", ")")
+  }
 }
