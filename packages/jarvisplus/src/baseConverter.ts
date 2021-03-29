@@ -6,7 +6,9 @@ export interface BaseConverter {
 
   generateType(name: string, definition: Schema): string
 
-  generateDefinitionType(name: string, definition: Schema): string
+  generateDefinitionTypes(
+    definitions: Array<[name: string, definition: Schema]>
+  ): string
 
   generateEnumForDefinitionType(name: string, definition: Schema): string
 

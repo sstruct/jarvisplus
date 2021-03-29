@@ -7,6 +7,5 @@ export declare class TypescriptClientGenerator {
     generateSingleFile(clientName: string): string;
     generateModels(): string;
     generateParameterTypesForOperations(): string;
-    generateImportsFromFile(importPath: string): string;
     generateClient(clientName: string): string;
 }

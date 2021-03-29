@@ -67,14 +67,14 @@ var commandCore = function (command, options) { return __awaiter(void 0, void 0,
             case 1:
                 spec = (_a.sent());
                 output = command(spec, {
-                    allowVoidParameters: options.allowVoidParameters,
                     backend: options.backend,
                     template: options.template,
                     mergeParam: options.mergeParam,
-                    legacy: options.legacy,
+                    tags: options.tags,
                     customAgent: customAgentRelativePath
                         ? "./" + customAgentRelativePath
                         : null,
+                    legacy: options.legacy,
                 });
                 writer = writerFactory_1.writerFactory({ targetPath: options.targetPath });
                 writer(output);
@@ -91,6 +91,7 @@ var useCommand = function (command) { return function (args) {
                 swaggerUrl: swagger.swaggerUrl,
                 backend: swagger.backend,
                 targetPath: swagger.targetPath,
+                tags: swagger.tags,
                 template: args.template,
                 mergeParam: args.mergeParam,
                 customAgent: args.customAgent,

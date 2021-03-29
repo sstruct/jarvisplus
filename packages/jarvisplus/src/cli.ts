@@ -39,14 +39,14 @@ const commandCore = async (command, options) => {
 
   const spec = (await reader()) as Spec
   const output = command(spec, {
-    allowVoidParameters: options.allowVoidParameters,
     backend: options.backend,
     template: options.template,
     mergeParam: options.mergeParam,
-    legacy: options.legacy,
+    tags: options.tags,
     customAgent: customAgentRelativePath
       ? `./${customAgentRelativePath}`
       : null,
+    legacy: options.legacy,
   })
 
   const writer = writerFactory({ targetPath: options.targetPath })
@@ -65,6 +65,7 @@ const useCommand = (command: Command) => (args: CommandOptions) => {
         swaggerUrl: swagger.swaggerUrl,
         backend: swagger.backend,
         targetPath: swagger.targetPath,
+        tags: swagger.tags,
         template: args.template,
         mergeParam: args.mergeParam,
         customAgent: args.customAgent,

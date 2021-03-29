@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.withHeaders = void 0;
-exports.withHeaders = function (requestFactory, overrideHeaders) {
+var withHeaders = function (requestFactory, overrideHeaders) {
     return function (_a) {
         var path = _a.path, query = _a.query, body = _a.body, formData = _a.formData, headers = _a.headers, method = _a.method, configuration = _a.configuration;
         var headersObject = new Headers(headers || {});
@@ -19,3 +19,4 @@ exports.withHeaders = function (requestFactory, overrideHeaders) {
         });
     };
 };
+exports.withHeaders = withHeaders;

@@ -8,6 +8,7 @@ export declare type ConfigType = {
         backend?: string;
         alias: string;
         targetPath: string;
+        tags: string | string[];
     }[];
     target_language: "ts" | "js";
     template: "whatwg-fetch" | "superagent-request";

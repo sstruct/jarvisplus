@@ -8,13 +8,13 @@ export declare const TYPESCRIPT_TYPE_VOID = "void";
 export declare const TYPESCRIPT_TYPE_ANY = "any";
 export declare const TYPESCRIPT_TYPE_EMPTY_OBJECT = "{}";
 export interface SwaggerToTypescriptConverterSettings {
-    allowVoidParameters?: boolean;
     backend?: string;
     targetPath?: string;
     template?: "whatwg-fetch" | "superagent-request" | string;
     mergeParam?: boolean;
     customAgent?: string;
     legacy?: boolean;
+    tags?: string[];
 }
 export declare class TypescriptConverter implements BaseConverter {
     protected swagger: Spec;
@@ -23,11 +23,11 @@ export declare class TypescriptConverter implements BaseConverter {
     protected parametersArrayToSchemaConverter: ParametersArrayToSchemaConverter;
     constructor(swagger: Spec, settings?: SwaggerToTypescriptConverterSettings);
     protected normalizer: Normalizer;
-    protected generatedDefinitions: string[];
     generateParameterTypesForOperation(path: string, method: string, operation: Operation): string;
+    private requiredDefinitionAndResponses;
     generateOperation(path: string, method: string, operation: Operation): string;
     generateType(name: string, definition: Schema): string;
-    generateDefinitionType(name: string, definition: Schema): string;
+    generateDefinitionTypes(definitions: Array<[name: string, definition: Schema]>): string;
     generateEnumForDefinitionType(name: string, definition: Schema): string;
     generateTypeValue(definition: Schema & {
         schema?: Schema;
@@ -35,6 +35,7 @@ export declare class TypescriptConverter implements BaseConverter {
         parentName: string;
         name?: string;
     }): string;
+    filterByTags: ([method, operation]: [any, any]) => boolean;
     generateClient(name: string): string;
     getNormalizer(): Normalizer;
     getParametersJarFactory(): ParametersJarFactory;

@@ -18,8 +18,12 @@ var PARAMETERS_BODY_SUFFIX = "BodyParameters";
 var PARAMETERS_FORM_DATA_SUFFIX = "FormDataParameters";
 var PARAMETERS_HEADER_SUFFIX = "HeaderParameters";
 var PARAMETERS_PAYLOAD_SUFFIX = "PayloadParameters";
+function getSegmentsFromRef(ref) {
+    return typeof ref === "string" ? ref.replace("#/definitions/", "") : "";
+}
 var TypescriptConverter = /** @class */ (function () {
     function TypescriptConverter(swagger, settings) {
+        var _this = this;
         this.swagger = swagger;
         this.settings = settings;
         this.parametersJarFactory = new parametersJarFactory_1.ParametersJarFactory(this.swagger);
@@ -29,7 +33,17 @@ var TypescriptConverter = /** @class */ (function () {
                 ? function (method, path) { return requestNameNormalizer_1.default(path, method); }
                 : null,
         });
-        this.generatedDefinitions = [];
+        this.requiredDefinitionAndResponses = new Set();
+        this.filterByTags = function (_a) {
+            var method = _a[0], operation = _a[1];
+            if (Array.isArray(_this.settings.tags) &&
+                _this.settings.tags.length > 0 &&
+                Array.isArray(operation.tags) &&
+                operation.tags.length > 0) {
+                return _this.settings.tags.includes(operation.tags[0]);
+            }
+            return true;
+        };
         this.settings = Object.assign({}, {
             backend: "",
             template: "superagent-request",
@@ -38,11 +52,13 @@ var TypescriptConverter = /** @class */ (function () {
     }
     TypescriptConverter.prototype.generateParameterTypesForOperation = function (path, method, operation) {
         var _this = this;
+        if (this.filterByTags([method, operation]) === false)
+            return "";
         var name = this.getNormalizer().normalizeRequestName(method, path);
         var _a = this.getParametersJarFactory().createFromOperation(operation), queryParams = _a.queryParams, bodyParams = _a.bodyParams, formDataParams = _a.formDataParams, headerParams = _a.headerParams, payloadParams = _a.payloadParams;
         var parameterTypes = [];
         var appendParameterTypes = function (params, suffix) {
-            if (_this.settings.allowVoidParameters || params.length > 0) {
+            if (params.length > 0) {
                 var schema = _this.getParametersArrayToSchemaConverter().convertToObject(params);
                 parameterTypes.push(_this.generateType(name + suffix, schema));
             }
@@ -75,7 +91,7 @@ var TypescriptConverter = /** @class */ (function () {
         // [PARAMETER_TYPE_PATH]: true,
         };
         var appendParametersArgs = function (paramsType, params, paramsSuffix) {
-            if (_this.settings.allowVoidParameters || params.length > 0) {
+            if (params.length > 0) {
                 if (_this.settings.mergeParam) {
                     if (paramsType === swaggerTypes_1.PARAMETER_TYPE_PAYLOAD) {
                         parameters.push(paramsType + ": " + name + paramsSuffix);
@@ -86,11 +102,12 @@ var TypescriptConverter = /** @class */ (function () {
                             .map(function (param) {
                             var _a;
                             if (typeof ((_a = param === null || param === void 0 ? void 0 : param.schema) === null || _a === void 0 ? void 0 : _a.$ref) === "string") {
-                                var segments = param.schema.$ref.replace("#/definitions/", "");
+                                var segments = getSegmentsFromRef(param.schema.$ref);
                                 var referred = _this.swagger.definitions[segments];
                                 if (!referred) {
                                     throw new Error("cannot find reference " + param.schema.$ref);
                                 }
+                                _this.requiredDefinitionAndResponses.add(segments);
                                 return Object.keys(referred.properties);
                             }
                             return param.name;
@@ -154,8 +171,21 @@ var TypescriptConverter = /** @class */ (function () {
             ? this.getNormalizer().normalize(definition.title)
             : this.generateTypeValue(definition)) + "\n";
     };
-    TypescriptConverter.prototype.generateDefinitionType = function (name, definition) {
-        return "export type " + this.getNormalizer().normalize(name) + " = " + this.generateTypeValue(definition, { parentName: name }) + "\n\n    " + this.generateEnumForDefinitionType(name, definition) + "\n";
+    TypescriptConverter.prototype.generateDefinitionTypes = function (definitions) {
+        var _this = this;
+        // Collect referred definitions before generating
+        definitions.forEach(function (_a) {
+            var name = _a[0], definition = _a[1];
+            _this.generateTypeValue(definition, { parentName: name });
+        });
+        return definitions
+            .map(function (_a) {
+            var name = _a[0], definition = _a[1];
+            if (!_this.requiredDefinitionAndResponses.has(name))
+                return "";
+            return "export type " + _this.getNormalizer().normalize(name) + " = " + _this.generateTypeValue(definition, { parentName: name }) + "\n\n      " + _this.generateEnumForDefinitionType(name, definition) + "\n";
+        })
+            .join("\n");
     };
     TypescriptConverter.prototype.generateEnumForDefinitionType = function (name, definition) {
         var _this = this;
@@ -180,7 +210,9 @@ var TypescriptConverter = /** @class */ (function () {
             return this.generateTypeValue(definition.schema);
         }
         if (definition.$ref) {
-            return this.getNormalizer().normalize(definition.$ref.substring(definition.$ref.lastIndexOf("/") + 1));
+            var segments = getSegmentsFromRef(definition.$ref);
+            this.requiredDefinitionAndResponses.add(segments);
+            return this.getNormalizer().normalize(segments);
         }
         if (Array.isArray(definition.enum)) {
             if ((options === null || options === void 0 ? void 0 : options.parentName) && (options === null || options === void 0 ? void 0 : options.name)) {
@@ -236,8 +268,7 @@ var TypescriptConverter = /** @class */ (function () {
                     var _b;
                     var name = _a[0], def = _a[1];
                     var output = "";
-                    // TODO: add proper type
-                    // @ts-ignore
+                    // @ts-expect-error add proper type
                     if (typeof ((_b = def === null || def === void 0 ? void 0 : def.schema) === null || _b === void 0 ? void 0 : _b.$ref) === "string") {
                         schemaProperties_1[name] = def;
                     }
@@ -261,13 +292,14 @@ var TypescriptConverter = /** @class */ (function () {
             output += Object.entries(schemaProperties_1)
                 .map(function (_a) {
                 var name = _a[0], def = _a[1];
-                // @ts-ignore
-                var segments = def.schema.$ref.replace("#/definitions/", "");
+                // @ts-expect-error add proper type
+                var segments = getSegmentsFromRef(def.schema.$ref);
                 var referred = _this.swagger.definitions[segments];
                 if (!referred) {
-                    // @ts-ignore
+                    // @ts-expect-error add proper type
                     throw new Error("cannot find reference " + def.schema.$ref);
                 }
+                _this.requiredDefinitionAndResponses.add(segments);
                 var seg = "" + (isEmpty_1 ? "" : "& ") + _this.getNormalizer().normalize(segments) + " " + getPropertyDescription(def);
                 isEmpty_1 = false;
                 return seg;
@@ -304,6 +336,7 @@ var TypescriptConverter = /** @class */ (function () {
             .map(function (_a) {
             var path = _a[0], methods = _a[1];
             return Object.entries(methods)
+                .filter(_this.filterByTags)
                 .map(function (_a) {
                 var method = _a[0], operation = _a[1];
                 return _this.generateOperation(path, method, operation);

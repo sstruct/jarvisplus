@@ -7,22 +7,20 @@ export class TypescriptClientGenerator {
   public generateSingleFile(clientName: string): string {
     return [
       this.generateClient(clientName),
-      this.generateModels(),
       this.generateParameterTypesForOperations(),
+      this.generateModels(),
     ].join("\n")
   }
 
   public generateModels(): string {
-    return []
-      .concat(Object.entries(this.swagger.definitions || {}))
-      .concat(Object.entries(this.swagger.responses || {}))
-      .map(([name, def]) => {
-        return this.converter.generateDefinitionType(name, def)
-      })
-      .join("\n")
+    return this.converter.generateDefinitionTypes(
+      []
+        .concat(Object.entries(this.swagger.definitions || {}))
+        .concat(Object.entries(this.swagger.responses || {}))
+    ) as string
   }
 
-  public generateParameterTypesForOperations() {
+  public generateParameterTypesForOperations(): string {
     return Object.entries(this.swagger.paths)
       .map(([path, methods]) => {
         return Object.entries(methods)
@@ -36,15 +34,6 @@ export class TypescriptClientGenerator {
           .join("\n")
       })
       .join("\n")
-  }
-
-  public generateImportsFromFile(importPath: string): string {
-    const names = []
-      .concat(Object.keys(this.swagger.definitions || {}))
-      .map((name) => this.converter.getNormalizer().normalize(name))
-      .join(",\n  ")
-
-    return `import {\n  ${names} \n} from '${importPath}'\n`
   }
 
   public generateClient(clientName: string): string {

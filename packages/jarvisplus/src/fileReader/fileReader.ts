@@ -10,6 +10,7 @@ export type ConfigType = {
     backend?: string
     alias: string
     targetPath: string
+    tags: string | string[]
   }[]
   // api client 生成的类型. 现在仅支持 js ts
   target_language: "ts" | "js"

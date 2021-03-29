@@ -27,13 +27,13 @@ lerna publish
 - [x] 支持 mustache 模版
 - [x] 支持 superagent runtime
 - [x] 函数参数格式兼容目前（Param in url）
-- [ ] 自动/批量替换当前接口
-- [ ] 支持模块分拆（包括相同类型提取）
-- [ ] 支持更新提示
-- [ ] 支持 mock, proxy
-- [ ] 支持 init 初始化引导页面
+- [x] 支持模块分拆（包括相同类型提取）
 - [x] 支持旧版 name normalizer
 - [x] 生成 client API/type 顺序调整
 - [x] 保留函数/字段注释
 - [x] 请求函数参数格式优化，默认不传 undefined
 - [x] 支持中文变量名
+- [ ] 自动/批量替换当前接口
+- [ ] 支持更新提示
+- [ ] 支持 mock, proxy
+- [ ] 支持 init 初始化引导页面

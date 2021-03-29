@@ -9,20 +9,14 @@ var TypescriptClientGenerator = /** @class */ (function () {
     TypescriptClientGenerator.prototype.generateSingleFile = function (clientName) {
         return [
             this.generateClient(clientName),
-            this.generateModels(),
             this.generateParameterTypesForOperations(),
+            this.generateModels(),
         ].join("\n");
     };
     TypescriptClientGenerator.prototype.generateModels = function () {
-        var _this = this;
-        return []
+        return this.converter.generateDefinitionTypes([]
             .concat(Object.entries(this.swagger.definitions || {}))
-            .concat(Object.entries(this.swagger.responses || {}))
-            .map(function (_a) {
-            var name = _a[0], def = _a[1];
-            return _this.converter.generateDefinitionType(name, def);
-        })
-            .join("\n");
+            .concat(Object.entries(this.swagger.responses || {})));
     };
     TypescriptClientGenerator.prototype.generateParameterTypesForOperations = function () {
         var _this = this;
@@ -37,14 +31,6 @@ var TypescriptClientGenerator = /** @class */ (function () {
                 .join("\n");
         })
             .join("\n");
-    };
-    TypescriptClientGenerator.prototype.generateImportsFromFile = function (importPath) {
-        var _this = this;
-        var names = []
-            .concat(Object.keys(this.swagger.definitions || {}))
-            .map(function (name) { return _this.converter.getNormalizer().normalize(name); })
-            .join(",\n  ");
-        return "import {\n  " + names + " \n} from '" + importPath + "'\n";
     };
     TypescriptClientGenerator.prototype.generateClient = function (clientName) {
         return this.converter.generateClient(clientName);

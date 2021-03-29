@@ -7,10 +7,8 @@ import { ParametersArrayToSchemaConverter } from "./parameterArrayToSchemaConver
 import { ParametersJarFactory } from "./parametersJarFactory"
 
 import {
-  ParameterType,
   DEFINITION_TYPE_ARRAY,
   DEFINITION_TYPE_BOOLEAN,
-  DEFINITION_TYPE_ENUM,
   DEFINITION_TYPE_INTEGER,
   DEFINITION_TYPE_NUMBER,
   DEFINITION_TYPE_OBJECT,
@@ -18,9 +16,9 @@ import {
   PARAMETER_TYPE_BODY,
   PARAMETER_TYPE_FORM_DATA,
   PARAMETER_TYPE_HEADER,
-  PARAMETER_TYPE_PATH,
-  PARAMETER_TYPE_QUERY,
   PARAMETER_TYPE_PAYLOAD,
+  PARAMETER_TYPE_QUERY,
+  ParameterType,
 } from "./swaggerTypes"
 import { TypescriptNameNormalizer } from "./typescriptNameNormalizer"
 import legacyRequestNameNormalizer from "./legacy/requestNameNormalizer"
@@ -38,7 +36,6 @@ const PARAMETERS_HEADER_SUFFIX = "HeaderParameters"
 const PARAMETERS_PAYLOAD_SUFFIX = "PayloadParameters"
 
 export interface SwaggerToTypescriptConverterSettings {
-  allowVoidParameters?: boolean
   backend?: string
   targetPath?: string
   // template name or custom template path
@@ -46,6 +43,11 @@ export interface SwaggerToTypescriptConverterSettings {
   mergeParam?: boolean
   customAgent?: string
   legacy?: boolean
+  tags?: string[]
+}
+
+function getSegmentsFromRef(ref: string): string {
+  return typeof ref === "string" ? ref.replace("#/definitions/", "") : ""
 }
 
 export class TypescriptConverter implements BaseConverter {
@@ -75,13 +77,12 @@ export class TypescriptConverter implements BaseConverter {
       : null,
   })
 
-  protected generatedDefinitions: string[] = []
-
   public generateParameterTypesForOperation(
     path: string,
     method: string,
     operation: Operation
   ): string {
+    if (this.filterByTags([method, operation]) === false) return ""
     const name = this.getNormalizer().normalizeRequestName(method, path)
 
     const {
@@ -95,7 +96,7 @@ export class TypescriptConverter implements BaseConverter {
     const parameterTypes: string[] = []
 
     const appendParameterTypes = (params, suffix): void => {
-      if (this.settings.allowVoidParameters || params.length > 0) {
+      if (params.length > 0) {
         const schema = this.getParametersArrayToSchemaConverter().convertToObject(
           params
         )
@@ -115,7 +116,13 @@ export class TypescriptConverter implements BaseConverter {
     return parameterTypes.join("\n")
   }
 
-  public generateOperation(path: string, method: string, operation: Operation) {
+  private requiredDefinitionAndResponses = new Set()
+
+  public generateOperation(
+    path: string,
+    method: string,
+    operation: Operation
+  ): string {
     const name = this.getNormalizer().normalizeRequestName(method, path)
     const {
       payloadParams,
@@ -148,7 +155,7 @@ export class TypescriptConverter implements BaseConverter {
     }
 
     const appendParametersArgs = (paramsType, params, paramsSuffix) => {
-      if (this.settings.allowVoidParameters || params.length > 0) {
+      if (params.length > 0) {
         if (this.settings.mergeParam) {
           if (paramsType === PARAMETER_TYPE_PAYLOAD) {
             parameters.push(`${paramsType}: ${name}${paramsSuffix}`)
@@ -157,16 +164,14 @@ export class TypescriptConverter implements BaseConverter {
             payloadIn[paramsType] = params
               .map((param) => {
                 if (typeof param?.schema?.$ref === "string") {
-                  const segments = param.schema.$ref.replace(
-                    "#/definitions/",
-                    ""
-                  )
+                  const segments = getSegmentsFromRef(param.schema.$ref)
                   const referred = this.swagger.definitions[segments]
                   if (!referred) {
                     throw new Error(
                       `cannot find reference ${param.schema.$ref}`
                     )
                   }
+                  this.requiredDefinitionAndResponses.add(segments)
                   return Object.keys(referred.properties)
                 }
                 return param.name
@@ -261,11 +266,23 @@ export class TypescriptConverter implements BaseConverter {
     }\n`
   }
 
-  public generateDefinitionType(name: string, definition: Schema): string {
-    return `export type ${this.getNormalizer().normalize(
-      name
-    )} = ${this.generateTypeValue(definition, { parentName: name })}\n
-    ${this.generateEnumForDefinitionType(name, definition)}\n`
+  public generateDefinitionTypes(
+    definitions: Array<[name: string, definition: Schema]>
+  ): string {
+    // Collect referred definitions before generating
+    definitions.forEach(([name, definition]) => {
+      this.generateTypeValue(definition, { parentName: name })
+    })
+
+    return definitions
+      .map(([name, definition]) => {
+        if (!this.requiredDefinitionAndResponses.has(name)) return ""
+        return `export type ${this.getNormalizer().normalize(
+          name
+        )} = ${this.generateTypeValue(definition, { parentName: name })}\n
+      ${this.generateEnumForDefinitionType(name, definition)}\n`
+      })
+      .join("\n")
   }
 
   public generateEnumForDefinitionType(
@@ -301,9 +318,9 @@ export class TypescriptConverter implements BaseConverter {
     }
 
     if (definition.$ref) {
-      return this.getNormalizer().normalize(
-        definition.$ref.substring(definition.$ref.lastIndexOf("/") + 1)
-      )
+      const segments = getSegmentsFromRef(definition.$ref)
+      this.requiredDefinitionAndResponses.add(segments)
+      return this.getNormalizer().normalize(segments)
     }
 
     if (Array.isArray(definition.enum)) {
@@ -370,8 +387,7 @@ export class TypescriptConverter implements BaseConverter {
         output += Object.entries(definition.properties)
           .map(([name, def]) => {
             let output = ""
-            // TODO: add proper type
-            // @ts-ignore
+            // @ts-expect-error add proper type
             if (typeof def?.schema?.$ref === "string") {
               schemaProperties[name] = def
             } else {
@@ -397,13 +413,14 @@ export class TypescriptConverter implements BaseConverter {
 
       output += Object.entries(schemaProperties)
         .map(([name, def]) => {
-          // @ts-ignore
-          const segments = def.schema.$ref.replace("#/definitions/", "")
+          // @ts-expect-error add proper type
+          const segments = getSegmentsFromRef(def.schema.$ref)
           const referred = this.swagger.definitions[segments]
           if (!referred) {
-            // @ts-ignore
+            // @ts-expect-error add proper type
             throw new Error(`cannot find reference ${def.schema.$ref}`)
           }
+          this.requiredDefinitionAndResponses.add(segments)
           const seg = `${isEmpty ? "" : "& "}${this.getNormalizer().normalize(
             segments
           )} ${getPropertyDescription(def)}`
@@ -434,6 +451,18 @@ export class TypescriptConverter implements BaseConverter {
     return TYPESCRIPT_TYPE_ANY
   }
 
+  public filterByTags = ([method, operation]) => {
+    if (
+      Array.isArray(this.settings.tags) &&
+      this.settings.tags.length > 0 &&
+      Array.isArray(operation.tags) &&
+      operation.tags.length > 0
+    ) {
+      return this.settings.tags.includes(operation.tags[0])
+    }
+    return true
+  }
+
   public generateClient(name: string): string {
     let output = ""
     output += Mustache.render(readerTemplate("methodModule"), {
@@ -446,6 +475,7 @@ export class TypescriptConverter implements BaseConverter {
     output += Object.entries(this.swagger.paths)
       .map(([path, methods]) => {
         return Object.entries(methods)
+          .filter(this.filterByTags)
           .map(([method, operation]) => {
             return this.generateOperation(path, method, operation)
           })
