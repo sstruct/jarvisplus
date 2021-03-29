@@ -3,7 +3,6 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
   "parserOptions": {
@@ -11,7 +10,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "@typescript-eslint/ban-ts-ignore": 1
+    "@typescript-eslint/prefer-ts-expect-error": 1
   },
   "env": {
     "es6": true
