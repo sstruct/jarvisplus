@@ -271,7 +271,9 @@ export class TypescriptConverter implements BaseConverter {
   ): string {
     // Collect referred definitions before generating
     definitions.forEach(([name, definition]) => {
-      this.generateTypeValue(definition, { parentName: name })
+      if (this.requiredDefinitionAndResponses.has(name)) {
+        this.generateTypeValue(definition, { parentName: name })
+      }
     })
 
     return definitions

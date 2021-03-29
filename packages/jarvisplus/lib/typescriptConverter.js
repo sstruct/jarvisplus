@@ -176,7 +176,9 @@ var TypescriptConverter = /** @class */ (function () {
         // Collect referred definitions before generating
         definitions.forEach(function (_a) {
             var name = _a[0], definition = _a[1];
-            _this.generateTypeValue(definition, { parentName: name });
+            if (_this.requiredDefinitionAndResponses.has(name)) {
+                _this.generateTypeValue(definition, { parentName: name });
+            }
         });
         return definitions
             .map(function (_a) {
