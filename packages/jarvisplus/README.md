@@ -56,7 +56,12 @@ legacy?: boolaen
 
 ## Changelog
 
-### 2.1.0-alpha.1
+### 2.1.1
+
+- 支持按 tags 筛选部分接口（参考配置文档 tags）
+- 支持 schema param 类型
+
+### 2.1.0
 
 - 支持 legacy 模式
   - 支持旧版方法名生成规则（因为存在历史问题，不建议使用）
