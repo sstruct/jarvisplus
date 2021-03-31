@@ -3,5 +3,5 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "workspaces": ["packages/jarvisplus", "packages/jarvisplus-runtime"],
-  "version": "2.1.1-beta.1"
+  "version": "2.1.1-beta.2"
 }
