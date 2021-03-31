@@ -27,6 +27,8 @@ export class ParametersArrayToSchemaConverter {
           ...schema.properties,
           ...properties,
         }
+      } else if (typeof param.schema?.properties === "object") {
+        schema.properties = param.schema.properties
       } else {
         schema.properties[param.name] = (param as any) as Schema
       }

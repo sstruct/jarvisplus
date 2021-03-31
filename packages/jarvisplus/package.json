@@ -11,7 +11,8 @@
     "prebuild": "yarn clean",
     "build": "tsc --build && npm run cptemplates",
     "cptemplates": "copyfiles -f 'src/templates/*.mustache' lib/templates",
-    "test": "jest ."
+    "test": "jest .",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

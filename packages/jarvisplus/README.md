@@ -4,13 +4,13 @@
 
 ## 安装
 
-```sh
+```shell
 npm install --global @terminus/jarvisplus
 ```
 
 ## 用法
 
-```sh
+```shell
 jarvisplus --configFile .jarvis.yml
 ```
 
@@ -22,13 +22,14 @@ jarvisplus --configFile .jarvis.yml
 
 ```yml
 swaggers:
-    # 后端swagger地址, url请带上 /v2/api-docs
-    - swaggerUrl?: string
-    - file?: string
-    # 本地 swagger 文件, 支持 json/yml，有 swaggerUrl 时，优先使用 swaggerUrl
-      backend?: string
-      alias: string
-      targetPath: string
+  - swaggerUrl?: string # 后端swagger地址, url请带上 /v2/api-docs
+  - file?: string # 本地 swagger 文件, 支持 json/yml，有 swaggerUrl 时，优先使用 swaggerUrl
+    backend?: string
+    alias: string
+    targetPath: string
+    tags: # 根据 tags 筛选，仅生成对应 tag 下的接口和数据模型
+      - tag_1
+      - tag_2
 # api client 生成的类型. 现在仅支持 js ts
 target_language: "ts" | "js"
 # 所依赖的请求模块, default: whatwg-fetch

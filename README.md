@@ -5,13 +5,15 @@
 
 # 开发 & 发布
 
-`sh
+```shell
 lerna run build
+```
 
 # 根据提示操作
 
+```shell
 lerna publish
-`
+```
 
 ## TODO
 

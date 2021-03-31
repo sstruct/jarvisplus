@@ -1,4 +1,5 @@
 import * as Mustache from "mustache"
+import * as chalk from "chalk"
 import { readerTemplate } from "./templates"
 import { Operation, Schema, Spec } from "swagger-schema-official"
 import { BaseConverter } from "./baseConverter"
@@ -44,6 +45,7 @@ export interface SwaggerToTypescriptConverterSettings {
   customAgent?: string
   legacy?: boolean
   tags?: string[]
+  hasValidFilter?: boolean
 }
 
 function getSegmentsFromRef(ref: string): string {
@@ -60,12 +62,15 @@ export class TypescriptConverter implements BaseConverter {
     protected swagger: Spec,
     protected settings?: SwaggerToTypescriptConverterSettings
   ) {
+    const hasValidFilter =
+      Array.isArray(settings.tags) && settings.tags.length !== 0
     this.settings = Object.assign(
       {},
       {
         backend: "",
         template: "superagent-request",
         mergeParam: false,
+        hasValidFilter: hasValidFilter,
       },
       settings || {}
     )
@@ -116,7 +121,7 @@ export class TypescriptConverter implements BaseConverter {
     return parameterTypes.join("\n")
   }
 
-  private requiredDefinitionAndResponses = new Set()
+  private referredDefinitions = new Set()
 
   public generateOperation(
     path: string,
@@ -171,7 +176,7 @@ export class TypescriptConverter implements BaseConverter {
                       `cannot find reference ${param.schema.$ref}`
                     )
                   }
-                  this.requiredDefinitionAndResponses.add(segments)
+                  this.referredDefinitions.add(segments)
                   return Object.keys(referred.properties)
                 }
                 return param.name
@@ -266,19 +271,43 @@ export class TypescriptConverter implements BaseConverter {
     }\n`
   }
 
+  public collectReferredDefinitions(definitions) {
+    const collectedDefinitions = new Set()
+    // Collect referred definitions before generating
+    while (this.referredDefinitions.size > collectedDefinitions.size) {
+      this.referredDefinitions.forEach((name: string) => {
+        if (!this.swagger.definitions[name]) {
+          collectedDefinitions.add(name)
+          console.log(chalk.yellow(`Unknown model "${name}", skipped.`))
+        }
+        if (
+          !collectedDefinitions.has(name) &&
+          this.referredDefinitions.has(name)
+        ) {
+          this.generateTypeValue(this.swagger.definitions[name], {
+            parentName: name,
+          })
+          collectedDefinitions.add(name)
+        }
+      })
+    }
+  }
+
   public generateDefinitionTypes(
     definitions: Array<[name: string, definition: Schema]>
   ): string {
-    // Collect referred definitions before generating
-    definitions.forEach(([name, definition]) => {
-      if (this.requiredDefinitionAndResponses.has(name)) {
-        this.generateTypeValue(definition, { parentName: name })
-      }
-    })
+    if (this.settings.hasValidFilter) {
+      this.collectReferredDefinitions(definitions)
+    }
 
     return definitions
       .map(([name, definition]) => {
-        if (!this.requiredDefinitionAndResponses.has(name)) return ""
+        if (
+          this.settings.hasValidFilter &&
+          !this.referredDefinitions.has(name)
+        ) {
+          return ""
+        }
         return `export type ${this.getNormalizer().normalize(
           name
         )} = ${this.generateTypeValue(definition, { parentName: name })}\n
@@ -321,7 +350,7 @@ export class TypescriptConverter implements BaseConverter {
 
     if (definition.$ref) {
       const segments = getSegmentsFromRef(definition.$ref)
-      this.requiredDefinitionAndResponses.add(segments)
+      this.referredDefinitions.add(segments)
       return this.getNormalizer().normalize(segments)
     }
 
@@ -422,7 +451,7 @@ export class TypescriptConverter implements BaseConverter {
             // @ts-expect-error add proper type
             throw new Error(`cannot find reference ${def.schema.$ref}`)
           }
-          this.requiredDefinitionAndResponses.add(segments)
+          this.referredDefinitions.add(segments)
           const seg = `${isEmpty ? "" : "& "}${this.getNormalizer().normalize(
             segments
           )} ${getPropertyDescription(def)}`
@@ -453,13 +482,9 @@ export class TypescriptConverter implements BaseConverter {
     return TYPESCRIPT_TYPE_ANY
   }
 
-  public filterByTags = ([method, operation]) => {
-    if (
-      Array.isArray(this.settings.tags) &&
-      this.settings.tags.length > 0 &&
-      Array.isArray(operation.tags) &&
-      operation.tags.length > 0
-    ) {
+  public filterByTags = ([method, operation] = []): boolean => {
+    if (!this.settings.hasValidFilter) return true
+    if (Array.isArray(operation.tags) && operation.tags.length > 0) {
       return this.settings.tags.includes(operation.tags[0])
     }
     return true

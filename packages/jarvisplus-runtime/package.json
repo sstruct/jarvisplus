@@ -9,7 +9,8 @@
     "clean": "rimraf ./lib",
     "prebuild": "yarn clean",
     "build": "tsc --build",
-    "test": "jest ."
+    "test": "jest .",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

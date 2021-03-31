@@ -1,2 +1,3 @@
 packages/**/*.d.ts
 tests/*
+packages/**/lib/*
