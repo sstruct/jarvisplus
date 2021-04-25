@@ -94,11 +94,6 @@ const args = yargs
     }
   )
   .default("configFile", ".jarvis.yml")
-  .option("allowVoidParameterTypes", {
-    boolean: true,
-    default: false,
-    alias: "a",
-  })
   .option("file", {
     type: "string",
     alias: "f",
