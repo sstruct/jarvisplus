@@ -45,7 +45,7 @@ export interface SwaggerToTypescriptConverterSettings {
   customAgent?: string
   legacy?: boolean
   tags?: string[]
-  hasValidFilter?: boolean
+  paths?: string[]
 }
 
 function getSegmentsFromRef(ref: string): string {
@@ -58,19 +58,20 @@ export class TypescriptConverter implements BaseConverter {
   )
   protected parametersArrayToSchemaConverter: ParametersArrayToSchemaConverter = new ParametersArrayToSchemaConverter()
 
+  protected hasValidFilter: boolean
+
   public constructor(
     protected swagger: Spec,
     protected settings?: SwaggerToTypescriptConverterSettings
   ) {
-    const hasValidFilter =
-      Array.isArray(settings.tags) && settings.tags.length !== 0
+    this.hasValidFilter =
+      !!this.settings.tags?.length || !!this.settings.paths?.length
     this.settings = Object.assign(
       {},
       {
         backend: "",
         template: "superagent-request",
         mergeParam: false,
-        hasValidFilter: hasValidFilter,
       },
       settings || {}
     )
@@ -87,7 +88,7 @@ export class TypescriptConverter implements BaseConverter {
     method: string,
     operation: Operation
   ): string {
-    if (this.filterByTags([method, operation]) === false) return ""
+    if (this.getAPIFilter(path, method, operation) === false) return ""
     const name = this.getNormalizer().normalizeRequestName(method, path)
 
     const {
@@ -296,16 +297,13 @@ export class TypescriptConverter implements BaseConverter {
   public generateDefinitionTypes(
     definitions: Array<[name: string, definition: Schema]>
   ): string {
-    if (this.settings.hasValidFilter) {
+    if (this.hasValidFilter) {
       this.collectReferredDefinitions(definitions)
     }
 
     return definitions
       .map(([name, definition]) => {
-        if (
-          this.settings.hasValidFilter &&
-          !this.referredDefinitions.has(name)
-        ) {
+        if (this.hasValidFilter && !this.referredDefinitions.has(name)) {
           return ""
         }
         return `export type ${this.getNormalizer().normalize(
@@ -483,9 +481,28 @@ export class TypescriptConverter implements BaseConverter {
   }
 
   public filterByTags = ([method, operation] = []): boolean => {
-    if (!this.settings.hasValidFilter) return true
     if (Array.isArray(operation.tags) && operation.tags.length > 0) {
       return this.settings.tags.includes(operation.tags[0])
+    }
+    return true
+  }
+
+  public filterByPaths = (method: string, path: string): boolean => {
+    if (
+      this.settings.paths.includes(path) ||
+      this.settings.paths.includes(`${method}:${path}`)
+    ) {
+      return true
+    }
+    return false
+  }
+
+  public getAPIFilter = (path: string, method: string, operation): boolean => {
+    if (this.settings.paths?.length) {
+      return this.filterByPaths(method, path)
+    }
+    if (this.settings.tags?.length) {
+      return this.filterByTags([method, operation])
     }
     return true
   }
@@ -502,7 +519,9 @@ export class TypescriptConverter implements BaseConverter {
     output += Object.entries(this.swagger.paths)
       .map(([path, methods]) => {
         return Object.entries(methods)
-          .filter(this.filterByTags)
+          .filter(([method, operation]) =>
+            this.getAPIFilter(path, method, operation)
+          )
           .map(([method, operation]) => {
             return this.generateOperation(path, method, operation)
           })

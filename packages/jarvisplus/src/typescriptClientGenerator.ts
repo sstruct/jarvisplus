@@ -12,6 +12,19 @@ export class TypescriptClientGenerator {
     ].join("\n")
   }
 
+  /**
+   * TODO: more api command things, such as:
+   * 1. only output API methods
+   * 2. generate models in a separate file
+   */
+  public generateAPIByPath(clientName: string): string {
+    return [
+      this.generateClient(clientName),
+      this.generateParameterTypesForOperations(),
+      this.generateModels(),
+    ].join("\n")
+  }
+
   public generateModels(): string {
     return this.converter.generateDefinitionTypes(
       []

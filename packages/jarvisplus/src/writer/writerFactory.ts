@@ -5,10 +5,10 @@ import { WriterOptions } from "./options"
 import { Writer } from "./writer"
 
 export const writerFactory = (options: WriterOptions): Writer => {
-  if (typeof options.targetPath !== "string") {
-    console.warn("invalid targetPath, string expected")
-  }
-  if (options.targetPath) {
+  if (options.writeToDisk) {
+    if (typeof options.targetPath !== "string" || options.targetPath === "") {
+      throw new Error("invalid targetPath, file path string expected")
+    }
     return (output, customOptions) =>
       prettierWriterComposite(fsWriter)(output, customOptions || options)
   }
