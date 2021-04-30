@@ -15,16 +15,14 @@ npm install --global @terminus/jarvisplus
 jarvisplus --config .jarvis.yml
 
 # 根据接口路径单独生成/更新接口
-jarvisplus api '/api/v2/to/somewhere'
+jarvisplus api --paths '/api/v2/to/somewhere'
 ```
 
 ## 参数
 
-- 配置文件路径
+- 配置文件路径：`--config, -f` - jarvis config file path
 
-`--config, -f` - jarvis config file path
-
-- 更多请参考 `jarvisplus --help`
+- 更多请参考：`jarvisplus --help`
 
 ## 配置文件格式
 
@@ -41,14 +39,20 @@ swaggers:
     paths: # 根据 paths 筛选，仅生成对应路径的接口和数据模型。和 tags 选项同时使用时，优先使用 paths
       - /api/v2/pet
       - get:/api/v2/store
-# api client 生成的类型. 现在仅支持 js ts
-target_language: "ts" | "js"
-# 所依赖的请求模块, default: whatwg-fetch
-template: "whatwg-fetch" | "superagent-request"
+    targets: # 支持多 target 文件，包含多个 targetPath 和 tags, paths 过滤项
+      - targetPath: /path/to/your-target-1.sdk.ts
+        tags:
+          - tag_1
+      - targetPath: /path/to/your-target-2.sdk.ts
+        paths:
+          - /api/v2/pet
+# api client 生成的类型. 现在仅支持 "ts(default)", "js"
+target_language: "ts
+# 所依赖的请求模块, 支持 "superagent-request(default)", "whatwg-fetch"
+template: "superagent-request"
 # 此配置仅当 template 为 superagent-request 时可用
 # 自定义 superagent 路径，可自行添加 headers 或中间件，不传则使用默认 superagent
 customAgent?: string
-gateway_url: http://dev.gateway.mall.cnooc.com.cn
 gateway_url: string
 # models存放的文件夹
 modelFolder: boolean

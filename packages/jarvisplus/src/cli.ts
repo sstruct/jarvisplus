@@ -5,7 +5,7 @@ import { Spec } from "swagger-schema-official"
 import { Command } from "./commands/command"
 import { writerFactory } from "./writer/writerFactory"
 import { readerFactory } from "./fileReader/readerFactory"
-import { ConfigType } from "./fileReader/fileReader"
+import { ConfigType, TargetOptions } from "./fileReader/fileReader"
 import { CommandOptions } from "./commands/options"
 import { defaultCommand, generateAPIByPath } from "./commands"
 
@@ -38,24 +38,43 @@ const commandCore = async (command, options) => {
   }
 
   const spec = (await reader()) as Spec
-  const output = command(spec, {
-    backend: options.backend,
-    template: options.template,
-    mergeParam: options.mergeParam,
-    tags: options.tags,
-    paths: options.paths,
-    customAgent: customAgentRelativePath
-      ? `./${customAgentRelativePath}`
-      : null,
-    legacy: options.legacy,
-  })
 
-  const writer = writerFactory({
-    targetPath: options.targetPath,
-    writeToDisk: options.writeToDisk,
-  })
-  writer(output)
+  const targetGroups = options.targets
 
+  const invokeCommand = (commonOptions) => (targetOptions: TargetOptions) => {
+    const output = command(spec, {
+      backend: commonOptions.backend,
+      template: commonOptions.template,
+      mergeParam: commonOptions.mergeParam,
+      tags: targetOptions.tags,
+      paths: targetOptions.paths,
+      customAgent: customAgentRelativePath
+        ? `./${customAgentRelativePath}`
+        : null,
+      legacy: commonOptions.legacy,
+    })
+    const writer = writerFactory({
+      targetPath: targetOptions.targetPath,
+      writeToDisk: commonOptions.writeToDisk,
+    })
+    writer(output)
+  }
+
+  if (Array.isArray(targetGroups) && targetGroups.length > 0) {
+    targetGroups.forEach((target) =>
+      invokeCommand(options)({
+        tags: target.tags,
+        paths: target.paths,
+        targetPath: target.targetPath,
+      })
+    )
+  } else {
+    invokeCommand(options)({
+      tags: options.tags,
+      paths: options.paths,
+      targetPath: options.targetPath,
+    })
+  }
   if (options.writeToDisk) {
     console.log(
       chalk.green("🚀 SDK generated successfully for: "),
@@ -71,6 +90,7 @@ const useCommand = (command: Command) => (args: CommandOptions) => {
         file: swagger.file,
         swaggerUrl: swagger.swaggerUrl,
         backend: swagger.backend,
+        targets: swagger.targets,
         targetPath: swagger.targetPath,
         tags: swagger.tags,
         paths: args.paths?.length ? args.paths : swagger.paths,

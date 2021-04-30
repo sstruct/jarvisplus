@@ -3,8 +3,25 @@ import { Spec } from "swagger-schema-official"
 
 export type FileReader<T = Spec> = (options: FileReaderOptions) => T
 
+export type TargetOptions = {
+  /**
+   * 写入文件路径
+   */
+  targetPath: string
+  /**
+   * 仅生成配置的 tag 的接口
+   */
+  tags?: string | string[]
+  /**
+   * 仅生成指定 path 的接口
+   * 支持路径，如 /api/v2/pet
+   * 或'方法:路径'，如 get:/api/v2/pet
+   */
+  paths?: string[]
+}
+
 export type ConfigType = {
-  swaggers: {
+  swaggers: ({
     /**
      * swagger 文档远程地址，支持 json、yaml
      */
@@ -15,25 +32,12 @@ export type ConfigType = {
     file?: string
     backend?: string
     alias: string
-    /**
-     * 仅生成配置的 tag 的接口
-     */
-    tags: string | string[]
-    /**
-     * 仅生成指定 path 的接口
-     * 支持路径，如 /api/v2/pet
-     * 或'方法:路径'，如 get:/api/v2/pet
-     */
-    paths?: string[]
+    targets?: TargetOptions
     /**
      * 是否写入磁盘，默认为 true
      */
     writeToDisk?: boolean
-    /**
-     * 写入文件路径
-     */
-    targetPath?: string
-  }[]
+  } & TargetOptions)[]
   /**
    * 指定 swagger 地址文件路径
    */
