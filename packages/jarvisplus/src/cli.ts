@@ -62,6 +62,7 @@ const commandCore = async (command, options) => {
       customAgent: customAgentRelativePath
         ? `./${customAgentRelativePath}`
         : null,
+      hasCustomReturnType,
       legacy: commonOptions.legacy,
     })
     const writer = writerFactory({
