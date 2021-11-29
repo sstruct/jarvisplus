@@ -1,13 +1,7 @@
 {
-  "packages": [
-    "packages/jarvisplus",
-    "packages/jarvisplus-runtime"
-  ],
+  "packages": ["packages/jarvisplus", "packages/jarvisplus-runtime"],
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "workspaces": [
-    "packages/jarvisplus",
-    "packages/jarvisplus-runtime"
-  ],
-  "version": "2.3.0-alpha.0"
+  "workspaces": ["packages/jarvisplus", "packages/jarvisplus-runtime"],
+  "version": "2.1.2-beta.0"
 }
