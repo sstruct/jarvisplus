@@ -77,6 +77,10 @@ need_mock: boolean
 - 支持按 paths 筛选接口（参考配置文档 paths）
 - 代码优化，新增 `jarvisplus api` 命令
 
+### 2.1.2
+
+- 支持 CustomReturnType（customAgent）
+
 ### 2.1.1
 
 - 支持按 tags 筛选部分接口（参考配置文档 tags）

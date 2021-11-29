@@ -10,3 +10,6 @@ const request = requestFactory("{{&baseUrl}}", { request: customAgent, onRespons
 const request = requestFactory("{{&baseUrl}}", {});
 {{/customAgent}}
 
+{{#hasCustomReturnType}}
+  import type { CustomReturnType } from '{{&customAgent}}'
+{{/hasCustomReturnType}}

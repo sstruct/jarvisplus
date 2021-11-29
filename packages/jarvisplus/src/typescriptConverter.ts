@@ -43,6 +43,7 @@ export interface SwaggerToTypescriptConverterSettings {
   template?: "whatwg-fetch" | "superagent-request" | string
   mergeParam?: boolean
   customAgent?: string
+  hasCustomReturnType?: boolean
   legacy?: boolean
   tags?: string[]
   paths?: string[]
@@ -53,10 +54,10 @@ function getSegmentsFromRef(ref: string): string {
 }
 
 export class TypescriptConverter implements BaseConverter {
-  protected parametersJarFactory: ParametersJarFactory = new ParametersJarFactory(
-    this.swagger
-  )
-  protected parametersArrayToSchemaConverter: ParametersArrayToSchemaConverter = new ParametersArrayToSchemaConverter()
+  protected parametersJarFactory: ParametersJarFactory =
+    new ParametersJarFactory(this.swagger)
+  protected parametersArrayToSchemaConverter: ParametersArrayToSchemaConverter =
+    new ParametersArrayToSchemaConverter()
 
   protected hasValidFilter: boolean
 
@@ -103,9 +104,8 @@ export class TypescriptConverter implements BaseConverter {
 
     const appendParameterTypes = (params, suffix): void => {
       if (params.length > 0) {
-        const schema = this.getParametersArrayToSchemaConverter().convertToObject(
-          params
-        )
+        const schema =
+          this.getParametersArrayToSchemaConverter().convertToObject(params)
         parameterTypes.push(this.generateType(name + suffix, schema))
       }
     }
@@ -151,7 +151,7 @@ export class TypescriptConverter implements BaseConverter {
         return `${
           parameter.name
         }${PARAMETER_PATH_SUFFIX}: ${this.generateTypeValue(
-          (parameter as any) as Schema
+          parameter as any as Schema
         )}`
       })
     }
@@ -259,6 +259,7 @@ export class TypescriptConverter implements BaseConverter {
       },
       method: method.toUpperCase(),
       responseTypes,
+      hasCustomReturnType: this.settings.hasCustomReturnType,
     })
 
     return output
@@ -512,6 +513,7 @@ export class TypescriptConverter implements BaseConverter {
     output += Mustache.render(readerTemplate("methodModule"), {
       RequestFactoryName: this.settings.template,
       customAgent: this.settings.customAgent,
+      hasCustomReturnType: this.settings.hasCustomReturnType,
       // base path
       baseUrl: this.settings.backend,
     })

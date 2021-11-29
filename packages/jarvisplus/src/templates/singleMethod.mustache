@@ -1,7 +1,9 @@
 /**
  * @description {{&summary}}
  */
-export function {{name}} ({{parameters}}): Promise<{{&responseTypes}}> {
+export function {{name}} ({{parameters}}): Promise<
+  {{#hasCustomReturnType}}CustomReturnType<{{&responseTypes}}>{{/hasCustomReturnType}}
+  {{^hasCustomReturnType}}{{&responseTypes}}{{/hasCustomReturnType}}> {
   {{definePath}} path = '{{{path}}}'
   {{#pathParams}}
       path = path.replace("{{pathParamName}}", String(payload['{{&name}}']));

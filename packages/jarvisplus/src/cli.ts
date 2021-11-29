@@ -30,11 +30,22 @@ const commandCore = async (command, options) => {
   })
 
   let customAgentRelativePath = null
+  let hasCustomReturnType = false
   if (options.customAgent) {
     customAgentRelativePath = path.relative(
       path.dirname(options.targetPath),
       options.customAgent
     )
+    const customAgentCwdPath = path.join(process.cwd(), options.customAgent)
+    const customAgentContent = readerFactory({
+      file: customAgentCwdPath.endsWith(".ts")
+        ? customAgentCwdPath
+        : `${customAgentCwdPath}.ts`,
+      plain: true,
+    })() as string
+    if (customAgentContent.includes("export type CustomReturnType")) {
+      hasCustomReturnType = true
+    }
   }
 
   const spec = (await reader()) as Spec

@@ -24,11 +24,11 @@ export const readerFactory = (options: FileReaderOptions) => {
     return () => yamlReader(options)
   }
 
-  if (options.file.endsWith(".mustache")) {
-    return () => plainTextReader(options)
+  if (options.plain === true || options.file.endsWith(".mustache")) {
+    return () => plainTextReader(options) as string
   }
 
   throw new Error(
-    `cannot create reader for ${options.file}. Supported formats: json, yml, yaml, mustache`
+    `cannot create reader for ${options.file}. Supported formats: json, yml, yaml, mustache, or you can explicit use plain as an option`
   )
 }
