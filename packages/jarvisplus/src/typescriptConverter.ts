@@ -421,10 +421,10 @@ export class TypescriptConverter implements BaseConverter {
             if (typeof def?.schema?.$ref === "string") {
               schemaProperties[name] = def
             } else {
-              const isRequired = (definition.required || []).indexOf(name)
+              const isRequired = (definition.required || []).includes(name)
               output += getPropertyDescription(def)
               output += `'${name}'${
-                isRequired ? "?" : ""
+                isRequired ? "" : "?"
               }: ${this.generateTypeValue(def, {
                 parentName: options?.parentName,
                 name,

@@ -79,7 +79,8 @@ need_mock: boolean
 
 ### 2.1.2
 
-- 支持 CustomReturnType（customAgent）
+- 新增：支持 CustomReturnType（customAgent）
+- 修复：类型 required 生成错误
 
 ### 2.1.1
 
