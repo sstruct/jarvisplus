@@ -1,5 +1,26 @@
-import { RequestFactoryType } from "./index"
 import { serialize } from "./serialize"
+
+export interface ApiResponse<T> extends Response {
+  json(): Promise<T>
+}
+
+export type RequestFactoryType = ({
+  path,
+  query,
+  body,
+  formData,
+  headers,
+  method,
+  configuration,
+}: {
+  path: string
+  query?: any
+  body?: any
+  formData?: any
+  headers?: any
+  method: string
+  configuration: any
+}) => Promise<ApiResponse<any>>
 
 export type WhatWgFetchFunctionType = (
   input: RequestInfo,
@@ -58,5 +79,26 @@ const WhatWgFetchRequestFactory =
 
     return callback(fullUrl, fetchOptions)
   }
+
+export const withHeaders = (
+  requestFactory: RequestFactoryType,
+  overrideHeaders: Headers
+): RequestFactoryType => {
+  return ({ path, query, body, formData, headers, method, configuration }) => {
+    const headersObject = new Headers(headers || {})
+    new Headers(overrideHeaders).forEach((value, key) => {
+      headersObject.set(key, String(value))
+    })
+    return requestFactory({
+      path,
+      query,
+      body,
+      formData,
+      headers: headersObject,
+      method,
+      configuration,
+    })
+  }
+}
 
 export default WhatWgFetchRequestFactory

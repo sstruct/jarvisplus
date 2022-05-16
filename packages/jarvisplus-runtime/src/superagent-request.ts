@@ -22,11 +22,6 @@ export type RequestFactoryType = ({
   method: string
 }) => Promise<any>
 
-export type SuperagentFunctionType = (
-  input: RequestInfo,
-  init?: RequestInit
-) => Promise<request.Response>
-
 type RequestCallback =
   | (request.SuperAgentStatic & request.Request)
   | request.SuperAgentStatic
