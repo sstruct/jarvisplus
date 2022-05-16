@@ -10,5 +10,5 @@ export const yamlReader: FileReader<any> = <T extends unknown>(
     encoding: "utf8",
     flag: "r",
   })
-  return yaml.safeLoad(content) as T
+  return yaml.load(content) as T
 }

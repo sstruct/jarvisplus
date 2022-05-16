@@ -54,89 +54,93 @@ const getParametersFromPayloadWithParamNames = (
   return parameters
 }
 
-const SuperagentRequestFactory = (
-  baseUrl: string,
-  options: SuperagentRequestFactoryOptions
-): RequestFactoryType => (args) => {
-  const { payload, payloadIn, payloadInType } = args
-  if (payloadInType) {
-    args[payloadInType] = payload
-  } else if (payloadIn) {
-    Object.keys(payloadIn).forEach((type) => {
-      args[type] = getParametersFromPayloadWithParamNames(
-        payload,
-        payloadIn[type]
-      )
+const SuperagentRequestFactory =
+  (
+    baseUrl: string,
+    options: SuperagentRequestFactoryOptions
+  ): RequestFactoryType =>
+  (args) => {
+    const { payload, payloadIn, payloadInType } = args
+    if (payloadInType) {
+      args[payloadInType] = payload
+    } else if (payloadIn) {
+      Object.keys(payloadIn).forEach((type) => {
+        args[type] = getParametersFromPayloadWithParamNames(
+          payload,
+          payloadIn[type]
+        )
+      })
+    }
+    const { path, query, body, formData, method, headers } = args
+
+    const headersObject = new Headers({})
+
+    new Headers(headers).forEach((value, key) => {
+      headersObject.set(key, String(value))
     })
-  }
-  const { path, query, body, formData, method, headers } = args
 
-  const headersObject = new Headers({})
+    const fetchOptions: RequestInit = Object.assign(
+      {},
+      { method: method, headers: headersObject }
+    )
 
-  new Headers(headers).forEach((value, key) => {
-    headersObject.set(key, String(value))
-  })
+    if (body !== undefined) {
+      fetchOptions.body = body
+    } else if (formData && Object.keys(formData).length > 0) {
+      fetchOptions.body = Object.keys(formData).reduce((data, key) => {
+        data.append(key, formData[key])
+        return data
+      }, new FormData())
+    } else if (formData) {
+      fetchOptions.body = formData
+    }
 
-  const fetchOptions: RequestInit = Object.assign(
-    {},
-    { method: method, headers: headersObject }
-  )
+    const callback: RequestCallback = ["function", "object"].includes(
+      typeof options.request
+    )
+      ? options.request
+      : request
 
-  if (body !== undefined) {
-    fetchOptions.body = body
-  } else if (formData && Object.keys(formData).length > 0) {
-    fetchOptions.body = Object.keys(formData).reduce((data, key) => {
-      data.append(key, formData[key])
-      return data
-    }, new FormData())
-  }
+    const handleResponse = (response) => {
+      if (typeof options.onResponse === "function")
+        return options.onResponse(response)
+      return response
+    }
+    const handleError = (error) => {
+      if (typeof options.onError === "function") return options.onError(error)
+      throw error
+    }
 
-  const callback: RequestCallback = ["function", "object"].includes(
-    typeof options.request
-  )
-    ? options.request
-    : request
+    const fullUrl = [baseUrl, path].join("")
+    const agentMethod = method.toLocaleLowerCase()
 
-  const handleResponse = (response) => {
-    if (typeof options.onResponse === "function")
-      return options.onResponse(response)
-    return response
-  }
-  const handleError = (error) => {
-    if (typeof options.onError === "function") return options.onError(error)
-    throw error
-  }
-
-  const fullUrl = [baseUrl, path].join("")
-  const agentMethod = method.toLocaleLowerCase()
-
-  switch (agentMethod) {
-    case "delete":
-      return callback[agentMethod](fullUrl)
-        .query(query)
-        .then((res) => handleResponse(res))
-        .catch((err) => handleError(err))
-    case "get": {
-      // compatible with historical apis
-      if (fetchOptions.body !== undefined) {
+    switch (agentMethod) {
+      case "delete":
         return callback[agentMethod](fullUrl)
           .query(query)
-          .query(fetchOptions.body)
+          .then((res) => handleResponse(res))
+          .catch((err) => handleError(err))
+      case "get": {
+        // compatible with historical apis
+        if (fetchOptions.body !== undefined) {
+          return callback[agentMethod](fullUrl)
+            .query(query)
+            .query(fetchOptions.body)
+            .then((res) => handleResponse(res))
+            .catch((err) => handleError(err))
+        }
+        return callback[agentMethod](fullUrl)
+          .query(query)
           .then((res) => handleResponse(res))
           .catch((err) => handleError(err))
       }
-      return callback[agentMethod](fullUrl)
-        .query(query)
-        .then((res) => handleResponse(res))
-        .catch((err) => handleError(err))
+      default:
+        return callback[agentMethod](fullUrl)
+          .query(query)
+          .send(fetchOptions.body || {})
+          .then((res) => handleResponse(res))
+          .catch((err) => handleError(err))
     }
-    default:
-      return callback[agentMethod](fullUrl)
-        .query(query)
-        .send(fetchOptions.body || {})
-        .then((res) => handleResponse(res))
-        .catch((err) => handleError(err))
   }
-}
 
 export default SuperagentRequestFactory
