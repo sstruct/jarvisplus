@@ -5,21 +5,21 @@ describe("TypescriptConverter", () => {
     let converter: TypescriptConverter
 
     beforeAll(() => {
-      converter = new TypescriptConverter(null, null)
+      converter = new TypescriptConverter(null, {})
     })
 
     test("it should generate correct enum type", () => {
       expect(
         converter.generateTypeValue({
-          type: "enum",
+          type: "string",
           enum: ["1", "2", "3"],
         })
-      ).toBe("1 | 2 | 3")
+      ).toBe('"1" | "2" | "3"')
 
       expect(
         converter.generateTypeValue({
-          type: "enum",
-          enum: ['"int"', '"string"', '"bool"'],
+          type: "string",
+          enum: ["int", "string", "bool"],
         })
       ).toBe('"int" | "string" | "bool"')
     })
@@ -70,7 +70,7 @@ describe("TypescriptConverter", () => {
             $ref: "definitions/SomeType",
           },
         })
-      ).toBe("Array<SomeType>")
+      ).toBe("Array<definitionsSomeType>")
     })
 
     test("it should generate correct object type with properties", () => {

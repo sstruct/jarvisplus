@@ -92,6 +92,19 @@ describe("ParametersJarFactory", () => {
 
     expect(factory.createFromOperation(operation)).toStrictEqual({
       pathParams: [],
+      payloadParams: [
+        {
+          description: "Auth token",
+          in: "query",
+          name: "token",
+          required: false,
+          type: "string",
+        },
+        {
+          in: "header",
+          type: "apiKey",
+        },
+      ],
       queryParams: [
         {
           name: "token",

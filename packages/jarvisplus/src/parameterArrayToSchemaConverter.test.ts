@@ -1,5 +1,6 @@
 import { Parameter, Schema } from "swagger-schema-official"
 import { ParametersArrayToSchemaConverter } from "./parameterArrayToSchemaConverter"
+import type { ConvertToObjectParam } from "./parameterArrayToSchemaConverter"
 
 describe("ParametersArrayToSchemaConverter", () => {
   describe("convertToObject", () => {
@@ -47,7 +48,7 @@ describe("ParametersArrayToSchemaConverter", () => {
         },
       }
 
-      const parameters: Parameter[] = [
+      const parameters: ConvertToObjectParam = [
         {
           name: "test1",
           type: "string",
@@ -84,7 +85,7 @@ describe("ParametersArrayToSchemaConverter", () => {
         },
       }
 
-      const parameters: Parameter[] = [
+      const parameters: ConvertToObjectParam = [
         {
           name: "test1",
           type: "string",

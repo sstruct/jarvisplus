@@ -20,7 +20,7 @@ export class TypescriptNameNormalizer implements Normalizer {
         }
         return segment
       })
-      .map((str, index) => {
+      .map((str) => {
         // remove punctuations in name, e.g.:  "（），。,.", return "any" if nothing left
         // ref 1. https://stackoverflow.com/a/6671856/5121972
         // ref 2. http://www.regular-expressions.info/unicode.html#category

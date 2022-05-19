@@ -3,6 +3,7 @@ import {
   Operation,
   Parameter,
   Spec,
+  Security,
 } from "swagger-schema-official"
 import { ParametersJar } from "./parametersJar"
 import {
@@ -62,7 +63,7 @@ export class ParametersJarFactory {
       .filter((parameter: Parameter) => parameter && parameter.in === type)
   }
 
-  protected mapParameters(operation: Operation) {
+  protected mapParameters(operation: Operation): Parameter[] {
     return (operation.parameters || []).map(
       (parameter: Parameter & BodyParameter) => {
         return parameter
@@ -70,7 +71,7 @@ export class ParametersJarFactory {
     )
   }
 
-  protected mapAuthorization(operation: Operation) {
+  protected mapAuthorization(operation: Operation): Security[] {
     return (operation.security || [])
       .reduce((prev: string[], current): string[] => {
         return prev.concat(Object.keys(current))

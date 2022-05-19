@@ -151,7 +151,7 @@ export class TypescriptConverter implements BaseConverter {
         return `${
           parameter.name
         }${PARAMETER_PATH_SUFFIX}: ${this.generateTypeValue(
-          parameter as any as Schema
+          parameter as unknown as Schema
         )}`
       })
     }
@@ -372,7 +372,7 @@ export class TypescriptConverter implements BaseConverter {
     switch (definition.type) {
       case DEFINITION_TYPE_STRING: {
         return definition.enum
-          ? definition.enum.map((ele) => `"${ele}"`).join("|")
+          ? definition.enum.map((ele) => `"${ele}"`).join(" | ")
           : definition.type
       }
       case DEFINITION_TYPE_BOOLEAN: {

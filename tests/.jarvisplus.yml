@@ -1,0 +1,48 @@
+# 所需要替换的 clients 脚本路径列表
+swaggers:
+  # 后端swagger地址, url请带上 /v2/api-docs
+  - file: tests/petstore.json
+    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
+    tags:
+      - pet
+      - store
+    # 生成的 client 存放路径, 相对路径
+    targetPath: tests/petstore.json.pet.local.snapshot.ts
+
+  - file: tests/petstore.json
+    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
+    tags:
+      - user
+    # 生成的 client 存放路径, 相对路径
+    targetPath: tests/petstore.json.user.snapshot.ts
+
+  - file: tests/petstore.json
+    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
+    paths:
+      - /pet/findByStatus
+      - post:/pet
+    # 生成的 client 存放路径, 相对路径
+    targetPath: tests/petstore.json.paths.snapshot.ts
+
+  - swaggerUrl: https://petstore.swagger.io/v2/swagger.json
+    # 切分sdk，按swagger中的tag切分。默认为空， 生成全部接口。
+    # 生成的 client 存放路径, 相对路径
+    targetPath: tests/petstore.json.remote.snapshot.ts
+
+# api client 生成的类型. 现在仅支持 js ts
+target_language: ts
+# 所依赖的请求代理模块, default： default | tangram
+# whatWgFetch default | superagent | path
+# template name or custom template path
+template: superagent-request
+customAgent: tests/customAgent.example
+mergeParam: true
+# 是否开启旧版模式（暂时仅支持旧版方法名生成规则，名称可能存在错误，不建议使用）
+legacy: false
+
+# models存放的文件夹
+modelFolder: false
+# 这是个数组！！！是否忽略接口名称中的 method、alias.
+# ignore:
+# - 'method'
+ignore:

@@ -59,7 +59,7 @@ modelFolder: boolean
 # 请求参数（path param, query, body, formData) 是否合并到一起，默认为 false
 # 重要 ⚠️：此选项开启时，不支持 body 类型不为对象（如 Array, String, Boolean 等）且同时含有 `path, query` 等参数的接口
 mergeParam?: boolean
-# 是否开启旧版模式（暂时仅支持旧版方法名生成规则，因为存在历史问题，不建议使用）
+# 是否开启旧版模式（暂时仅支持旧版方法名生成规则，名称可能存在错误，不建议使用）
 legacy?: boolean
 # TODO 以下配置项暂不支持
 # 是否开启 API 校验。默认为false。开启
