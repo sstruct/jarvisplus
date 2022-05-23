@@ -1,6 +1,6 @@
 {
   "name": "@terminus/jarvisplus",
-  "version": "2.3.0-beta.0",
+  "version": "2.3.0-beta.1",
   "description": "Convert swagger 2.0 file to typescript client",
   "main": "lib/index.js",
   "bin": "bin/index.js",
@@ -27,11 +27,11 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "js-yaml": "^4.1.0",
+    "lodash.get": "^4.4.2",
     "mustache": "^4.2.0",
     "node-fetch": "^2.6.7",
     "prettier": "^2.6.2",
-    "yargs": "^16.2.0",
-    "lodash.get": "^4.4.2"
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",
