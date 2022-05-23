@@ -28,46 +28,40 @@ jarvisplus api --paths '/api/v2/to/somewhere'
 
 ```yml
 swaggers:
-  - swaggerUrl?: string # 后端swagger地址, url请带上 /v2/api-docs
-  - file?: string # 本地 swagger 文件, 支持 json/yml，有 swaggerUrl 时，优先使用 swaggerUrl
+  - swaggerUrl?: string # 远程 swagger 文件, url 请带上 /v2/api-docs
+  - file?: string # 本地 json/yaml 格式的 swagger 文件。优先使用远程文件
     backend?: string
-    alias: string # TODO 暂不支持
+    alias?: string # TODO 暂未支持
     targetPath: string
     tags: # 根据 tags 筛选，仅生成对应 tag 下的接口和数据模型。和 paths 选项同时使用时，优先使用 paths
-      - tag_1
-      - tag_2
+      - tag_a
+      - tag_b
     paths: # 根据 paths 筛选，仅生成对应路径的接口和数据模型。和 tags 选项同时使用时，优先使用 paths
       - /api/v2/pet
       - get:/api/v2/store
-    targets: # 支持多 target 文件，包含多个 targetPath 和 tags, paths 过滤项
+    targets: # 支持生成多个 targets 文件，每项分别配置 targetPath 和过滤选项
       - targetPath: /path/to/your-target-1.sdk.ts
         tags:
-          - tag_1
+          - tag_a
       - targetPath: /path/to/your-target-2.sdk.ts
         paths:
           - /api/v2/pet
-# api client 生成的类型. 现在仅支持 "ts(default)", "js"
-target_language: "ts
+# api client 生成的类型. 现在仅支持 ts（默认值）
+targetLanguage: "ts
 # 所依赖的请求模块, 支持 "superagent-request(default)", "whatwg-fetch"
 template: "superagent-request"
 # 此配置仅当 template 为 superagent-request 时可用
 # 自定义 superagent 路径，可自行添加 headers 或中间件，不传则使用默认 superagent
 customAgent?: string
-gateway_url: string
-# models存放的文件夹
-modelFolder: boolean
 # 请求参数（path param, query, body, formData) 是否合并到一起，默认为 false
 # 重要 ⚠️：此选项开启时，不支持 body 类型不为对象（如 Array, String, Boolean 等）且同时含有 `path, query` 等参数的接口
 mergeParam?: boolean
 # 是否开启旧版模式（暂时仅支持旧版方法名生成规则，名称可能存在错误，不建议使用）
 legacy?: boolean
-# TODO 以下配置项暂不支持
-# 是否开启 API 校验。默认为false。开启
-check_api: boolean
-# 方法名称上忽略 alias
-ignore_alias: boolean
+
+# TODO 以下配置项暂未支持
 # 输出的 mock 文件位置。如果需要开启mock功能的话，需要配置次地址。
-need_mock: boolean
+enableMock?: boolean
 ```
 
 ## Changelog

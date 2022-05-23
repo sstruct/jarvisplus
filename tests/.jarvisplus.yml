@@ -1,48 +1,57 @@
 # 所需要替换的 clients 脚本路径列表
 swaggers:
-  # 后端swagger地址, url请带上 /v2/api-docs
-  - file: tests/petstore.json
-    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
-    tags:
-      - pet
-      - store
-    # 生成的 client 存放路径, 相对路径
-    targetPath: tests/petstore.json.pet.local.snapshot.ts
+#  - file: tests/petstore.json
+#    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
+#    tags:
+#      - pet
+#      - store
+#    # 生成的 client 存放路径, 相对路径
+#    targetPath: tests/snapshots/petstore.json.pet.local.ts
+#
+#  - file: tests/petstore.json
+#    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
+#    tags:
+#      - user
+#    # 生成的 client 存放路径, 相对路径
+#    targetPath: tests/snapshots/petstore.json.user.ts
+#
+#  - file: tests/petstore.json
+#    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
+#    paths:
+#      - /pet/findByStatus
+#      - post:/pet
+#    # 生成的 client 存放路径, 相对路径
+#    targetPath: tests/snapshots/petstore.json.paths.ts
+#  - swaggerUrl: https://petstore.swagger.io/v2/swagger.json
+#    # 切分sdk，按swagger中的tag切分。默认为空， 生成全部接口。
+#    # 生成的 client 存放路径, 相对路径
+#    targetPath: tests/snapshots/petstore.json.remote.ts
 
-  - file: tests/petstore.json
-    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
-    tags:
-      - user
-    # 生成的 client 存放路径, 相对路径
-    targetPath: tests/petstore.json.user.snapshot.ts
+  - swaggerUrl: https://api.apis.guru/v2/specs/azure.com/EnterpriseKnowledgeGraph-EnterpriseKnowledgeGraphSwagger/2018-12-03/swagger.json
+    targetPath: tests/snapshots/azure.com.ts
 
-  - file: tests/petstore.json
-    # 切分 SDK，按 swagger 中的 tag 切分。默认为空，生成全部接口。
-    paths:
-      - /pet/findByStatus
-      - post:/pet
-    # 生成的 client 存放路径, 相对路径
-    targetPath: tests/petstore.json.paths.snapshot.ts
+#  - swaggerUrl: https://api.apis.guru/v2/specs/1forge.com/0.0.1/swagger.json
+#    # 生成的 client 存放路径, 相对路径
+#    targetPath: tests/snapshots/1forge.com.ts
 
-  - swaggerUrl: https://petstore.swagger.io/v2/swagger.json
-    # 切分sdk，按swagger中的tag切分。默认为空， 生成全部接口。
-    # 生成的 client 存放路径, 相对路径
-    targetPath: tests/petstore.json.remote.snapshot.ts
+#  - swaggerUrl: https://api.apis.guru/v2/specs/github.com/ghes-3.1/1.1.4/openapi.json
+#    # 生成的 client 存放路径, 相对路径
+#    targetPath: tests/snapshots/ghes-3.1.ts
 
-# api client 生成的类型. 现在仅支持 js ts
-target_language: ts
-# 所依赖的请求代理模块, default： default | tangram
-# whatWgFetch default | superagent | path
-# template name or custom template path
+#  - swaggerUrl: https://api.apis.guru/v2/specs/google.home/2.0/openapi.json
+#    # 生成的 client 存放路径, 相对路径
+#    targetPath: tests/snapshots/google.home.ts
+
+#  - swaggerUrl: https://api.apis.guru/v2/specs/github.com/ghes-3.1/1.1.4/openapi.json
+#    # 生成的 client 存放路径, 相对路径
+#    targetPath: tests/snapshots/ghes-3.1.ts
+
+# api client 生成语言，目前仅支持 ts
+targetLanguage: ts
+# 所依赖的请求代理模块, whatwg-fetch(default) | superagent
+# template: superagent-request
 template: superagent-request
-customAgent: tests/customAgent.example
+#customAgent: tests/snapshots/customAgent.example
 mergeParam: true
 # 是否开启旧版模式（暂时仅支持旧版方法名生成规则，名称可能存在错误，不建议使用）
 legacy: false
-
-# models存放的文件夹
-modelFolder: false
-# 这是个数组！！！是否忽略接口名称中的 method、alias.
-# ignore:
-# - 'method'
-ignore:

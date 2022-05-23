@@ -1,7 +1,7 @@
 import {
-  BodyParameter,
   Operation,
   Parameter,
+  Reference,
   Spec,
   Security,
 } from "swagger-schema-official"
@@ -60,15 +60,11 @@ export class ParametersJarFactory {
     return []
       .concat(parameters)
       .concat(authorization)
-      .filter((parameter: Parameter) => parameter && parameter.in === type)
+      .filter((parameter) => parameter?.in === type)
   }
 
-  protected mapParameters(operation: Operation): Parameter[] {
-    return (operation.parameters || []).map(
-      (parameter: Parameter & BodyParameter) => {
-        return parameter
-      }
-    )
+  protected mapParameters(operation: Operation): (Parameter | Reference)[] {
+    return operation.parameters || []
   }
 
   protected mapAuthorization(operation: Operation): Security[] {

@@ -11,7 +11,7 @@
     "prebuild": "yarn clean",
     "build": "tsc --build && npm run cptemplates",
     "cptemplates": "copyfiles -f 'src/templates/*.mustache' lib/templates",
-    "test": "jest .",
+    "test": "jest --coverage .",
     "prepublish": "npm run build"
   },
   "engines": {
@@ -30,7 +30,8 @@
     "mustache": "^4.2.0",
     "node-fetch": "^2.6.7",
     "prettier": "^2.6.2",
-    "yargs": "^16.2.0"
+    "yargs": "^16.2.0",
+    "lodash.get": "^4.4.2"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",

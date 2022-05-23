@@ -35,8 +35,10 @@ lerna publish
 - [x] 保留函数/字段注释
 - [x] 请求函数参数格式优化，默认不传 undefined
 - [x] 支持中文变量名
-- [x] 根据路径单独生成/更新接口
+- [x] 支持根据 tags、path 过滤生成的接口
 - [x] 支持同一源文件生成多个目标文件
-- [ ] 支持更新提示
-- [ ] 支持 mock, proxy
-- [ ] 支持 init 命令，初始化引导页面
+- [ ] 支持 init 命令，初始化引导
+- [ ] 支持 mock
+- [ ] 支持自定义 agent, templates
+- [ ] 支持 [OpenAPI v3](https://swagger.io/specification/)
+- [ ] 支持按 tags, path 忽略部分接口

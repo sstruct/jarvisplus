@@ -31,7 +31,7 @@ export type ConfigType = {
      */
     file?: string
     backend?: string
-    alias: string
+    alias: string // TODO 暂未支持
     targets?: TargetOptions
     /**
      * 是否写入磁盘，默认为 true
@@ -43,9 +43,9 @@ export type ConfigType = {
    */
   swagger?: string
   /**
-   * api client 生成的类型. 现在仅支持 js ts
+   * api client 生成的类型. 现在仅支持 ts
    */
-  target_language: "ts" | "js"
+  targetLanguage: "ts"
   /**
    * 所依赖的请求模块, default: whatwg-fetch
    */
@@ -56,26 +56,6 @@ export type ConfigType = {
    */
   customAgent?: string
   /**
-   * 是否开启 API 校验。默认为false。开启
-   */
-  check_api: boolean
-  /**
-   * 方法名称上忽略 alias
-   */
-  ignore_alias: boolean
-  /**
-   * 输出的 mock 文件位置。如果需要开启mock功能的话，需要配置次地址。
-   */
-  need_mock: boolean
-  /**
-   * gateway_url: http://dev.gateway.mall.cnooc.com.cn
-   */
-  gateway_url: string
-  /**
-   * models存放的文件夹
-   */
-  modelFolder: boolean
-  /**
    * 请求参数（path param, query, body, formData) 是否合并到一起，默认为 false
    */
   mergeParam?: boolean
@@ -83,4 +63,8 @@ export type ConfigType = {
    * 是否启用旧版模式（暂时仅支持请求方法命名）
    */
   legacy?: boolean
+  /**
+   * TODO: 输出的 mock 文件位置。如果需要开启mock功能的话，需要配置此地址。
+   */
+  enableMock?: boolean
 }

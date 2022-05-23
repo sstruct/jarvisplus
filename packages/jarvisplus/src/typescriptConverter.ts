@@ -1,7 +1,14 @@
 import * as Mustache from "mustache"
 import * as chalk from "chalk"
+import * as get from "lodash.get"
 import { readerTemplate } from "./templates"
-import { Operation, Schema, Spec } from "swagger-schema-official"
+import {
+  Operation,
+  Parameter,
+  Reference,
+  Schema,
+  Spec,
+} from "swagger-schema-official"
 import { BaseConverter } from "./baseConverter"
 import { Normalizer } from "./normalizer"
 import { ParametersArrayToSchemaConverter } from "./parameterArrayToSchemaConverter"
@@ -49,8 +56,12 @@ export interface SwaggerToTypescriptConverterSettings {
   paths?: string[]
 }
 
-function getSegmentsFromRef(ref: string): string {
-  return typeof ref === "string" ? ref.replace("#/definitions/", "") : ""
+function getRefSegments(ref: string): string[] {
+  if (typeof ref === "string") {
+    ref = ref.replace(/^#\//i, "")
+    return ref.split("/")
+  }
+  return []
 }
 
 export class TypescriptConverter implements BaseConverter {
@@ -102,8 +113,11 @@ export class TypescriptConverter implements BaseConverter {
 
     const parameterTypes: string[] = []
 
-    const appendParameterTypes = (params, suffix): void => {
-      if (params.length > 0) {
+    const appendParameterTypes = (_params, suffix): void => {
+      if (_params.length > 0) {
+        const params = _params.map(
+          (param) => this.getDefinitionFromRef(param).parameter
+        )
         const schema =
           this.getParametersArrayToSchemaConverter().convertToObject(params)
         parameterTypes.push(this.generateType(name + suffix, schema))
@@ -124,6 +138,34 @@ export class TypescriptConverter implements BaseConverter {
 
   private referredDefinitions = new Set()
 
+  public getDefinitionFromRef(param: Parameter | Reference | Schema): {
+    parameter: Schema | Parameter
+    segment?: string
+  } {
+    if ((param as Reference).$ref) {
+      const segments = getRefSegments((param as Reference).$ref)
+      const parameter = get(this.swagger, segments)
+      const segment = segments[segments.length - 1]
+      if (!parameter) {
+        console.log(
+          chalk.yellow(`Cannot find reference for "${segment}", skipped.`)
+        )
+      }
+      this.referredDefinitions.add(segment)
+      return { parameter, segment }
+    }
+    return { parameter: param } as { parameter: Schema }
+  }
+
+  public prepareOperation(operation: Operation) {
+    if (Array.isArray(operation.parameters)) {
+      operation.parameters = operation.parameters.map(
+        (param) => this.getDefinitionFromRef(param).parameter as Parameter
+      )
+    }
+    return operation
+  }
+
   public generateOperation(
     path: string,
     method: string,
@@ -137,7 +179,9 @@ export class TypescriptConverter implements BaseConverter {
       bodyParams,
       formDataParams,
       headerParams,
-    } = this.getParametersJarFactory().createFromOperation(operation)
+    } = this.getParametersJarFactory().createFromOperation(
+      this.prepareOperation(operation)
+    )
 
     let output = ""
 
@@ -170,15 +214,9 @@ export class TypescriptConverter implements BaseConverter {
             payloadIn[paramsType] = params
               .map((param) => {
                 if (typeof param?.schema?.$ref === "string") {
-                  const segments = getSegmentsFromRef(param.schema.$ref)
-                  const referred = this.swagger.definitions[segments]
-                  if (!referred) {
-                    throw new Error(
-                      `cannot find reference ${param.schema.$ref}`
-                    )
-                  }
-                  this.referredDefinitions.add(segments)
-                  return Object.keys(referred.properties)
+                  const parameter = this.getDefinitionFromRef(param.schema)
+                    .parameter as Schema
+                  return Object.keys(parameter.properties)
                 }
                 return param.name
               })
@@ -348,9 +386,8 @@ export class TypescriptConverter implements BaseConverter {
     }
 
     if (definition.$ref) {
-      const segments = getSegmentsFromRef(definition.$ref)
-      this.referredDefinitions.add(segments)
-      return this.getNormalizer().normalize(segments)
+      const { segment } = this.getDefinitionFromRef(definition)
+      return this.getNormalizer().normalize(segment)
     }
 
     if (Array.isArray(definition.enum)) {
@@ -416,43 +453,35 @@ export class TypescriptConverter implements BaseConverter {
         output += "{\n"
         output += Object.entries(definition.properties)
           .map(([name, def]) => {
-            let output = ""
+            let str = ""
             // @ts-expect-error add proper type
             if (typeof def?.schema?.$ref === "string") {
               schemaProperties[name] = def
             } else {
               const isRequired = (definition.required || []).includes(name)
-              output += getPropertyDescription(def)
-              output += `'${name}'${
+              str += getPropertyDescription(def)
+              str += `'${name}'${
                 isRequired ? "" : "?"
               }: ${this.generateTypeValue(def, {
                 parentName: options?.parentName,
                 name,
               })}`
             }
-            return output
+            return str
           })
           .join("\n")
         output += "\n}"
       }
 
-      let isEmpty = output.replace(/\n/g, "") === "{}"
-      if (isEmpty) {
-        output = ""
-      }
+      let isEmpty = output.replace(/\n/g, "") === TYPESCRIPT_TYPE_EMPTY_OBJECT
+      if (isEmpty) output = ""
 
       output += Object.entries(schemaProperties)
         .map(([name, def]) => {
           // @ts-expect-error add proper type
-          const segments = getSegmentsFromRef(def.schema.$ref)
-          const referred = this.swagger.definitions[segments]
-          if (!referred) {
-            // @ts-expect-error add proper type
-            throw new Error(`cannot find reference ${def.schema.$ref}`)
-          }
-          this.referredDefinitions.add(segments)
+          const { segment } = this.getDefinitionFromRef(def.schema)
           const seg = `${isEmpty ? "" : "& "}${this.getNormalizer().normalize(
-            segments
+            segment
           )} ${getPropertyDescription(def)}`
           isEmpty = false
           return seg
@@ -473,7 +502,7 @@ export class TypescriptConverter implements BaseConverter {
       }
 
       if (output.trim().length === 0) {
-        return TYPESCRIPT_TYPE_EMPTY_OBJECT
+        return "Record<string, unknown>"
       }
       return output
     }

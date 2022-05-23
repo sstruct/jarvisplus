@@ -1,11 +1,38 @@
+import { Spec } from "swagger-schema-official"
 import { TypescriptConverter } from "./typescriptConverter"
+
+const arraySwagger: Spec = {
+  swagger: "2.0",
+  info: {
+    title: "TypescriptConverter-Test",
+    version: "2.0",
+  },
+  paths: {},
+  definitions: {
+    SomeType: {
+      type: "object",
+      properties: {
+        code: {
+          type: "integer",
+          format: "int32",
+        },
+        type: {
+          type: "string",
+        },
+        message: {
+          type: "string",
+        },
+      },
+    },
+  },
+}
 
 describe("TypescriptConverter", () => {
   describe("should generate correct type values", () => {
     let converter: TypescriptConverter
 
     beforeAll(() => {
-      converter = new TypescriptConverter(null, {})
+      converter = new TypescriptConverter(arraySwagger, {})
     })
 
     test("it should generate correct enum type", () => {
@@ -70,7 +97,7 @@ describe("TypescriptConverter", () => {
             $ref: "definitions/SomeType",
           },
         })
-      ).toBe("Array<definitionsSomeType>")
+      ).toBe("Array<SomeType>")
     })
 
     test("it should generate correct object type with properties", () => {
@@ -143,7 +170,7 @@ describe("TypescriptConverter", () => {
         converter.generateTypeValue({
           type: "object",
         })
-      ).toBe(`{}`)
+      ).toBe(`Record<string, unknown>`)
     })
 
     test("it should generate correct object type with props if type is not defined but properties are defined", () => {
