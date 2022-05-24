@@ -66,6 +66,11 @@ enableMock?: boolean
 
 ## Changelog
 
+### 2.2.1
+
+- 支持引用类型的 path parameter
+- 内部依赖升级；更新测试用例
+
 ### 2.2.0
 
 - 支持按 paths 筛选接口（参考配置文档 paths）
