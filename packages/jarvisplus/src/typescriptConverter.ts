@@ -1,8 +1,6 @@
 import * as Mustache from "mustache"
 import * as chalk from "chalk"
 import * as get from "lodash.get"
-import { readerTemplate, defaultTemplatesSuites } from "./templates"
-import type { TemplatesSuite } from "./templates"
 import {
   Operation,
   Parameter,
@@ -10,6 +8,8 @@ import {
   Schema,
   Spec,
 } from "swagger-schema-official"
+import type { TemplatesSuite, TemplateType } from "./templates/options"
+import { readerTemplate, resolveTemplateSuite } from "./templates"
 import { BaseConverter } from "./baseConverter"
 import { Normalizer } from "./normalizer"
 import { ParametersArrayToSchemaConverter } from "./parameterArrayToSchemaConverter"
@@ -49,7 +49,7 @@ export interface SwaggerToTypescriptConverterSettings {
   backend?: string
   targetPath?: string
   // template name or custom template path
-  template?: "whatwg-fetch" | "superagent-request" | "util-request" | string
+  template?: TemplateType
   mergeParam?: boolean
   customAgent?: string
   hasCustomReturnType?: boolean
@@ -83,14 +83,10 @@ export class TypescriptConverter implements BaseConverter {
       !!this.settings.tags?.length || !!this.settings.paths?.length
     this.settings = Object.assign(
       {},
-      {
-        backend: "",
-        template: "superagent-request",
-        mergeParam: false,
-      },
+      { backend: "", template: "superagent-request", mergeParam: false },
       settings || {}
     )
-    this.templatesSuite = defaultTemplatesSuites[this.settings.template]
+    this.templatesSuite = resolveTemplateSuite(this.settings.template)
   }
 
   protected normalizer: Normalizer = new TypescriptNameNormalizer({

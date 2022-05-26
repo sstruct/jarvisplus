@@ -1,23 +1,27 @@
 /* eslint-disable */
 
-import { request } from "@terminus/mall-utils";
+import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/superagent-request";
+
+const request = requestFactory("", {});
 
 /**
  * @description Add a new pet to the store
  */
 export function postPet(payload: postPetParameters): Promise<void> {
+  const path = "/pet";
   const payloadIn = {
     body: ["id", "category", "name", "photoUrls", "tags", "status"],
     header: ["X-Request-ID"],
   };
-  return request("/pet", { payload, payloadIn, method: "POST" });
+  return request({ path, payload, payloadIn, method: "POST" });
 }
 
 /**
  * @description Update an existing pet
  */
 export function putPet(payload: putPetParameters): Promise<void> {
-  return request("/pet", { payload, payloadIn: "body", method: "PUT" });
+  const path = "/pet";
+  return request({ path, payload, payloadIn: "body", method: "PUT" });
 }
 
 /**
@@ -26,22 +30,16 @@ export function putPet(payload: putPetParameters): Promise<void> {
 export function getPetFindByStatus(
   payload: getPetFindByStatusParameters
 ): Promise<Array<Pet>> {
-  return request("/pet/findByStatus", {
-    payload,
-    payloadIn: "query",
-    method: "GET",
-  });
+  const path = "/pet/findByStatus";
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
  * @description Find pet by ID
  */
 export function getPetByPetId(payload: getPetByPetIdParameters): Promise<Pet> {
-  return request(`/pet/${payload["petId"]}`, {
-    payload,
-    payloadIn: "header",
-    method: "GET",
-  });
+  const path = `/pet/${payload["petId"]}`;
+  return request({ path, payload, payloadIn: "header", method: "GET" });
 }
 
 export type postPetParameters = {

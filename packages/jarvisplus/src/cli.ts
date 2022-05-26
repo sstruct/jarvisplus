@@ -72,26 +72,31 @@ const commandCore = async (command, options) => {
     writer(output)
   }
 
-  if (Array.isArray(targetGroups) && targetGroups.length > 0) {
-    targetGroups.forEach((target) =>
+  try {
+    if (Array.isArray(targetGroups) && targetGroups.length > 0) {
+      targetGroups.forEach((target) =>
+        invokeCommand(options)({
+          tags: target.tags,
+          paths: target.paths,
+          targetPath: target.targetPath,
+        })
+      )
+    } else {
       invokeCommand(options)({
-        tags: target.tags,
-        paths: target.paths,
-        targetPath: target.targetPath,
+        tags: options.tags,
+        paths: options.paths,
+        targetPath: options.targetPath,
       })
-    )
-  } else {
-    invokeCommand(options)({
-      tags: options.tags,
-      paths: options.paths,
-      targetPath: options.targetPath,
-    })
-  }
-  if (options.writeToDisk) {
-    console.log(
-      chalk.green("🚀 SDK generated successfully for: "),
-      chalk.green(options.swaggerUrl || path.resolve(options.file))
-    )
+    }
+    if (options.writeToDisk) {
+      console.log(
+        chalk.green("🚀 SDK generated successfully for: "),
+        chalk.green(options.swaggerUrl || path.resolve(options.file))
+      )
+    }
+  } catch (e) {
+    if (args.debug) throw e
+    console.error(chalk.red("❌ something wrong:"), chalk.red(e.message))
   }
 }
 
@@ -169,6 +174,12 @@ const args = yargs
       description: "Enable write to targetPath",
       required: false,
       default: true,
+    },
+    debug: {
+      type: "boolean",
+      alias: "d",
+      description: "Enable debug or development mode",
+      required: false,
     },
   })
   .command(

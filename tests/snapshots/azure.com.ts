@@ -1,6 +1,8 @@
 /* eslint-disable */
 
-import { request } from "@terminus/mall-utils";
+import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/superagent-request";
+
+const request = requestFactory("", {});
 
 /**
  * @description false
@@ -8,11 +10,8 @@ import { request } from "@terminus/mall-utils";
 export function getProvidersMicrosoftEnterpriseKnowledgeGraphOperations(
   payload: getProvidersMicrosoftEnterpriseKnowledgeGraphOperationsParameters
 ): Promise<OperationEntityListResult> {
-  return request("/providers/Microsoft.EnterpriseKnowledgeGraph/operations", {
-    payload,
-    payloadIn: "query",
-    method: "GET",
-  });
+  const path = "/providers/Microsoft.EnterpriseKnowledgeGraph/operations";
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
@@ -21,10 +20,8 @@ export function getProvidersMicrosoftEnterpriseKnowledgeGraphOperations(
 export function getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnowledgeGraphServices(
   payload: getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnowledgeGraphServicesParameters
 ): Promise<EnterpriseKnowledgeGraphResponseList | Error> {
-  return request(
-    `/subscriptions/${payload["subscriptionId"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services`,
-    { payload, payloadIn: "query", method: "GET" }
-  );
+  const path = `/subscriptions/${payload["subscriptionId"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services`;
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
@@ -33,10 +30,8 @@ export function getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnow
 export function getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServices(
   payload: getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesParameters
 ): Promise<EnterpriseKnowledgeGraphResponseList | Error> {
-  return request(
-    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services`,
-    { payload, payloadIn: "query", method: "GET" }
-  );
+  const path = `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services`;
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
@@ -45,10 +40,8 @@ export function getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNam
 export function deleteSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceName(
   payload: deleteSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters
 ): Promise<Error> {
-  return request(
-    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`,
-    { payload, payloadIn: "query", method: "DELETE" }
-  );
+  const path = `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`;
+  return request({ path, payload, payloadIn: "query", method: "DELETE" });
 }
 
 /**
@@ -57,10 +50,8 @@ export function deleteSubscriptionsBySubscriptionIdResourceGroupsByResourceGroup
 export function getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceName(
   payload: getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters
 ): Promise<EnterpriseKnowledgeGraph | Error> {
-  return request(
-    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`,
-    { payload, payloadIn: "query", method: "GET" }
-  );
+  const path = `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`;
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
@@ -69,11 +60,9 @@ export function getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNam
 export function patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceName(
   payload: patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters
 ): Promise<EnterpriseKnowledgeGraph | Error> {
+  const path = `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`;
   const payloadIn = { query: ["api-version"], body: ["properties"] };
-  return request(
-    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`,
-    { payload, payloadIn, method: "PATCH" }
-  );
+  return request({ path, payload, payloadIn, method: "PATCH" });
 }
 
 /**
@@ -82,11 +71,9 @@ export function patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupN
 export function putSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceName(
   payload: putSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters
 ): Promise<EnterpriseKnowledgeGraph | Error> {
+  const path = `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`;
   const payloadIn = { query: ["api-version"], body: ["properties"] };
-  return request(
-    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`,
-    { payload, payloadIn, method: "PUT" }
-  );
+  return request({ path, payload, payloadIn, method: "PUT" });
 }
 
 export type getProvidersMicrosoftEnterpriseKnowledgeGraphOperationsParameters =

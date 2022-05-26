@@ -1,6 +1,8 @@
 /* eslint-disable */
 
-import { request } from "@terminus/mall-utils";
+import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/superagent-request";
+
+const request = requestFactory("", {});
 
 /**
  * @description Creates list of users with given input array
@@ -8,11 +10,8 @@ import { request } from "@terminus/mall-utils";
 export function postUserCreateWithArray(
   payload: postUserCreateWithArrayParameters
 ): Promise<void> {
-  return request("/user/createWithArray", {
-    payload,
-    payloadIn: "body",
-    method: "POST",
-  });
+  const path = "/user/createWithArray";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
 /**
@@ -21,11 +20,8 @@ export function postUserCreateWithArray(
 export function postUserCreateWithList(
   payload: postUserCreateWithListParameters
 ): Promise<void> {
-  return request("/user/createWithList", {
-    payload,
-    payloadIn: "body",
-    method: "POST",
-  });
+  const path = "/user/createWithList";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
 /**
@@ -34,7 +30,8 @@ export function postUserCreateWithList(
 export function getUserByUsername(
   payload: getUserByUsernameParameters
 ): Promise<User> {
-  return request(`/user/${payload["username"]}`, { payload, method: "GET" });
+  const path = `/user/${payload["username"]}`;
+  return request({ path, payload, method: "GET" });
 }
 
 /**
@@ -43,11 +40,8 @@ export function getUserByUsername(
 export function putUserByUsername(
   payload: putUserByUsernameParameters
 ): Promise<void> {
-  return request(`/user/${payload["username"]}`, {
-    payload,
-    payloadIn: "body",
-    method: "PUT",
-  });
+  const path = `/user/${payload["username"]}`;
+  return request({ path, payload, payloadIn: "body", method: "PUT" });
 }
 
 /**
@@ -56,28 +50,32 @@ export function putUserByUsername(
 export function deleteUserByUsername(
   payload: deleteUserByUsernameParameters
 ): Promise<void> {
-  return request(`/user/${payload["username"]}`, { payload, method: "DELETE" });
+  const path = `/user/${payload["username"]}`;
+  return request({ path, payload, method: "DELETE" });
 }
 
 /**
  * @description Logs user into the system
  */
 export function getUserLogin(payload: getUserLoginParameters): Promise<string> {
-  return request("/user/login", { payload, payloadIn: "query", method: "GET" });
+  const path = "/user/login";
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
  * @description Logs out current logged in user session
  */
 export function getUserLogout(): Promise<void> {
-  return request("/user/logout", { method: "GET" });
+  const path = "/user/logout";
+  return request({ path, method: "GET" });
 }
 
 /**
  * @description Create user
  */
 export function postUser(payload: postUserParameters): Promise<void> {
-  return request("/user", { payload, payloadIn: "body", method: "POST" });
+  const path = "/user";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
 export type postUserCreateWithArrayParameters = {

@@ -28,10 +28,9 @@ lerna publish
 - [x] 支持 enum
 - [x] 支持 mustache 模版
 - [x] 支持 superagent runtime
-- [x] 函数参数格式兼容目前（Param in url）
+- [x] 函数参数格式兼容（Param in url）
 - [x] 支持模块分拆（包括相同类型提取）
 - [x] 支持旧版 name normalizer
-- [x] 生成 client API/type 顺序调整
 - [x] 保留函数/字段注释
 - [x] 请求函数参数格式优化，默认不传 undefined
 - [x] 支持中文变量名
@@ -41,5 +40,6 @@ lerna publish
 - [ ] 支持 auth 参数
 - [ ] 支持 init 命令，初始化引导
 - [ ] 支持 mock
-- [ ] 支持自定义 agent, templates
+- [ ] 支持自定义 agent
+- [x] 支持自定义 templates
 - [ ] 支持 [OpenAPI v3](https://swagger.io/specification/)

@@ -6,4 +6,3 @@
 
 - superagent
 - whatwg-fetch
-- util-request

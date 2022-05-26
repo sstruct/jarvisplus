@@ -1,14 +1,6 @@
 import * as request from "superagent"
-import {
-  parsePayloadParameters,
-  prepareFetchHeaders,
-  prepareFetchBody,
-} from "./utils"
-import type {
-  ApiResponse,
-  RequestParameterType,
-  RequestFactoryType,
-} from "./utils"
+import { parsePayloadParameters, prepareFetchHeaders } from "./utils"
+import type { RequestParameterType, RequestFactoryType } from "./utils"
 
 type RequestCallback =
   | (request.SuperAgentStatic & request.Request)
@@ -26,7 +18,7 @@ const SuperagentRequestFactory =
   (
     baseUrl: string,
     options: SuperagentRequestFactoryOptions
-  ): RequestFactoryType<ApiResponse<any>> =>
+  ): RequestFactoryType<any> =>
   (_args) => {
     const args = parsePayloadParameters(_args)
     const { path, query, body, formData, method, headers } = args

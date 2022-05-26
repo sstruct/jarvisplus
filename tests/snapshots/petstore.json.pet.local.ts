@@ -1,6 +1,8 @@
 /* eslint-disable */
 
-import { request } from "@terminus/mall-utils";
+import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/superagent-request";
+
+const request = requestFactory("", {});
 
 /**
  * @description uploads an image
@@ -8,29 +10,28 @@ import { request } from "@terminus/mall-utils";
 export function postPetByPetIdUploadImage(
   payload: postPetByPetIdUploadImageParameters
 ): Promise<ApiResponse> {
-  return request(`/pet/${payload["petId"]}/uploadImage`, {
-    payload,
-    payloadIn: "formData",
-    method: "POST",
-  });
+  const path = `/pet/${payload["petId"]}/uploadImage`;
+  return request({ path, payload, payloadIn: "formData", method: "POST" });
 }
 
 /**
  * @description Add a new pet to the store
  */
 export function postPet(payload: postPetParameters): Promise<void> {
+  const path = "/pet";
   const payloadIn = {
     body: ["id", "category", "name", "photoUrls", "tags", "status"],
     header: ["X-Request-ID"],
   };
-  return request("/pet", { payload, payloadIn, method: "POST" });
+  return request({ path, payload, payloadIn, method: "POST" });
 }
 
 /**
  * @description Update an existing pet
  */
 export function putPet(payload: putPetParameters): Promise<void> {
-  return request("/pet", { payload, payloadIn: "body", method: "PUT" });
+  const path = "/pet";
+  return request({ path, payload, payloadIn: "body", method: "PUT" });
 }
 
 /**
@@ -39,11 +40,8 @@ export function putPet(payload: putPetParameters): Promise<void> {
 export function getPetFindByStatus(
   payload: getPetFindByStatusParameters
 ): Promise<Array<Pet>> {
-  return request("/pet/findByStatus", {
-    payload,
-    payloadIn: "query",
-    method: "GET",
-  });
+  const path = "/pet/findByStatus";
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
@@ -52,22 +50,16 @@ export function getPetFindByStatus(
 export function getPetFindByTags(
   payload: getPetFindByTagsParameters
 ): Promise<Array<Pet>> {
-  return request("/pet/findByTags", {
-    payload,
-    payloadIn: "query",
-    method: "GET",
-  });
+  const path = "/pet/findByTags";
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
  * @description Find pet by ID
  */
 export function getPetByPetId(payload: getPetByPetIdParameters): Promise<Pet> {
-  return request(`/pet/${payload["petId"]}`, {
-    payload,
-    payloadIn: "header",
-    method: "GET",
-  });
+  const path = `/pet/${payload["petId"]}`;
+  return request({ path, payload, payloadIn: "header", method: "GET" });
 }
 
 /**
@@ -76,11 +68,8 @@ export function getPetByPetId(payload: getPetByPetIdParameters): Promise<Pet> {
 export function postPetByPetId(
   payload: postPetByPetIdParameters
 ): Promise<void> {
-  return request(`/pet/${payload["petId"]}`, {
-    payload,
-    payloadIn: "formData",
-    method: "POST",
-  });
+  const path = `/pet/${payload["petId"]}`;
+  return request({ path, payload, payloadIn: "formData", method: "POST" });
 }
 
 /**
@@ -89,11 +78,8 @@ export function postPetByPetId(
 export function deletePetByPetId(
   payload: deletePetByPetIdParameters
 ): Promise<void> {
-  return request(`/pet/${payload["petId"]}`, {
-    payload,
-    payloadIn: "header",
-    method: "DELETE",
-  });
+  const path = `/pet/${payload["petId"]}`;
+  return request({ path, payload, payloadIn: "header", method: "DELETE" });
 }
 
 /**
@@ -102,11 +88,8 @@ export function deletePetByPetId(
 export function postStoreOrder(
   payload: postStoreOrderParameters
 ): Promise<Order> {
-  return request("/store/order", {
-    payload,
-    payloadIn: "body",
-    method: "POST",
-  });
+  const path = "/store/order";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
 /**
@@ -115,10 +98,8 @@ export function postStoreOrder(
 export function getStoreOrderByOrderId(
   payload: getStoreOrderByOrderIdParameters
 ): Promise<Order> {
-  return request(`/store/order/${payload["orderId"]}`, {
-    payload,
-    method: "GET",
-  });
+  const path = `/store/order/${payload["orderId"]}`;
+  return request({ path, payload, method: "GET" });
 }
 
 /**
@@ -127,10 +108,8 @@ export function getStoreOrderByOrderId(
 export function deleteStoreOrderByOrderId(
   payload: deleteStoreOrderByOrderIdParameters
 ): Promise<void> {
-  return request(`/store/order/${payload["orderId"]}`, {
-    payload,
-    method: "DELETE",
-  });
+  const path = `/store/order/${payload["orderId"]}`;
+  return request({ path, payload, method: "DELETE" });
 }
 
 /**
@@ -139,11 +118,8 @@ export function deleteStoreOrderByOrderId(
 export function getStoreInventory(
   payload: getStoreInventoryParameters
 ): Promise<{ [key: string]: number }> {
-  return request("/store/inventory", {
-    payload,
-    payloadIn: "header",
-    method: "GET",
-  });
+  const path = "/store/inventory";
+  return request({ path, payload, payloadIn: "header", method: "GET" });
 }
 
 export type postPetByPetIdUploadImageParameters = {

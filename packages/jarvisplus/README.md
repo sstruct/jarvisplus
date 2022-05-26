@@ -32,7 +32,7 @@ swaggers:
   - file?: string # 本地 json/yaml 格式的 swagger 文件。优先使用远程文件
     backend?: string
     alias?: string # TODO 暂未支持
-    targetPath: string
+    targetPath: string  # 生成文件路径（相对于项目根目录）
     tags: # 根据 tags 筛选，仅生成对应 tag 下的接口和数据模型。和 paths 选项同时使用时，优先使用 paths
       - tag_a
       - tag_b
@@ -48,7 +48,7 @@ swaggers:
           - /api/v2/pet
 # api client 生成的类型. 现在仅支持 ts（默认值）
 targetLanguage: "ts
-# 所依赖的请求模块, 支持 "superagent-request", "util-request", "whatwg-fetch"
+# 所依赖的请求模块 superagent-request | whatwg-fetch(default) | dir_path(自定义模版路径，参考 templates 文件夹 README)
 template: "superagent-request"
 # 此配置仅当 template 为 superagent-request 时可用
 # 自定义 superagent 路径，可自行添加 headers 或中间件，不传则使用默认 superagent
@@ -65,6 +65,12 @@ enableMock?: boolean
 ```
 
 ## Changelog
+
+### 2.2.2-beta.1
+
+- 对用户更友好的错误提示
+- 支持用户自定义模版；uitl-request 模版移入 mall-utils 包
+- mergeParam 模式下模版格式优化
 
 ### 2.2.2-beta.0
 
