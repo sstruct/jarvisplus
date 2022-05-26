@@ -1,224 +1,226 @@
-import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/superagent-request";
+/* eslint-disable */
 
-const request = requestFactory("", {});
+import { request } from "@terminus/mall-utils";
 
 /**
  * @description uploads an image
  */
 export function postPetByPetIdUploadImage(
-  payload: postPetByPetIdUploadImagePayloadParameters
+  payload: postPetByPetIdUploadImageParameters
 ): Promise<ApiResponse> {
-  let path = "/pet/{petId}/uploadImage";
-  path = path.replace("{petId}", String(payload["petId"]));
-  const payloadInType = "formData";
-  return request({ path, payload, payloadInType, method: "POST" });
+  return request(`/pet/${payload["petId"]}/uploadImage`, {
+    payload,
+    payloadIn: "formData",
+    method: "POST",
+  });
 }
 
 /**
  * @description Add a new pet to the store
  */
-export function postPet(payload: postPetPayloadParameters): Promise<void> {
-  const path = "/pet";
-  const payloadInType = "body";
-  return request({ path, payload, payloadInType, method: "POST" });
+export function postPet(payload: postPetParameters): Promise<void> {
+  return request("/pet", { payload, payloadIn: "body", method: "POST" });
 }
 
 /**
  * @description Update an existing pet
  */
-export function putPet(payload: putPetPayloadParameters): Promise<void> {
-  const path = "/pet";
-  const payloadInType = "body";
-  return request({ path, payload, payloadInType, method: "PUT" });
+export function putPet(payload: putPetParameters): Promise<void> {
+  return request("/pet", { payload, payloadIn: "body", method: "PUT" });
 }
 
 /**
  * @description Finds Pets by status
  */
 export function getPetFindByStatus(
-  payload: getPetFindByStatusPayloadParameters
+  payload: getPetFindByStatusParameters
 ): Promise<Array<Pet>> {
-  const path = "/pet/findByStatus";
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "GET" });
+  return request("/pet/findByStatus", {
+    payload,
+    payloadIn: "query",
+    method: "GET",
+  });
 }
 
 /**
  * @description Finds Pets by tags
  */
 export function getPetFindByTags(
-  payload: getPetFindByTagsPayloadParameters
+  payload: getPetFindByTagsParameters
 ): Promise<Array<Pet>> {
-  const path = "/pet/findByTags";
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "GET" });
+  return request("/pet/findByTags", {
+    payload,
+    payloadIn: "query",
+    method: "GET",
+  });
 }
 
 /**
  * @description Find pet by ID
  */
-export function getPetByPetId(
-  payload: getPetByPetIdPayloadParameters
-): Promise<Pet> {
-  let path = "/pet/{petId}";
-  path = path.replace("{petId}", String(payload["petId"]));
-  const payloadInType = "header";
-  return request({ path, payload, payloadInType, method: "GET" });
+export function getPetByPetId(payload: getPetByPetIdParameters): Promise<Pet> {
+  return request(`/pet/${payload["petId"]}`, {
+    payload,
+    payloadIn: "header",
+    method: "GET",
+  });
 }
 
 /**
  * @description Updates a pet in the store with form data
  */
 export function postPetByPetId(
-  payload: postPetByPetIdPayloadParameters
+  payload: postPetByPetIdParameters
 ): Promise<void> {
-  let path = "/pet/{petId}";
-  path = path.replace("{petId}", String(payload["petId"]));
-  const payloadInType = "formData";
-  return request({ path, payload, payloadInType, method: "POST" });
+  return request(`/pet/${payload["petId"]}`, {
+    payload,
+    payloadIn: "formData",
+    method: "POST",
+  });
 }
 
 /**
  * @description Deletes a pet
  */
 export function deletePetByPetId(
-  payload: deletePetByPetIdPayloadParameters
+  payload: deletePetByPetIdParameters
 ): Promise<void> {
-  let path = "/pet/{petId}";
-  path = path.replace("{petId}", String(payload["petId"]));
-  const payloadInType = "header";
-  return request({ path, payload, payloadInType, method: "DELETE" });
+  return request(`/pet/${payload["petId"]}`, {
+    payload,
+    payloadIn: "header",
+    method: "DELETE",
+  });
 }
 
 /**
  * @description Place an order for a pet
  */
 export function postStoreOrder(
-  payload: postStoreOrderPayloadParameters
+  payload: postStoreOrderParameters
 ): Promise<Order> {
-  const path = "/store/order";
-  const payloadInType = "body";
-  return request({ path, payload, payloadInType, method: "POST" });
+  return request("/store/order", {
+    payload,
+    payloadIn: "body",
+    method: "POST",
+  });
 }
 
 /**
  * @description Find purchase order by ID
  */
 export function getStoreOrderByOrderId(
-  payload: getStoreOrderByOrderIdPayloadParameters
+  payload: getStoreOrderByOrderIdParameters
 ): Promise<Order> {
-  let path = "/store/order/{orderId}";
-  path = path.replace("{orderId}", String(payload["orderId"]));
-  return request({ path, payload, method: "GET" });
+  return request(`/store/order/${payload["orderId"]}`, {
+    payload,
+    method: "GET",
+  });
 }
 
 /**
  * @description Delete purchase order by ID
  */
 export function deleteStoreOrderByOrderId(
-  payload: deleteStoreOrderByOrderIdPayloadParameters
+  payload: deleteStoreOrderByOrderIdParameters
 ): Promise<void> {
-  let path = "/store/order/{orderId}";
-  path = path.replace("{orderId}", String(payload["orderId"]));
-  return request({ path, payload, method: "DELETE" });
+  return request(`/store/order/${payload["orderId"]}`, {
+    payload,
+    method: "DELETE",
+  });
 }
 
 /**
  * @description Returns pet inventories by status
  */
 export function getStoreInventory(
-  payload: getStoreInventoryPayloadParameters
+  payload: getStoreInventoryParameters
 ): Promise<{ [key: string]: number }> {
-  const path = "/store/inventory";
-  const payloadInType = "header";
-  return request({ path, payload, payloadInType, method: "GET" });
+  return request("/store/inventory", {
+    payload,
+    payloadIn: "header",
+    method: "GET",
+  });
 }
 
 /**
  * @description Creates list of users with given input array
  */
 export function postUserCreateWithArray(
-  payload: postUserCreateWithArrayPayloadParameters
+  payload: postUserCreateWithArrayParameters
 ): Promise<void> {
-  const path = "/user/createWithArray";
-  const payloadInType = "body";
-  return request({ path, payload, payloadInType, method: "POST" });
+  return request("/user/createWithArray", {
+    payload,
+    payloadIn: "body",
+    method: "POST",
+  });
 }
 
 /**
  * @description Creates list of users with given input array
  */
 export function postUserCreateWithList(
-  payload: postUserCreateWithListPayloadParameters
+  payload: postUserCreateWithListParameters
 ): Promise<void> {
-  const path = "/user/createWithList";
-  const payloadInType = "body";
-  return request({ path, payload, payloadInType, method: "POST" });
+  return request("/user/createWithList", {
+    payload,
+    payloadIn: "body",
+    method: "POST",
+  });
 }
 
 /**
  * @description Get user by user name
  */
 export function getUserByUsername(
-  payload: getUserByUsernamePayloadParameters
+  payload: getUserByUsernameParameters
 ): Promise<User> {
-  let path = "/user/{username}";
-  path = path.replace("{username}", String(payload["username"]));
-  return request({ path, payload, method: "GET" });
+  return request(`/user/${payload["username"]}`, { payload, method: "GET" });
 }
 
 /**
  * @description Updated user
  */
 export function putUserByUsername(
-  payload: putUserByUsernamePayloadParameters
+  payload: putUserByUsernameParameters
 ): Promise<void> {
-  let path = "/user/{username}";
-  path = path.replace("{username}", String(payload["username"]));
-  const payloadInType = "body";
-  return request({ path, payload, payloadInType, method: "PUT" });
+  return request(`/user/${payload["username"]}`, {
+    payload,
+    payloadIn: "body",
+    method: "PUT",
+  });
 }
 
 /**
  * @description Delete user
  */
 export function deleteUserByUsername(
-  payload: deleteUserByUsernamePayloadParameters
+  payload: deleteUserByUsernameParameters
 ): Promise<void> {
-  let path = "/user/{username}";
-  path = path.replace("{username}", String(payload["username"]));
-  return request({ path, payload, method: "DELETE" });
+  return request(`/user/${payload["username"]}`, { payload, method: "DELETE" });
 }
 
 /**
  * @description Logs user into the system
  */
-export function getUserLogin(
-  payload: getUserLoginPayloadParameters
-): Promise<string> {
-  const path = "/user/login";
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "GET" });
+export function getUserLogin(payload: getUserLoginParameters): Promise<string> {
+  return request("/user/login", { payload, payloadIn: "query", method: "GET" });
 }
 
 /**
  * @description Logs out current logged in user session
  */
 export function getUserLogout(): Promise<void> {
-  const path = "/user/logout";
-  return request({ path, method: "GET" });
+  return request("/user/logout", { method: "GET" });
 }
 
 /**
  * @description Create user
  */
-export function postUser(payload: postUserPayloadParameters): Promise<void> {
-  const path = "/user";
-  const payloadInType = "body";
-  return request({ path, payload, payloadInType, method: "POST" });
+export function postUser(payload: postUserParameters): Promise<void> {
+  return request("/user", { payload, payloadIn: "body", method: "POST" });
 }
 
-export type postPetByPetIdUploadImagePayloadParameters = {
+export type postPetByPetIdUploadImageParameters = {
   /** ID of pet to update in path */
   petId: number;
   /** Additional data to pass to server in formData */
@@ -228,34 +230,34 @@ export type postPetByPetIdUploadImagePayloadParameters = {
   undefined?: any;
 };
 
-export type postPetPayloadParameters = {
+export type postPetParameters = {
   undefined?: any;
 } & Pet; /** Pet object that needs to be added to the store in body */
 
-export type putPetPayloadParameters = {
+export type putPetParameters = {
   undefined?: any;
 } & Pet; /** Pet object that needs to be added to the store in body */
 
-export type getPetFindByStatusPayloadParameters = {
+export type getPetFindByStatusParameters = {
   /** Status values that need to be considered for filter in query */
   status: Array<"available" | "pending" | "sold">;
   undefined?: any;
 };
 
-export type getPetFindByTagsPayloadParameters = {
+export type getPetFindByTagsParameters = {
   /** Tags to filter by in query */
   tags: Array<string>;
   undefined?: any;
 };
 
-export type getPetByPetIdPayloadParameters = {
+export type getPetByPetIdParameters = {
   /** ID of pet to return in path */
   petId: number;
   /** in header */
   api_key?: any;
 };
 
-export type postPetByPetIdPayloadParameters = {
+export type postPetByPetIdParameters = {
   /** ID of pet that needs to be updated in path */
   petId: number;
   /** Updated name of the pet in formData */
@@ -265,7 +267,7 @@ export type postPetByPetIdPayloadParameters = {
   undefined?: any;
 };
 
-export type deletePetByPetIdPayloadParameters = {
+export type deletePetByPetIdParameters = {
   /** in header */
   api_key?: string;
   /** Pet id to delete in path */
@@ -273,57 +275,57 @@ export type deletePetByPetIdPayloadParameters = {
   undefined?: any;
 };
 
-export type postStoreOrderPayloadParameters =
+export type postStoreOrderParameters =
   Order; /** order placed for purchasing the pet in body */
 
-export type getStoreOrderByOrderIdPayloadParameters = {
+export type getStoreOrderByOrderIdParameters = {
   /** ID of pet that needs to be fetched in path */
   orderId: number;
 };
 
-export type deleteStoreOrderByOrderIdPayloadParameters = {
+export type deleteStoreOrderByOrderIdParameters = {
   /** ID of the order that needs to be deleted in path */
   orderId: number;
 };
 
-export type getStoreInventoryPayloadParameters = {
+export type getStoreInventoryParameters = {
   /** in header */
   api_key?: any;
 };
 
-export type postUserCreateWithArrayPayloadParameters = {
+export type postUserCreateWithArrayParameters = {
   /** List of user object in body */
   body: Array<User>;
 };
 
-export type postUserCreateWithListPayloadParameters = {
+export type postUserCreateWithListParameters = {
   /** List of user object in body */
   body: Array<User>;
 };
 
-export type getUserByUsernamePayloadParameters = {
+export type getUserByUsernameParameters = {
   /** The name that needs to be fetched. Use user1 for testing.  in path */
   username: string;
 };
 
-export type putUserByUsernamePayloadParameters = {
+export type putUserByUsernameParameters = {
   /** name that need to be updated in path */
   username: string;
 } & User; /** Updated user object in body */
 
-export type deleteUserByUsernamePayloadParameters = {
+export type deleteUserByUsernameParameters = {
   /** The name that needs to be deleted in path */
   username: string;
 };
 
-export type getUserLoginPayloadParameters = {
+export type getUserLoginParameters = {
   /** The user name for login in query */
   username: string;
   /** The password for login in clear text in query */
   password: string;
 };
 
-export type postUserPayloadParameters = User; /** Created user object in body */
+export type postUserParameters = User; /** Created user object in body */
 
 export type ApiResponse = {
   code?: number;

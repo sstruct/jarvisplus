@@ -1,0 +1,17 @@
+/**
+ * @description {{&summary}}
+ */
+export function {{name}} ({{parameters}}): Promise<
+  {{#hasCustomReturnType}}CustomReturnType<{{&responseTypes}}>{{/hasCustomReturnType}}
+  {{^hasCustomReturnType}}{{&responseTypes}}{{/hasCustomReturnType}}> {
+  {{#pathParams.length}}
+    const path = `{{{path}}}`
+  {{/pathParams.length}}
+  {{^pathParams.length}}
+    const path = "{{{path}}}"
+  {{/pathParams.length}}
+  {{#payloadIn}}
+      const payloadIn = {{&payloadIn}}
+  {{/payloadIn}}
+  return request({ path, {{#requestArgs}}{{.}},{{/requestArgs}} {{#payloadIn}}payloadIn, {{/payloadIn}} {{#payloadInType}}payloadIn: "{{&payloadInType}}", {{/payloadInType}} method: '{{method}}' })
+}

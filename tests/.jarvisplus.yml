@@ -20,8 +20,11 @@ swaggers:
     paths:
       - /pet/findByStatus
       - post:/pet
+      - put:/pet
+      - get:/pet/{petId}
     # 生成的 client 存放路径, 相对路径
     targetPath: tests/snapshots/petstore.json.paths.ts
+
   - swaggerUrl: https://petstore.swagger.io/v2/swagger.json
     # 切分sdk，按swagger中的tag切分。默认为空， 生成全部接口。
     # 生成的 client 存放路径, 相对路径
@@ -29,6 +32,9 @@ swaggers:
 
   - swaggerUrl: https://api.apis.guru/v2/specs/azure.com/EnterpriseKnowledgeGraph-EnterpriseKnowledgeGraphSwagger/2018-12-03/swagger.json
     targetPath: tests/snapshots/azure.com.ts
+
+  - swaggerUrl: https://bbc-mall-dev.app.terminus.io/v2/api-docs?group=content
+    targetPath: tests/snapshots/bbc.content.ts
 
 #  - swaggerUrl: https://api.apis.guru/v2/specs/1forge.com/0.0.1/swagger.json
 #    # 生成的 client 存放路径, 相对路径
@@ -48,9 +54,8 @@ swaggers:
 
 # api client 生成语言，目前仅支持 ts
 targetLanguage: ts
-# 所依赖的请求代理模块, whatwg-fetch(default) | superagent
-# template: superagent-request
-template: superagent-request
+# 所依赖的请求代理模块 superagent-request | util-request | whatwg-fetch(default)
+template: util-request
 #customAgent: tests/snapshots/customAgent.example
 mergeParam: true
 # 是否开启旧版模式（暂时仅支持旧版方法名生成规则，名称可能存在错误，不建议使用）

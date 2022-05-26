@@ -1,35 +1,71 @@
-import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/superagent-request";
+/* eslint-disable */
 
-const request = requestFactory("", {});
+import { request } from "@terminus/mall-utils";
 
 /**
  * @description Add a new pet to the store
  */
-export function postPet(payload: postPetPayloadParameters): Promise<void> {
-  const path = "/pet";
-  const payloadInType = "body";
-  return request({ path, payload, payloadInType, method: "POST" });
+export function postPet(payload: postPetParameters): Promise<void> {
+  const payloadIn = {
+    body: ["id", "category", "name", "photoUrls", "tags", "status"],
+    header: ["X-Request-ID"],
+  };
+  return request("/pet", { payload, payloadIn, method: "POST" });
+}
+
+/**
+ * @description Update an existing pet
+ */
+export function putPet(payload: putPetParameters): Promise<void> {
+  return request("/pet", { payload, payloadIn: "body", method: "PUT" });
 }
 
 /**
  * @description Finds Pets by status
  */
 export function getPetFindByStatus(
-  payload: getPetFindByStatusPayloadParameters
+  payload: getPetFindByStatusParameters
 ): Promise<Array<Pet>> {
-  const path = "/pet/findByStatus";
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "GET" });
+  return request("/pet/findByStatus", {
+    payload,
+    payloadIn: "query",
+    method: "GET",
+  });
 }
 
-export type postPetPayloadParameters = {
+/**
+ * @description Find pet by ID
+ */
+export function getPetByPetId(payload: getPetByPetIdParameters): Promise<Pet> {
+  return request(`/pet/${payload["petId"]}`, {
+    payload,
+    payloadIn: "header",
+    method: "GET",
+  });
+}
+
+export type postPetParameters = {
+  /** in header */
+  "X-Request-ID": string;
+
   undefined?: any;
 } & Pet; /** Pet object that needs to be added to the store in body */
 
-export type getPetFindByStatusPayloadParameters = {
+export type putPetParameters = {
+  undefined?: any;
+} & Pet; /** Pet object that needs to be added to the store in body */
+
+export type getPetFindByStatusParameters = {
   /** Status values that need to be considered for filter in query */
   status: Array<"available" | "pending" | "sold">;
   undefined?: any;
+};
+
+export type getPetByPetIdParameters = {
+  /** ID of pet to return in path */
+  petId: number;
+  /** in header */
+  api_key?: any;
 };
 
 export type Category = {

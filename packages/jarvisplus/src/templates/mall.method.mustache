@@ -1,0 +1,28 @@
+/**
+ * @description {{&summary}}
+ */
+{{#mergeParam}}
+export function {{name}} ({{parameters}}): Promise<
+  {{#hasCustomReturnType}}CustomReturnType<{{&responseTypes}}>{{/hasCustomReturnType}}
+  {{^hasCustomReturnType}}{{&responseTypes}}{{/hasCustomReturnType}}> {
+  {{#payloadIn}}
+    const payloadIn = {{&payloadIn}}
+  {{/payloadIn}}
+  return request(
+    {{#pathParams.length}}`{{{path}}}`{{/pathParams.length}}
+    {{^pathParams.length}}"{{{path}}}"{{/pathParams.length}},
+    { {{#parameters}}payload,{{/parameters}} {{#payloadIn}}payloadIn, {{/payloadIn}} {{#payloadInType}}payloadIn: "{{&payloadInType}}", {{/payloadInType}} method: '{{method}}' }
+  )
+}
+{{/mergeParam}}
+{{^mergeParam}}
+export function {{name}} ({ {{#requestArgs}}{{.}},{{/requestArgs}} }: { {{parameters}} }): Promise<
+  {{#hasCustomReturnType}}CustomReturnType<{{&responseTypes}}>{{/hasCustomReturnType}}
+  {{^hasCustomReturnType}}{{&responseTypes}}{{/hasCustomReturnType}}> {
+  return request(
+      {{#pathParams.length}}`{{{path}}}`{{/pathParams.length}}
+      {{^pathParams.length}}"{{{path}}}"{{/pathParams.length}},
+      { {{#requestArgs}}{{.}},{{/requestArgs}} method: '{{method}}' }
+  )
+}
+{{/mergeParam}}

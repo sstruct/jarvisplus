@@ -1,26 +1,14 @@
 import * as request from "superagent"
-
-export type RequestFactoryType = ({
-  path,
-  payload,
-  payloadIn,
-  payloadInType,
-  query,
-  body,
-  formData,
-  headers,
-  method,
-}: {
-  path: string
-  payload?: any
-  payloadIn?: any
-  payloadInType?: string
-  query?: any
-  body?: any
-  formData?: any
-  headers?: any
-  method: string
-}) => Promise<any>
+import {
+  parsePayloadParameters,
+  prepareFetchHeaders,
+  prepareFetchBody,
+} from "./utils"
+import type {
+  ApiResponse,
+  RequestParameterType,
+  RequestFactoryType,
+} from "./utils"
 
 type RequestCallback =
   | (request.SuperAgentStatic & request.Request)
@@ -29,55 +17,24 @@ type RequestCallback =
 export interface SuperagentRequestFactoryOptions {
   request?: RequestCallback
 
-  onResponse?(any): any
+  onResponse?(any): request.Response
 
-  onError?(any): any
-}
-
-const getParametersFromPayloadWithParamNames = (
-  payload: any,
-  paramNames: string[]
-) => {
-  if (payload && typeof payload === "string") return payload
-  if (!Array.isArray(paramNames)) return
-  const parameters = {}
-  paramNames.forEach((name) => {
-    if (Object.hasOwnProperty.call(payload, name)) {
-      parameters[name] = payload[name]
-    }
-  })
-  return parameters
+  onError?(any): request.ResponseError
 }
 
 const SuperagentRequestFactory =
   (
     baseUrl: string,
     options: SuperagentRequestFactoryOptions
-  ): RequestFactoryType =>
-  (args) => {
-    const { payload, payloadIn, payloadInType } = args
-    if (payloadInType) {
-      args[payloadInType] = payload
-    } else if (payloadIn) {
-      Object.keys(payloadIn).forEach((type) => {
-        args[type] = getParametersFromPayloadWithParamNames(
-          payload,
-          payloadIn[type]
-        )
-      })
-    }
+  ): RequestFactoryType<ApiResponse<any>> =>
+  (_args) => {
+    const args = parsePayloadParameters(_args)
     const { path, query, body, formData, method, headers } = args
 
-    const headersObject = new Headers({})
-
-    new Headers(headers).forEach((value, key) => {
-      headersObject.set(key, String(value))
-    })
-
-    const fetchOptions: RequestInit = Object.assign(
-      {},
-      { method: method, headers: headersObject }
-    )
+    const fetchOptions: RequestParameterType = {
+      method: method,
+      headers: prepareFetchHeaders({ headers }),
+    }
 
     if (body !== undefined) {
       fetchOptions.body = body

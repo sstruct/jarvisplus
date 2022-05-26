@@ -1,26 +1,10 @@
 import { serialize } from "./serialize"
-
-export interface ApiResponse<T> extends Response {
-  json(): Promise<T>
-}
-
-export type RequestFactoryType = ({
-  path,
-  query,
-  body,
-  formData,
-  headers,
-  method,
-  configuration,
-}: {
-  path: string
-  query?: any
-  body?: any
-  formData?: any
-  headers?: any
-  method: string
-  configuration: any
-}) => Promise<ApiResponse<any>>
+import {
+  parsePayloadParameters,
+  prepareFetchHeaders,
+  prepareFetchBody,
+} from "./utils"
+import type { ApiResponse, RequestFactoryType } from "./utils"
 
 export type WhatWgFetchFunctionType = (
   input: RequestInfo,
@@ -36,35 +20,27 @@ const WhatWgFetchRequestFactory =
   (
     baseUrl: string,
     options: WhatWgFetchRequestFactoryOptions
-  ): RequestFactoryType =>
-  ({ path, query, body, formData, headers, method, configuration: never }) => {
-    const headersObject = new Headers(options.requestInit.headers || {})
-
-    new Headers(headers).forEach((value, key) => {
-      headersObject.set(key, String(value))
-    })
+  ): RequestFactoryType<ApiResponse<any>> =>
+  (_args) => {
+    const args = parsePayloadParameters(_args)
+    const {
+      path,
+      query,
+      body,
+      formData,
+      method,
+      headers,
+      configuration: never,
+    } = args
 
     const fetchOptions: RequestInit = Object.assign({}, options.requestInit, {
       method: method,
-      headers: headersObject,
+      headers: prepareFetchHeaders({
+        initHeaders: options.requestInit.headers || {},
+        headers,
+      }),
     })
-
-    if (body && typeof body === "string") {
-      fetchOptions.body = body
-    } else if (
-      body &&
-      typeof body === "object" &&
-      Object.keys(body).length > 0
-    ) {
-      fetchOptions.body = JSON.stringify(body)
-    } else if (formData && Object.keys(formData).length > 0) {
-      fetchOptions.body = Object.keys(formData).reduce((data, key) => {
-        data.append(key, formData[key])
-        return data
-      }, new FormData())
-    } else if (formData) {
-      fetchOptions.body = formData
-    }
+    fetchOptions.body = prepareFetchBody({ body, formData })
 
     const hasQuery = query && Object.keys(query).length > 0
     const fullUrl = [
@@ -81,9 +57,9 @@ const WhatWgFetchRequestFactory =
   }
 
 export const withHeaders = (
-  requestFactory: RequestFactoryType,
+  requestFactory: RequestFactoryType<ApiResponse<any>>,
   overrideHeaders: Headers
-): RequestFactoryType => {
+): RequestFactoryType<ApiResponse<any>> => {
   return ({ path, query, body, formData, headers, method, configuration }) => {
     const headersObject = new Headers(headers || {})
     new Headers(overrideHeaders).forEach((value, key) => {

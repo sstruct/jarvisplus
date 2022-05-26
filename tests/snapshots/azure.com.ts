@@ -1,127 +1,101 @@
-import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/superagent-request";
+/* eslint-disable */
 
-const request = requestFactory("", {});
+import { request } from "@terminus/mall-utils";
 
 /**
  * @description false
  */
 export function getProvidersMicrosoftEnterpriseKnowledgeGraphOperations(
-  payload: getProvidersMicrosoftEnterpriseKnowledgeGraphOperationsPayloadParameters
+  payload: getProvidersMicrosoftEnterpriseKnowledgeGraphOperationsParameters
 ): Promise<OperationEntityListResult> {
-  const path = "/providers/Microsoft.EnterpriseKnowledgeGraph/operations";
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "GET" });
+  return request("/providers/Microsoft.EnterpriseKnowledgeGraph/operations", {
+    payload,
+    payloadIn: "query",
+    method: "GET",
+  });
 }
 
 /**
  * @description false
  */
 export function getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnowledgeGraphServices(
-  payload: getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnowledgeGraphServicesPayloadParameters
+  payload: getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnowledgeGraphServicesParameters
 ): Promise<EnterpriseKnowledgeGraphResponseList | Error> {
-  let path =
-    "/subscriptions/{subscriptionId}/providers/Microsoft.EnterpriseKnowledgeGraph/services";
-  path = path.replace("{subscriptionId}", String(payload["subscriptionId"]));
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "GET" });
+  return request(
+    `/subscriptions/${payload["subscriptionId"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services`,
+    { payload, payloadIn: "query", method: "GET" }
+  );
 }
 
 /**
  * @description false
  */
 export function getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServices(
-  payload: getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesPayloadParameters
+  payload: getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesParameters
 ): Promise<EnterpriseKnowledgeGraphResponseList | Error> {
-  let path =
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EnterpriseKnowledgeGraph/services";
-  path = path.replace(
-    "{resourceGroupName}",
-    String(payload["resourceGroupName"])
+  return request(
+    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services`,
+    { payload, payloadIn: "query", method: "GET" }
   );
-  path = path.replace("{subscriptionId}", String(payload["subscriptionId"]));
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "GET" });
 }
 
 /**
  * @description false
  */
 export function deleteSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceName(
-  payload: deleteSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNamePayloadParameters
+  payload: deleteSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters
 ): Promise<Error> {
-  let path =
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EnterpriseKnowledgeGraph/services/{resourceName}";
-  path = path.replace(
-    "{resourceGroupName}",
-    String(payload["resourceGroupName"])
+  return request(
+    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`,
+    { payload, payloadIn: "query", method: "DELETE" }
   );
-  path = path.replace("{resourceName}", String(payload["resourceName"]));
-  path = path.replace("{subscriptionId}", String(payload["subscriptionId"]));
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "DELETE" });
 }
 
 /**
  * @description false
  */
 export function getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceName(
-  payload: getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNamePayloadParameters
+  payload: getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters
 ): Promise<EnterpriseKnowledgeGraph | Error> {
-  let path =
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EnterpriseKnowledgeGraph/services/{resourceName}";
-  path = path.replace(
-    "{resourceGroupName}",
-    String(payload["resourceGroupName"])
+  return request(
+    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`,
+    { payload, payloadIn: "query", method: "GET" }
   );
-  path = path.replace("{resourceName}", String(payload["resourceName"]));
-  path = path.replace("{subscriptionId}", String(payload["subscriptionId"]));
-  const payloadInType = "query";
-  return request({ path, payload, payloadInType, method: "GET" });
 }
 
 /**
  * @description false
  */
 export function patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceName(
-  payload: patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNamePayloadParameters
+  payload: patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters
 ): Promise<EnterpriseKnowledgeGraph | Error> {
-  let path =
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EnterpriseKnowledgeGraph/services/{resourceName}";
-  path = path.replace(
-    "{resourceGroupName}",
-    String(payload["resourceGroupName"])
-  );
-  path = path.replace("{resourceName}", String(payload["resourceName"]));
-  path = path.replace("{subscriptionId}", String(payload["subscriptionId"]));
   const payloadIn = { query: ["api-version"], body: ["properties"] };
-  return request({ path, payload, payloadIn, method: "PATCH" });
+  return request(
+    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`,
+    { payload, payloadIn, method: "PATCH" }
+  );
 }
 
 /**
  * @description false
  */
 export function putSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceName(
-  payload: putSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNamePayloadParameters
+  payload: putSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters
 ): Promise<EnterpriseKnowledgeGraph | Error> {
-  let path =
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.EnterpriseKnowledgeGraph/services/{resourceName}";
-  path = path.replace(
-    "{resourceGroupName}",
-    String(payload["resourceGroupName"])
-  );
-  path = path.replace("{resourceName}", String(payload["resourceName"]));
-  path = path.replace("{subscriptionId}", String(payload["subscriptionId"]));
   const payloadIn = { query: ["api-version"], body: ["properties"] };
-  return request({ path, payload, payloadIn, method: "PUT" });
+  return request(
+    `/subscriptions/${payload["subscriptionId"]}/resourceGroups/${payload["resourceGroupName"]}/providers/Microsoft.EnterpriseKnowledgeGraph/services/${payload["resourceName"]}`,
+    { payload, payloadIn, method: "PUT" }
+  );
 }
 
-export type getProvidersMicrosoftEnterpriseKnowledgeGraphOperationsPayloadParameters =
+export type getProvidersMicrosoftEnterpriseKnowledgeGraphOperationsParameters =
   {
     /** Version of the API to be used with the client request. in query */
     "api-version": string;
   };
 
-export type getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnowledgeGraphServicesPayloadParameters =
+export type getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnowledgeGraphServicesParameters =
   {
     /** Version of the API to be used with the client request. in query */
     "api-version": string;
@@ -129,7 +103,7 @@ export type getSubscriptionsBySubscriptionIdProvidersMicrosoftEnterpriseKnowledg
     subscriptionId: string;
   };
 
-export type getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesPayloadParameters =
+export type getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesParameters =
   {
     /** The name of the EnterpriseKnowledgeGraph resource group in the user subscription. in path */
     resourceGroupName: string;
@@ -139,19 +113,7 @@ export type getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNamePro
     "api-version": string;
   };
 
-export type deleteSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNamePayloadParameters =
-  {
-    /** The name of the EnterpriseKnowledgeGraph resource group in the user subscription. in path */
-    resourceGroupName: string;
-    /** The name of the EnterpriseKnowledgeGraph resource. in path */
-    resourceName: string;
-    /** Version of the API to be used with the client request. in query */
-    "api-version": string;
-    /** Azure Subscription ID. in path */
-    subscriptionId: string;
-  };
-
-export type getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNamePayloadParameters =
+export type deleteSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters =
   {
     /** The name of the EnterpriseKnowledgeGraph resource group in the user subscription. in path */
     resourceGroupName: string;
@@ -163,7 +125,19 @@ export type getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNamePro
     subscriptionId: string;
   };
 
-export type patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNamePayloadParameters =
+export type getSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters =
+  {
+    /** The name of the EnterpriseKnowledgeGraph resource group in the user subscription. in path */
+    resourceGroupName: string;
+    /** The name of the EnterpriseKnowledgeGraph resource. in path */
+    resourceName: string;
+    /** Version of the API to be used with the client request. in query */
+    "api-version": string;
+    /** Azure Subscription ID. in path */
+    subscriptionId: string;
+  };
+
+export type patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters =
   {
     /** The name of the EnterpriseKnowledgeGraph resource group in the user subscription. in path */
     resourceGroupName: string;
@@ -176,7 +150,7 @@ export type patchSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameP
     subscriptionId: string;
   } & EnterpriseKnowledgeGraph; /** The parameters to provide for the created EnterpriseKnowledgeGraph. in body */
 
-export type putSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNamePayloadParameters =
+export type putSubscriptionsBySubscriptionIdResourceGroupsByResourceGroupNameProvidersMicrosoftEnterpriseKnowledgeGraphServicesByResourceNameParameters =
   {
     /** The name of the EnterpriseKnowledgeGraph resource group in the user subscription. in path */
     resourceGroupName: string;

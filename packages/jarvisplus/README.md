@@ -48,7 +48,7 @@ swaggers:
           - /api/v2/pet
 # api client 生成的类型. 现在仅支持 ts（默认值）
 targetLanguage: "ts
-# 所依赖的请求模块, 支持 "superagent-request(default)", "whatwg-fetch"
+# 所依赖的请求模块, 支持 "superagent-request", "util-request", "whatwg-fetch"
 template: "superagent-request"
 # 此配置仅当 template 为 superagent-request 时可用
 # 自定义 superagent 路径，可自行添加 headers 或中间件，不传则使用默认 superagent
@@ -65,6 +65,14 @@ enableMock?: boolean
 ```
 
 ## Changelog
+
+### 2.2.2-beta.0
+
+- 默认方法请求地址格式优化，string replace 替换为 string template
+- 请求参数类型名简化: fooPayloadParameter -> fooParameter
+- 支持 util-request 模版
+- 修复 mergeParam 为 false 时模版错误
+- 优化：精简带参数的 path 模版格式
 
 ### 2.2.1
 

@@ -116,6 +116,15 @@
         ],
         "parameters": [
           {
+            "in": "header",
+            "name": "X-Request-ID",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true
+          },
+          {
             "in": "body",
             "name": "body",
             "description": "Pet object that needs to be added to the store",

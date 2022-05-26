@@ -1,7 +1,8 @@
 import * as Mustache from "mustache"
 import * as chalk from "chalk"
 import * as get from "lodash.get"
-import { readerTemplate } from "./templates"
+import { readerTemplate, defaultTemplatesSuites } from "./templates"
+import type { TemplatesSuite } from "./templates"
 import {
   Operation,
   Parameter,
@@ -24,6 +25,7 @@ import {
   PARAMETER_TYPE_BODY,
   PARAMETER_TYPE_FORM_DATA,
   PARAMETER_TYPE_HEADER,
+  PARAMETER_TYPE_PATH,
   PARAMETER_TYPE_PAYLOAD,
   PARAMETER_TYPE_QUERY,
   ParameterType,
@@ -41,13 +43,13 @@ const PARAMETERS_QUERY_SUFFIX = "QueryParameters"
 const PARAMETERS_BODY_SUFFIX = "BodyParameters"
 const PARAMETERS_FORM_DATA_SUFFIX = "FormDataParameters"
 const PARAMETERS_HEADER_SUFFIX = "HeaderParameters"
-const PARAMETERS_PAYLOAD_SUFFIX = "PayloadParameters"
+const PARAMETERS_PAYLOAD_SUFFIX = "Parameters"
 
 export interface SwaggerToTypescriptConverterSettings {
   backend?: string
   targetPath?: string
   // template name or custom template path
-  template?: "whatwg-fetch" | "superagent-request" | string
+  template?: "whatwg-fetch" | "superagent-request" | "util-request" | string
   mergeParam?: boolean
   customAgent?: string
   hasCustomReturnType?: boolean
@@ -74,7 +76,8 @@ export class TypescriptConverter implements BaseConverter {
 
   public constructor(
     protected swagger: Spec,
-    protected settings?: SwaggerToTypescriptConverterSettings
+    protected settings?: SwaggerToTypescriptConverterSettings,
+    protected templatesSuite?: TemplatesSuite
   ) {
     this.hasValidFilter =
       !!this.settings.tags?.length || !!this.settings.paths?.length
@@ -87,6 +90,7 @@ export class TypescriptConverter implements BaseConverter {
       },
       settings || {}
     )
+    this.templatesSuite = defaultTemplatesSuites[this.settings.template]
   }
 
   protected normalizer: Normalizer = new TypescriptNameNormalizer({
@@ -104,6 +108,7 @@ export class TypescriptConverter implements BaseConverter {
     const name = this.getNormalizer().normalizeRequestName(method, path)
 
     const {
+      pathParams,
       queryParams,
       bodyParams,
       formDataParams,
@@ -127,6 +132,7 @@ export class TypescriptConverter implements BaseConverter {
     if (this.settings.mergeParam) {
       appendParameterTypes(payloadParams, PARAMETERS_PAYLOAD_SUFFIX)
     } else {
+      appendParameterTypes(pathParams, PARAMETER_PATH_SUFFIX)
       appendParameterTypes(queryParams, PARAMETERS_QUERY_SUFFIX)
       appendParameterTypes(bodyParams, PARAMETERS_BODY_SUFFIX)
       appendParameterTypes(formDataParams, PARAMETERS_FORM_DATA_SUFFIX)
@@ -185,20 +191,9 @@ export class TypescriptConverter implements BaseConverter {
 
     let output = ""
 
-    let parameters: string[] = []
-
+    const parameters: string[] = []
     const payloadInType: string[] = []
     const payloadIn: { [key: string]: string[] } = {}
-
-    if (!this.settings.mergeParam) {
-      parameters = pathParams.map((parameter) => {
-        return `${
-          parameter.name
-        }${PARAMETER_PATH_SUFFIX}: ${this.generateTypeValue(
-          parameter as unknown as Schema
-        )}`
-      })
-    }
 
     const args: Partial<Record<ParameterType, boolean>> = {
       // [PARAMETER_TYPE_PATH]: true,
@@ -240,6 +235,13 @@ export class TypescriptConverter implements BaseConverter {
       )
     }
 
+    if (!this.settings.mergeParam) {
+      appendParametersArgs(
+        PARAMETER_TYPE_PATH,
+        pathParams,
+        PARAMETER_PATH_SUFFIX
+      )
+    }
     appendParametersArgs(
       PARAMETER_TYPE_QUERY,
       queryParams,
@@ -272,7 +274,8 @@ export class TypescriptConverter implements BaseConverter {
         )
         .join(" | ") || TYPESCRIPT_TYPE_VOID
 
-    output += Mustache.render(readerTemplate("singleMethod"), {
+    output += Mustache.render(readerTemplate(this.templatesSuite.method), {
+      mergeParam: this.settings.mergeParam,
       // method summary
       summary:
         this.getNormalizer().normalizeSummary(operation.summary) || false,
@@ -280,6 +283,7 @@ export class TypescriptConverter implements BaseConverter {
       name,
       // method parameters
       parameters: parameters.join(", "),
+      pathParams,
       payloadIn:
         Object.keys(payloadIn).length > 1
           ? JSON.stringify(payloadIn)
@@ -287,14 +291,9 @@ export class TypescriptConverter implements BaseConverter {
       payloadInType: payloadInType.length === 1 ? payloadInType[0] : undefined,
       // request arguments(payload | query, body, formData)
       requestArgs: Object.keys(args).filter((arg) => args[arg]),
-      // define path keyword const/let
-      definePath: pathParams.length > 0 ? "let" : "const",
-      path,
-      pathParams,
-      // decorate path params' name with curly braces
-      pathParamName: function () {
-        return `{${this.name}}`
-      },
+      path: path
+        .replace(/\{/g, this.settings.mergeParam ? '${payload["' : '${path["')
+        .replace(/\}/g, `"]}`),
       method: method.toUpperCase(),
       responseTypes,
       hasCustomReturnType: this.settings.hasCustomReturnType,
@@ -316,7 +315,8 @@ export class TypescriptConverter implements BaseConverter {
     // Collect referred definitions before generating
     while (this.referredDefinitions.size > collectedDefinitions.size) {
       this.referredDefinitions.forEach((name: string) => {
-        if (!this.swagger.definitions[name]) {
+        const definition = this.swagger.definitions[name]
+        if (!definition) {
           collectedDefinitions.add(name)
           console.log(chalk.yellow(`Unknown model "${name}", skipped.`))
         }
@@ -324,7 +324,7 @@ export class TypescriptConverter implements BaseConverter {
           !collectedDefinitions.has(name) &&
           this.referredDefinitions.has(name)
         ) {
-          this.generateTypeValue(this.swagger.definitions[name], {
+          this.generateTypeValue(definition, {
             parentName: name,
           })
           collectedDefinitions.add(name)
@@ -539,7 +539,7 @@ export class TypescriptConverter implements BaseConverter {
 
   public generateClient(name: string): string {
     let output = ""
-    output += Mustache.render(readerTemplate("methodModule"), {
+    output += Mustache.render(readerTemplate(this.templatesSuite.header), {
       RequestFactoryName: this.settings.template,
       customAgent: this.settings.customAgent,
       hasCustomReturnType: this.settings.hasCustomReturnType,
