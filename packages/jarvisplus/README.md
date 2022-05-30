@@ -31,7 +31,7 @@ swaggers:
   - swaggerUrl?: string # 远程 swagger 文件, url 请带上 /v2/api-docs
   - file?: string # 本地 json/yaml 格式的 swagger 文件。优先使用远程文件
     backend?: string
-    alias?: string # TODO 暂未支持
+    alias?: string # @TODO 暂未支持
     targetPath: string  # 生成文件路径（相对于项目根目录）
     tags: # 根据 tags 筛选，仅生成对应 tag 下的接口和数据模型。和 paths 选项同时使用时，优先使用 paths
       - tag_a

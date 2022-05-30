@@ -48,10 +48,6 @@ swaggers:
 #    # 生成的 client 存放路径, 相对路径
 #    targetPath: tests/snapshots/google.home.ts
 
-#  - swaggerUrl: https://api.apis.guru/v2/specs/github.com/ghes-3.1/1.1.4/openapi.json
-#    # 生成的 client 存放路径, 相对路径
-#    targetPath: tests/snapshots/ghes-3.1.ts
-
 # api client 生成语言，目前仅支持 ts
 targetLanguage: ts
 # 所依赖的请求代理模块 superagent-request | whatwg-fetch(default) | dir_path

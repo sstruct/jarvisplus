@@ -35,11 +35,14 @@ lerna publish
 - [x] 请求函数参数格式优化，默认不传 undefined
 - [x] 支持中文变量名
 - [x] 支持同一源文件生成多个目标文件
-- [x] 支持根据 tags、path 过滤生成的接口
-- [ ] 支持按 tags, path 忽略部分接口
+- [x] 支持根据 tags, path 过滤生成结果
+- [ ] 支持 exclude 部分结果
+- [ ] 支持 mock
 - [ ] 支持 auth 参数
 - [ ] 支持 init 命令，初始化引导
-- [ ] 支持 mock
-- [ ] 支持自定义 agent
 - [x] 支持自定义 templates
+- [x] 支持自定义 agent
+- [ ] 支持自定义函数命名规则
+- [ ] 支持 node 接口
 - [ ] 支持 [OpenAPI v3](https://swagger.io/specification/)
+- [ ] 完善的文档；自动生成配置文件文档
