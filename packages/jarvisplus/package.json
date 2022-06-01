@@ -10,7 +10,7 @@
     "clean": "rimraf ./lib",
     "prebuild": "yarn clean",
     "build": "tsc --build && npm run cptemplates",
-    "cptemplates": "copyfiles -f 'src/templates/*.mustache' lib/templates",
+    "cptemplates": "copyfiles -f 'src/templates/**/*.mustache' lib/templates",
     "test": "jest --coverage .",
     "prepublish": "npm run build"
   },

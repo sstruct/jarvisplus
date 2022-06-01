@@ -1,4 +1,8 @@
-export const DEFAULT_TEMPLATES = ["whatwg-fetch", "superagent-request"]
+export const DEFAULT_TEMPLATES = [
+  "whatwg-fetch",
+  "superagent-request",
+  "utils-request",
+]
 
 export type TemplateType = typeof DEFAULT_TEMPLATES[number] | string
 
@@ -14,5 +18,9 @@ export const DEFAULT_TEMPLATES_SUITES: Record<TemplateType, TemplatesSuite> = {
   "superagent-request": {
     header: "./default.header",
     method: "./default.method",
+  },
+  "utils-request": {
+    header: "./utils-request.header",
+    method: "./utils-request.method",
   },
 }

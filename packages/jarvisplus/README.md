@@ -48,7 +48,7 @@ swaggers:
           - /api/v2/pet
 # api client 生成的类型. 现在仅支持 ts（默认值）
 targetLanguage: "ts
-# 所依赖的请求模块 superagent-request | whatwg-fetch(default) | dir_path(自定义模版路径，参考 templates 文件夹 README)
+# 所依赖的请求模块 superagent-request | whatwg-fetch(default) | utils-request | dir_path(自定义模版路径，参考 templates 文件夹 README)
 template: "superagent-request"
 # 此配置仅当 template 为 superagent-request 时可用
 # 自定义 superagent 路径，可自行添加 headers 或中间件，不传则使用默认 superagent
@@ -66,10 +66,15 @@ enableMock?: boolean
 
 ## Changelog
 
+### 2.2.2-beta.2
+
+- 默认内置 utils-request 模版
+- 支持强制 camelCase 命名
+
 ### 2.2.2-beta.1
 
 - 对用户更友好的错误提示
-- 支持用户自定义模版；uitl-request 模版移入 mall-utils 包
+- 支持用户自定义模版; utils-request 模版移入 mall-utils 包
 - mergeParam 模式下模版格式优化
 
 ### 2.2.2-beta.0

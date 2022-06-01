@@ -50,9 +50,10 @@ swaggers:
 
 # api client 生成语言，目前仅支持 ts
 targetLanguage: ts
-# 所依赖的请求代理模块 superagent-request | whatwg-fetch(default) | dir_path
+# 所依赖的请求模块 superagent-request | whatwg-fetch(default) | utils-request | dir_path(自定义模版路径，参考 templates 文件夹 README)
 template: superagent-request
-# template: @terminus/mall-utils/lib/jarvisplus-templates
+#template: utils-request
+#template: @terminus/mall-utils/lib/jarvisplus-templates
 #customAgent: tests/snapshots/customAgent.example
 mergeParam: true
 # 是否开启旧版模式（暂时仅支持旧版方法名生成规则，名称可能存在错误，不建议使用）

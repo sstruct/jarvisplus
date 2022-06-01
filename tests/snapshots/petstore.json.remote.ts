@@ -119,6 +119,26 @@ export function getStoreInventory(
 }
 
 /**
+ * @description Creates list of users with given input array
+ */
+export function postUserCreateWithArray(
+  payload: postUserCreateWithArrayParameters
+): Promise<void> {
+  const path = "/user/createWithArray";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
+}
+
+/**
+ * @description Creates list of users with given input array
+ */
+export function postUserCreateWithList(
+  payload: postUserCreateWithListParameters
+): Promise<void> {
+  const path = "/user/createWithList";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
+}
+
+/**
  * @description Get user by user name
  */
 export function getUserByUsername(
@@ -162,26 +182,6 @@ export function getUserLogin(payload: getUserLoginParameters): Promise<string> {
 export function getUserLogout(): Promise<void> {
   const path = "/user/logout";
   return request({ path, method: "GET" });
-}
-
-/**
- * @description Creates list of users with given input array
- */
-export function postUserCreateWithArray(
-  payload: postUserCreateWithArrayParameters
-): Promise<void> {
-  const path = "/user/createWithArray";
-  return request({ path, payload, payloadIn: "body", method: "POST" });
-}
-
-/**
- * @description Creates list of users with given input array
- */
-export function postUserCreateWithList(
-  payload: postUserCreateWithListParameters
-): Promise<void> {
-  const path = "/user/createWithList";
-  return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
 /**
@@ -265,6 +265,16 @@ export type getStoreInventoryParameters = {
   api_key?: any;
 };
 
+export type postUserCreateWithArrayParameters = {
+  /** List of user object in body */
+  body: Array<User>;
+};
+
+export type postUserCreateWithListParameters = {
+  /** List of user object in body */
+  body: Array<User>;
+};
+
 export type getUserByUsernameParameters = {
   /** The name that needs to be fetched. Use user1 for testing.  in path */
   username: string;
@@ -285,16 +295,6 @@ export type getUserLoginParameters = {
   username: string;
   /** The password for login in clear text in query */
   password: string;
-};
-
-export type postUserCreateWithArrayParameters = {
-  /** List of user object in body */
-  body: Array<User>;
-};
-
-export type postUserCreateWithListParameters = {
-  /** List of user object in body */
-  body: Array<User>;
 };
 
 export type postUserParameters = User; /** Created user object in body */
