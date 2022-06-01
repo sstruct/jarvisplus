@@ -7,8 +7,8 @@ const request = requestFactory("", {});
 /**
  * @description Creates list of users with given input array
  */
-export function postUserCreateWithArray(
-  payload: postUserCreateWithArrayParameters
+export function PostUserCreateWithArray(
+  payload: PostUserCreateWithArrayParameters
 ): Promise<void> {
   const path = "/user/createWithArray";
   return request({ path, payload, payloadIn: "body", method: "POST" });
@@ -17,8 +17,8 @@ export function postUserCreateWithArray(
 /**
  * @description Creates list of users with given input array
  */
-export function postUserCreateWithList(
-  payload: postUserCreateWithListParameters
+export function PostUserCreateWithList(
+  payload: PostUserCreateWithListParameters
 ): Promise<void> {
   const path = "/user/createWithList";
   return request({ path, payload, payloadIn: "body", method: "POST" });
@@ -27,8 +27,8 @@ export function postUserCreateWithList(
 /**
  * @description Get user by user name
  */
-export function getUserByUsername(
-  payload: getUserByUsernameParameters
+export function GetUserByUsername(
+  payload: GetUserByUsernameParameters
 ): Promise<User> {
   const path = `/user/${payload["username"]}`;
   return request({ path, payload, method: "GET" });
@@ -37,8 +37,8 @@ export function getUserByUsername(
 /**
  * @description Updated user
  */
-export function putUserByUsername(
-  payload: putUserByUsernameParameters
+export function PutUserByUsername(
+  payload: PutUserByUsernameParameters
 ): Promise<void> {
   const path = `/user/${payload["username"]}`;
   return request({ path, payload, payloadIn: "body", method: "PUT" });
@@ -47,8 +47,8 @@ export function putUserByUsername(
 /**
  * @description Delete user
  */
-export function deleteUserByUsername(
-  payload: deleteUserByUsernameParameters
+export function DeleteUserByUsername(
+  payload: DeleteUserByUsernameParameters
 ): Promise<void> {
   const path = `/user/${payload["username"]}`;
   return request({ path, payload, method: "DELETE" });
@@ -57,7 +57,7 @@ export function deleteUserByUsername(
 /**
  * @description Logs user into the system
  */
-export function getUserLogin(payload: getUserLoginParameters): Promise<string> {
+export function GetUserLogin(payload: GetUserLoginParameters): Promise<string> {
   const path = "/user/login";
   return request({ path, payload, payloadIn: "query", method: "GET" });
 }
@@ -65,7 +65,7 @@ export function getUserLogin(payload: getUserLoginParameters): Promise<string> {
 /**
  * @description Logs out current logged in user session
  */
-export function getUserLogout(): Promise<void> {
+export function GetUserLogout(): Promise<void> {
   const path = "/user/logout";
   return request({ path, method: "GET" });
 }
@@ -73,44 +73,44 @@ export function getUserLogout(): Promise<void> {
 /**
  * @description Create user
  */
-export function postUser(payload: postUserParameters): Promise<void> {
+export function PostUser(payload: PostUserParameters): Promise<void> {
   const path = "/user";
   return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
-export type postUserCreateWithArrayParameters = {
+export type PostUserCreateWithArrayParameters = {
   /** List of user object in body */
   body: Array<User>;
 };
 
-export type postUserCreateWithListParameters = {
+export type PostUserCreateWithListParameters = {
   /** List of user object in body */
   body: Array<User>;
 };
 
-export type getUserByUsernameParameters = {
+export type GetUserByUsernameParameters = {
   /** The name that needs to be fetched. Use user1 for testing.  in path */
   username: string;
 };
 
-export type putUserByUsernameParameters = {
+export type PutUserByUsernameParameters = {
   /** name that need to be updated in path */
   username: string;
 } & User; /** Updated user object in body */
 
-export type deleteUserByUsernameParameters = {
+export type DeleteUserByUsernameParameters = {
   /** The name that needs to be deleted in path */
   username: string;
 };
 
-export type getUserLoginParameters = {
+export type GetUserLoginParameters = {
   /** The user name for login in query */
   username: string;
   /** The password for login in clear text in query */
   password: string;
 };
 
-export type postUserParameters = User; /** Created user object in body */
+export type PostUserParameters = User; /** Created user object in body */
 
 export type User = {
   id?: number;

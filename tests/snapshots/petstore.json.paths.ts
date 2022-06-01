@@ -7,7 +7,7 @@ const request = requestFactory("", {});
 /**
  * @description Add a new pet to the store
  */
-export function postPet(payload: postPetParameters): Promise<void> {
+export function PostPet(payload: PostPetParameters): Promise<void> {
   const path = "/pet";
   const payloadIn = {
     body: ["id", "category", "name", "photoUrls", "tags", "status"],
@@ -19,7 +19,7 @@ export function postPet(payload: postPetParameters): Promise<void> {
 /**
  * @description Update an existing pet
  */
-export function putPet(payload: putPetParameters): Promise<void> {
+export function PutPet(payload: PutPetParameters): Promise<void> {
   const path = "/pet";
   return request({ path, payload, payloadIn: "body", method: "PUT" });
 }
@@ -27,8 +27,8 @@ export function putPet(payload: putPetParameters): Promise<void> {
 /**
  * @description Finds Pets by status
  */
-export function getPetFindByStatus(
-  payload: getPetFindByStatusParameters
+export function GetPetFindByStatus(
+  payload: GetPetFindByStatusParameters
 ): Promise<Array<Pet>> {
   const path = "/pet/findByStatus";
   return request({ path, payload, payloadIn: "query", method: "GET" });
@@ -37,29 +37,29 @@ export function getPetFindByStatus(
 /**
  * @description Find pet by ID
  */
-export function getPetByPetId(payload: getPetByPetIdParameters): Promise<Pet> {
+export function GetPetByPetId(payload: GetPetByPetIdParameters): Promise<Pet> {
   const path = `/pet/${payload["petId"]}`;
   return request({ path, payload, payloadIn: "header", method: "GET" });
 }
 
-export type postPetParameters = {
+export type PostPetParameters = {
   /** in header */
   "X-Request-ID": string;
 
   undefined?: any;
 } & Pet; /** Pet object that needs to be added to the store in body */
 
-export type putPetParameters = {
+export type PutPetParameters = {
   undefined?: any;
 } & Pet; /** Pet object that needs to be added to the store in body */
 
-export type getPetFindByStatusParameters = {
+export type GetPetFindByStatusParameters = {
   /** Status values that need to be considered for filter in query */
   status: Array<"available" | "pending" | "sold">;
   undefined?: any;
 };
 
-export type getPetByPetIdParameters = {
+export type GetPetByPetIdParameters = {
   /** ID of pet to return in path */
   petId: number;
   /** in header */

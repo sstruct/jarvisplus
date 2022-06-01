@@ -63,6 +63,7 @@ const commandCore = async (command, options) => {
         ? `./${customAgentRelativePath}`
         : null,
       hasCustomReturnType,
+      nameConvention: commonOptions.nameConvention,
       legacy: commonOptions.legacy,
     })
     const writer = writerFactory({
@@ -116,6 +117,7 @@ const useCommand = (command: Command) => (args: CommandOptions) => {
         customAgent: args.customAgent,
         legacy: args.legacy,
         writeToDisk: args.writeToDisk,
+        nameConvention: args.nameConvention,
       })
     })
   } else {
@@ -128,6 +130,7 @@ const useCommand = (command: Command) => (args: CommandOptions) => {
       paths: args.paths,
       legacy: args.legacy,
       writeToDisk: args.writeToDisk,
+      nameConvention: args.nameConvention,
     })
   }
 }

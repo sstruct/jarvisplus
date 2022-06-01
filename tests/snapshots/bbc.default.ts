@@ -7,8 +7,8 @@ const request = requestFactory("", {});
 /**
  * @description 删除
  */
-export function deleteApiBasicAddressDeleteById(
-  payload: deleteApiBasicAddressDeleteByIdParameters
+export function DeleteApiBasicAddressDeleteById(
+  payload: DeleteApiBasicAddressDeleteByIdParameters
 ): Promise<boolean> {
   const path = `/api/basic/address/delete/${payload["id"]}`;
   return request({ path, payload, method: "DELETE" });
@@ -17,7 +17,7 @@ export function deleteApiBasicAddressDeleteById(
 /**
  * @description 查询
  */
-export function getApiBasicAddressList(): Promise<Array<收货地址>> {
+export function GetApiBasicAddressList(): Promise<Array<收货地址>> {
   const path = "/api/basic/address/list";
   return request({ path, method: "GET" });
 }
@@ -25,8 +25,8 @@ export function getApiBasicAddressList(): Promise<Array<收货地址>> {
 /**
  * @description 保存
  */
-export function postApiBasicAddressSave(
-  payload: postApiBasicAddressSaveParameters
+export function PostApiBasicAddressSave(
+  payload: PostApiBasicAddressSaveParameters
 ): Promise<收货地址> {
   const path = "/api/basic/address/save";
   return request({ path, payload, payloadIn: "body", method: "POST" });
@@ -35,8 +35,8 @@ export function postApiBasicAddressSave(
 /**
  * @description 查询行政区划
  */
-export function getApiBasicDistrictPage(
-  payload: getApiBasicDistrictPageParameters
+export function GetApiBasicDistrictPage(
+  payload: GetApiBasicDistrictPageParameters
 ): Promise<Paging行政区划> {
   const path = "/api/basic/district/page";
   return request({ path, payload, payloadIn: "query", method: "GET" });
@@ -45,8 +45,8 @@ export function getApiBasicDistrictPage(
 /**
  * @description 删除
  */
-export function deleteApiBasicInvoiceDeleteById(
-  payload: deleteApiBasicInvoiceDeleteByIdParameters
+export function DeleteApiBasicInvoiceDeleteById(
+  payload: DeleteApiBasicInvoiceDeleteByIdParameters
 ): Promise<boolean> {
   const path = `/api/basic/invoice/delete/${payload["id"]}`;
   return request({ path, payload, method: "DELETE" });
@@ -55,7 +55,7 @@ export function deleteApiBasicInvoiceDeleteById(
 /**
  * @description 查询
  */
-export function getApiBasicInvoiceList(): Promise<Array<发票>> {
+export function GetApiBasicInvoiceList(): Promise<Array<发票>> {
   const path = "/api/basic/invoice/list";
   return request({ path, method: "GET" });
 }
@@ -63,8 +63,8 @@ export function getApiBasicInvoiceList(): Promise<Array<发票>> {
 /**
  * @description 保存
  */
-export function postApiBasicInvoiceSave(
-  payload: postApiBasicInvoiceSaveParameters
+export function PostApiBasicInvoiceSave(
+  payload: PostApiBasicInvoiceSaveParameters
 ): Promise<发票> {
   const path = "/api/basic/invoice/save";
   return request({ path, payload, payloadIn: "body", method: "POST" });
@@ -73,7 +73,7 @@ export function postApiBasicInvoiceSave(
 /**
  * @description 查询列表
  */
-export function getApiBasicLanguageList(): Promise<Array<LanguageVO>> {
+export function GetApiBasicLanguageList(): Promise<Array<LanguageVO>> {
   const path = "/api/basic/language/list";
   return request({ path, method: "GET" });
 }
@@ -81,8 +81,8 @@ export function getApiBasicLanguageList(): Promise<Array<LanguageVO>> {
 /**
  * @description 查询开屏广告
  */
-export function getApiBasicMobile_appStartup(
-  payload: getApiBasicMobile_appStartupParameters
+export function GetApiBasicMobileAppStartup(
+  payload: GetApiBasicMobileAppStartupParameters
 ): Promise<开屏广告> {
   const path = "/api/basic/mobile-app/startup";
   return request({ path, payload, payloadIn: "query", method: "GET" });
@@ -91,8 +91,8 @@ export function getApiBasicMobile_appStartup(
 /**
  * @description 查询最新版本
  */
-export function getApiBasicMobile_appVersion(
-  payload: getApiBasicMobile_appVersionParameters
+export function GetApiBasicMobileAppVersion(
+  payload: GetApiBasicMobileAppVersionParameters
 ): Promise<APP版本> {
   const path = "/api/basic/mobile-app/version";
   return request({ path, payload, payloadIn: "query", method: "GET" });
@@ -101,7 +101,7 @@ export function getApiBasicMobile_appVersion(
 /**
  * @description 消息计数
  */
-export function getApiBasicNoticeStation_letterCount(): Promise<StationLetterCountVO> {
+export function GetApiBasicNoticeStationLetterCount(): Promise<StationLetterCountVO> {
   const path = "/api/basic/notice/station-letter/count";
   return request({ path, method: "GET" });
 }
@@ -109,7 +109,7 @@ export function getApiBasicNoticeStation_letterCount(): Promise<StationLetterCou
 /**
  * @description 消息分组
  */
-export function getApiBasicNoticeStation_letterGroup(): Promise<
+export function GetApiBasicNoticeStationLetterGroup(): Promise<
   Array<StationLetterGroupVO>
 > {
   const path = "/api/basic/notice/station-letter/group";
@@ -119,8 +119,8 @@ export function getApiBasicNoticeStation_letterGroup(): Promise<
 /**
  * @description 消息列表
  */
-export function getApiBasicNoticeStation_letterPage(
-  payload: getApiBasicNoticeStation_letterPageParameters
+export function GetApiBasicNoticeStationLetterPage(
+  payload: GetApiBasicNoticeStationLetterPageParameters
 ): Promise<PagingStationLetterVO> {
   const path = "/api/basic/notice/station-letter/page";
   return request({ path, payload, payloadIn: "query", method: "GET" });
@@ -129,7 +129,7 @@ export function getApiBasicNoticeStation_letterPage(
 /**
  * @description 消息全部已读
  */
-export function putApiBasicNoticeStation_letterRead_all(): Promise<void> {
+export function PutApiBasicNoticeStationLetterReadAll(): Promise<void> {
   const path = "/api/basic/notice/station-letter/read-all";
   return request({ path, method: "PUT" });
 }
@@ -137,8 +137,8 @@ export function putApiBasicNoticeStation_letterRead_all(): Promise<void> {
 /**
  * @description 消息已读
  */
-export function putApiBasicNoticeStation_letterReadById(
-  payload: putApiBasicNoticeStation_letterReadByIdParameters
+export function PutApiBasicNoticeStationLetterReadById(
+  payload: PutApiBasicNoticeStationLetterReadByIdParameters
 ): Promise<void> {
   const path = `/api/basic/notice/station-letter/read/${payload["id"]}`;
   return request({ path, payload, method: "PUT" });
@@ -147,8 +147,8 @@ export function putApiBasicNoticeStation_letterReadById(
 /**
  * @description 查询国家地区
  */
-export function getApiBasicRegionPage(
-  payload: getApiBasicRegionPageParameters
+export function GetApiBasicRegionPage(
+  payload: GetApiBasicRegionPageParameters
 ): Promise<Paging国家地区> {
   const path = "/api/basic/region/page";
   return request({ path, payload, payloadIn: "query", method: "GET" });
@@ -157,7 +157,7 @@ export function getApiBasicRegionPage(
 /**
  * @description 校验是否满足注销条件
  */
-export function postApiBasicUserCheck_destroy(): Promise<boolean> {
+export function PostApiBasicUserCheckDestroy(): Promise<boolean> {
   const path = "/api/basic/user/check-destroy";
   return request({ path, method: "POST" });
 }
@@ -165,8 +165,8 @@ export function postApiBasicUserCheck_destroy(): Promise<boolean> {
 /**
  * @description 根据手机号或邮件注销
  */
-export function postApiBasicUserDestroy(
-  payload: postApiBasicUserDestroyParameters
+export function PostApiBasicUserDestroy(
+  payload: PostApiBasicUserDestroyParameters
 ): Promise<boolean> {
   const path = "/api/basic/user/destroy";
   return request({ path, payload, payloadIn: "body", method: "POST" });
@@ -175,22 +175,22 @@ export function postApiBasicUserDestroy(
 /**
  * @description 发送用户注销验证码
  */
-export function postApiBasicUserSend_destroy_sms(
-  payload: postApiBasicUserSend_destroy_smsParameters
+export function PostApiBasicUserSendDestroySms(
+  payload: PostApiBasicUserSendDestroySmsParameters
 ): Promise<boolean> {
   const path = "/api/basic/user/send-destroy-sms";
   return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
-export type deleteApiBasicAddressDeleteByIdParameters = {
+export type DeleteApiBasicAddressDeleteByIdParameters = {
   /** id in path */
   id: number;
 };
 
-export type postApiBasicAddressSaveParameters =
+export type PostApiBasicAddressSaveParameters =
   收货地址; /** addressTO in body */
 
-export type getApiBasicDistrictPageParameters = {
+export type GetApiBasicDistrictPageParameters = {
   /** 层级 in query */
   level?: number;
   /** 当前页码-默认1，从1开始 in query */
@@ -207,14 +207,14 @@ export type getApiBasicDistrictPageParameters = {
   "operationType.write"?: boolean;
 };
 
-export type deleteApiBasicInvoiceDeleteByIdParameters = {
+export type DeleteApiBasicInvoiceDeleteByIdParameters = {
   /** id in path */
   id: number;
 };
 
-export type postApiBasicInvoiceSaveParameters = 发票; /** invoiceTO in body */
+export type PostApiBasicInvoiceSaveParameters = 发票; /** invoiceTO in body */
 
-export type getApiBasicMobile_appStartupParameters = {
+export type GetApiBasicMobileAppStartupParameters = {
   /** 系统类型 in query */
   type?: string;
   /** in query */
@@ -223,7 +223,7 @@ export type getApiBasicMobile_appStartupParameters = {
   "operationType.write"?: boolean;
 };
 
-export type getApiBasicMobile_appVersionParameters = {
+export type GetApiBasicMobileAppVersionParameters = {
   /** 版本名称 in query */
   name?: string;
   /** 当前版本号 in query */
@@ -236,7 +236,7 @@ export type getApiBasicMobile_appVersionParameters = {
   "operationType.write"?: boolean;
 };
 
-export type getApiBasicNoticeStation_letterPageParameters = {
+export type GetApiBasicNoticeStationLetterPageParameters = {
   /** 分组类型ID in query */
   typeId?: number;
   /** in query */
@@ -247,12 +247,12 @@ export type getApiBasicNoticeStation_letterPageParameters = {
   skipCount?: boolean;
 };
 
-export type putApiBasicNoticeStation_letterReadByIdParameters = {
+export type PutApiBasicNoticeStationLetterReadByIdParameters = {
   /** id in path */
   id: number;
 };
 
-export type getApiBasicRegionPageParameters = {
+export type GetApiBasicRegionPageParameters = {
   /** 别名 in query */
   alias?: string;
   /** 编码 in query */
@@ -271,10 +271,10 @@ export type getApiBasicRegionPageParameters = {
   "operationType.write"?: boolean;
 };
 
-export type postApiBasicUserDestroyParameters =
+export type PostApiBasicUserDestroyParameters =
   UserDestroyRequest; /** request in body */
 
-export type postApiBasicUserSend_destroy_smsParameters =
+export type PostApiBasicUserSendDestroySmsParameters =
   UserSmsCodeRequest; /** request in body */
 
 export type APP版本 = {

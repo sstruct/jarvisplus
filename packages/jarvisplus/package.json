@@ -27,6 +27,7 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "js-yaml": "^4.1.0",
+    "lodash.defaults": "^4.2.0",
     "lodash.get": "^4.4.2",
     "mustache": "^4.2.0",
     "node-fetch": "^2.6.7",

@@ -56,9 +56,11 @@ customAgent?: string
 # 请求参数（path param, query, body, formData) 是否合并到一起，默认为 false
 # 重要 ⚠️：此选项开启时，不支持 body 类型不为对象（如 Array, String, Boolean 等）且同时含有 `path, query` 等参数的接口
 mergeParam?: boolean
+# 函数命名风格 camelCase(default) | PascalCase | snake_case | camelSnake_case | legacy
+nameConvention: PascalCase
+
 # 是否开启旧版模式（暂时仅支持旧版方法名生成规则，名称可能存在错误，不建议使用）
 legacy?: boolean
-
 # TODO 以下配置项暂未支持
 # 输出的 mock 文件位置。如果需要开启mock功能的话，需要配置次地址。
 enableMock?: boolean
@@ -69,7 +71,8 @@ enableMock?: boolean
 ### 2.2.2-beta.2
 
 - 默认内置 utils-request 模版
-- 支持强制 camelCase 命名
+- 默认内置支持更多的命名规范 camelCase(default) | PascalCase | snake_case | camelSnake_case | legacy
+  - 原 legacy: boolean 配置项后续会被废弃
 
 ### 2.2.2-beta.1
 

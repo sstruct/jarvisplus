@@ -1,6 +1,7 @@
 import * as Mustache from "mustache"
 import * as chalk from "chalk"
 import * as get from "lodash.get"
+import * as defaults from "lodash.defaults"
 import {
   Operation,
   Parameter,
@@ -9,9 +10,10 @@ import {
   Spec,
 } from "swagger-schema-official"
 import type { TemplatesSuite, TemplateType } from "./templates/options"
+import type { NameConvention } from "./nameNormalizer/options"
 import { readerTemplate, resolveTemplateSuite } from "./templates"
 import { BaseConverter } from "./baseConverter"
-import { Normalizer } from "./normalizer"
+import { Normalizer } from "./nameNormalizer/normalizer"
 import { ParametersArrayToSchemaConverter } from "./parameterArrayToSchemaConverter"
 import { ParametersJarFactory } from "./parametersJarFactory"
 
@@ -30,8 +32,7 @@ import {
   PARAMETER_TYPE_QUERY,
   ParameterType,
 } from "./swaggerTypes"
-import { TypescriptNameNormalizer } from "./typescriptNameNormalizer"
-import legacyRequestNameNormalizer from "./legacy/requestNameNormalizer"
+import { TypescriptNameNormalizer } from "./nameNormalizer/typescriptNameNormalizer"
 
 export const TYPESCRIPT_TYPE_UNDEFINED = "undefined"
 export const TYPESCRIPT_TYPE_VOID = "void"
@@ -56,6 +57,7 @@ export interface SwaggerToTypescriptConverterSettings {
   legacy?: boolean
   tags?: string[]
   paths?: string[]
+  nameConvention?: NameConvention
 }
 
 function getRefSegments(ref: string): string[] {
@@ -66,11 +68,19 @@ function getRefSegments(ref: string): string[] {
   return []
 }
 
+const DEFAULT_SETTINGS = {
+  backend: "",
+  template: "superagent-request",
+  mergeParam: false,
+  nameConvention: "camelCase",
+}
+
 export class TypescriptConverter implements BaseConverter {
   protected parametersJarFactory: ParametersJarFactory =
     new ParametersJarFactory(this.swagger)
   protected parametersArrayToSchemaConverter: ParametersArrayToSchemaConverter =
     new ParametersArrayToSchemaConverter()
+  protected normalizer: Normalizer = null
 
   protected hasValidFilter: boolean
 
@@ -81,19 +91,14 @@ export class TypescriptConverter implements BaseConverter {
   ) {
     this.hasValidFilter =
       !!this.settings.tags?.length || !!this.settings.paths?.length
-    this.settings = Object.assign(
-      {},
-      { backend: "", template: "superagent-request", mergeParam: false },
-      settings || {}
-    )
+    this.settings = defaults(settings, DEFAULT_SETTINGS)
     this.templatesSuite = resolveTemplateSuite(this.settings.template)
-  }
 
-  protected normalizer: Normalizer = new TypescriptNameNormalizer({
-    customNormalizeRequestName: this.settings.legacy
-      ? (method, path) => legacyRequestNameNormalizer(path, method)
-      : null,
-  })
+    this.normalizer = new TypescriptNameNormalizer({
+      nameConvention: this.settings.nameConvention,
+      legacy: this.settings.legacy,
+    })
+  }
 
   public generateParameterTypesForOperation(
     path: string,
