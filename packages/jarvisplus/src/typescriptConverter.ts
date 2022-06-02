@@ -62,13 +62,16 @@ export interface SwaggerToTypescriptConverterSettings {
 
 function getRefSegments(ref: string): string[] {
   if (typeof ref === "string") {
-    ref = ref.replace(/^#\//i, "")
-    return ref.split("/")
+    /**
+     * example: #/definitions/some/typename -> ["definitions", "some/typename"]
+     * @TODO: support OpenAPI 3.0: "#/components/examples|schemas|parameters|headers|responses/webhook-config"
+     */
+    return ["definitions", ref.replace(/^#\/definitions\//i, "")]
   }
   return []
 }
 
-const DEFAULT_SETTINGS = {
+const defaultSettings = {
   backend: "",
   template: "superagent-request",
   mergeParam: false,
@@ -91,7 +94,7 @@ export class TypescriptConverter implements BaseConverter {
   ) {
     this.hasValidFilter =
       !!this.settings.tags?.length || !!this.settings.paths?.length
-    this.settings = defaults(settings, DEFAULT_SETTINGS)
+    this.settings = defaults(settings, defaultSettings)
     this.templatesSuite = resolveTemplateSuite(this.settings.template)
 
     this.normalizer = new TypescriptNameNormalizer({
