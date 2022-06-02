@@ -94,7 +94,7 @@ describe("TypescriptConverter", () => {
         converter.generateTypeValue({
           type: "array",
           items: {
-            $ref: "definitions/SomeType",
+            $ref: "#/definitions/SomeType",
           },
         })
       ).toBe("Array<SomeType>")

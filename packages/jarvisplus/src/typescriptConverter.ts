@@ -61,12 +61,17 @@ export interface SwaggerToTypescriptConverterSettings {
 }
 
 function getRefSegments(ref: string): string[] {
+  const prefixes = ["definitions", "parameters", "responses"]
   if (typeof ref === "string") {
     /**
      * example: #/definitions/some/typename -> ["definitions", "some/typename"]
      * @TODO: support OpenAPI 3.0: "#/components/examples|schemas|parameters|headers|responses/webhook-config"
      */
-    return ["definitions", ref.replace(/^#\/definitions\//i, "")]
+    for (const prefix of prefixes) {
+      if (ref.startsWith(`#/${prefix}`)) {
+        return [prefix, ref.replace(`#/${prefix}/`, "")]
+      }
+    }
   }
   return []
 }
