@@ -64,19 +64,20 @@ export const parsePayloadParameters = (
   return { ...result, ...rest } as RequestParameterType
 }
 
-type HeaderPares = string[][] | { [key: string]: string } | Headers
 export const prepareFetchHeaders = ({
   initHeaders,
   headers,
+  options: { plain = false } = {},
 }: {
-  initHeaders?: HeaderPares
-  headers: HeaderPares
-}): Headers => {
+  initHeaders?: HeadersInit
+  headers: HeadersInit
+  options?: { plain?: boolean }
+}): Headers | Record<string, string> => {
   const headersObject = new Headers(initHeaders || {})
   new Headers(headers).forEach((value, key) => {
     headersObject.set(key, String(value))
   })
-  return headersObject
+  return plain ? Object.fromEntries(headersObject.entries()) : headersObject
 }
 
 export const prepareFetchBody = ({

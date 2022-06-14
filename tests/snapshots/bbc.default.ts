@@ -33,6 +33,14 @@ export function PostApiBasicAddressSave(
 }
 
 /**
+ * @description 清理本地缓存
+ */
+export function GetApiBasicCacheCleanup(): Promise<void> {
+  const path = "/api/basic/cache/cleanup";
+  return request({ path, method: "GET" });
+}
+
+/**
  * @description 查询行政区划
  */
 export function GetApiBasicDistrictPage(
@@ -96,6 +104,16 @@ export function GetApiBasicMobileAppVersion(
 ): Promise<APP版本> {
   const path = "/api/basic/mobile-app/version";
   return request({ path, payload, payloadIn: "query", method: "GET" });
+}
+
+/**
+ * @description 发送消息
+ */
+export function PostApiBasicNoticeSend(
+  payload: PostApiBasicNoticeSendParameters
+): Promise<void> {
+  const path = "/api/basic/notice/send";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
 /**
@@ -163,17 +181,37 @@ export function PostApiBasicUserCheckDestroy(): Promise<boolean> {
 }
 
 /**
- * @description 根据手机号或邮件注销
+ * @description 根据邮箱验证码注销用户
  */
-export function PostApiBasicUserDestroy(
-  payload: PostApiBasicUserDestroyParameters
+export function PostApiBasicUserDestroyByEmail(
+  payload: PostApiBasicUserDestroyByEmailParameters
 ): Promise<boolean> {
-  const path = "/api/basic/user/destroy";
+  const path = "/api/basic/user/destroy-by-email";
   return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
 /**
- * @description 发送用户注销验证码
+ * @description 根据短信验证码注销用户
+ */
+export function PostApiBasicUserDestroyBySms(
+  payload: PostApiBasicUserDestroyBySmsParameters
+): Promise<boolean> {
+  const path = "/api/basic/user/destroy-by-sms";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
+}
+
+/**
+ * @description 发送用户注销邮箱验证码
+ */
+export function PostApiBasicUserSendDestroyEmail(
+  payload: PostApiBasicUserSendDestroyEmailParameters
+): Promise<boolean> {
+  const path = "/api/basic/user/send-destroy-email";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
+}
+
+/**
+ * @description 发送用户注销短信验证码
  */
 export function PostApiBasicUserSendDestroySms(
   payload: PostApiBasicUserSendDestroySmsParameters
@@ -236,6 +274,8 @@ export type GetApiBasicMobileAppVersionParameters = {
   "operationType.write"?: boolean;
 };
 
+export type PostApiBasicNoticeSendParameters = NoticeParam; /** param in body */
+
 export type GetApiBasicNoticeStationLetterPageParameters = {
   /** 分组类型ID in query */
   typeId?: number;
@@ -271,11 +311,17 @@ export type GetApiBasicRegionPageParameters = {
   "operationType.write"?: boolean;
 };
 
-export type PostApiBasicUserDestroyParameters =
+export type PostApiBasicUserDestroyByEmailParameters =
   UserDestroyRequest; /** request in body */
 
+export type PostApiBasicUserDestroyBySmsParameters =
+  UserDestroyRequest; /** request in body */
+
+export type PostApiBasicUserSendDestroyEmailParameters =
+  UserDestroyCodeRequest; /** request in body */
+
 export type PostApiBasicUserSendDestroySmsParameters =
-  UserSmsCodeRequest; /** request in body */
+  UserDestroyCodeRequest; /** request in body */
 
 export type APP版本 = {
   /** 数据版本  */
@@ -316,6 +362,15 @@ export type LanguageVO = {
   id?: number;
   /** 是否默认  */
   isDefault?: boolean;
+};
+
+export type NoticeParam = {
+  /** 通知场景  */
+  noticeScene?: string;
+  /** 通知模版中消息内容的占位参数  */
+  params?: { [key: string]: string };
+  /** 用户ID  */
+  userId?: number;
 };
 
 export type PagingStationLetterVO = {
@@ -375,28 +430,18 @@ export type StationLetterVO = {
   title?: string;
 };
 
-export type UserDestroyRequest = {
-  /** 邮箱  */
-  email?: string;
-  /** 邮箱验证码  */
-  emailCode?: string;
-  /** 手机号  */
-  mobile?: string;
-  /** 手机号前缀  */
-  prefix?: string;
-  /** 短信验证码  */
-  smsCode?: string;
-};
-
-export type UserSmsCodeRequest = {
+export type UserDestroyCodeRequest = {
   /** 验证码  */
   captcha?: string;
-  /** 手机号  */
-  mobile?: string;
-  /** 手机号前缀  */
-  prefix?: string;
   /** Token  */
   token?: string;
+};
+
+export type UserDestroyRequest = {
+  /** 邮箱验证码  */
+  emailCode?: string;
+  /** 短信验证码  */
+  smsCode?: string;
 };
 
 export type 发票 = {
