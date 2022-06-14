@@ -67,6 +67,15 @@ enableMock?: boolean
 
 ## Changelog
 
+### 2.3.1-beta.1
+
+- Fix
+  - 兼容 path parameter(parameter.properties) 为空对象的情况
+
+### 2.3.1-beta.0
+
+- 打包结果格式调整 es5 -> es2019
+
 ### 2.3.0
 
 - Features

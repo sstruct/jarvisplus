@@ -220,7 +220,7 @@ export class TypescriptConverter implements BaseConverter {
                 if (typeof param?.schema?.$ref === "string") {
                   const parameter = this.getDefinitionFromRef(param.schema)
                     .parameter as Schema
-                  return Object.keys(parameter.properties)
+                  return Object.keys(parameter.properties || {})
                 }
                 return param.name
               })
