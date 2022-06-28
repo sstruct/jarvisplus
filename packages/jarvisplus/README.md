@@ -67,6 +67,11 @@ enableMock?: boolean
 
 ## Changelog
 
+### 2.3.1-beta.2
+
+- Fix
+  - 读取文件错误（JSON 格式错误，网络错误等）提示信息格式优化
+
 ### 2.3.1-beta.1
 
 - Fix

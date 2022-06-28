@@ -48,32 +48,32 @@ const commandCore = async (command, options) => {
     }
   }
 
-  const spec = (await reader()) as Spec
-
-  const targetGroups = options.targets
-
-  const invokeCommand = (commonOptions) => (targetOptions: TargetOptions) => {
-    const output = command(spec, {
-      backend: commonOptions.backend,
-      template: commonOptions.template,
-      mergeParam: commonOptions.mergeParam,
-      tags: targetOptions.tags,
-      paths: targetOptions.paths,
-      customAgent: customAgentRelativePath
-        ? `./${customAgentRelativePath}`
-        : null,
-      hasCustomReturnType,
-      nameConvention: commonOptions.nameConvention,
-      legacy: commonOptions.legacy,
-    })
-    const writer = writerFactory({
-      targetPath: targetOptions.targetPath,
-      writeToDisk: commonOptions.writeToDisk,
-    })
-    writer(output)
-  }
-
   try {
+    const spec = (await reader()) as Spec
+
+    const targetGroups = options.targets
+
+    const invokeCommand = (commonOptions) => (targetOptions: TargetOptions) => {
+      const output = command(spec, {
+        backend: commonOptions.backend,
+        template: commonOptions.template,
+        mergeParam: commonOptions.mergeParam,
+        tags: targetOptions.tags,
+        paths: targetOptions.paths,
+        customAgent: customAgentRelativePath
+          ? `./${customAgentRelativePath}`
+          : null,
+        hasCustomReturnType,
+        nameConvention: commonOptions.nameConvention,
+        legacy: commonOptions.legacy,
+      })
+      const writer = writerFactory({
+        targetPath: targetOptions.targetPath,
+        writeToDisk: commonOptions.writeToDisk,
+      })
+      writer(output)
+    }
+
     if (Array.isArray(targetGroups) && targetGroups.length > 0) {
       targetGroups.forEach((target) =>
         invokeCommand(options)({
@@ -91,13 +91,17 @@ const commandCore = async (command, options) => {
     }
     if (options.writeToDisk) {
       console.log(
-        chalk.green("🚀 SDK generated successfully for: "),
+        chalk.green("🚀 SDK generated successfully for:"),
         chalk.green(options.swaggerUrl || path.resolve(options.file))
       )
     }
   } catch (e) {
     if (args.debug) throw e
-    console.error(chalk.red("❌ something wrong:"), chalk.red(e.message))
+    console.error(
+      chalk.red("❌ Unexpected error with:"),
+      chalk.red(options.swaggerUrl || path.resolve(options.file), "\n"),
+      chalk.red(" -> Reason:", e.message)
+    )
   }
 }
 
