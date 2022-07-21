@@ -73,30 +73,36 @@ export const prepareFetchHeaders = ({
   headers: HeadersInit
   options?: { plain?: boolean }
 }): Headers | Record<string, string> => {
+  if (plain) {
+    return { ...initHeaders, ...headers } as Record<string, string>
+  }
   const headersObject = new Headers(initHeaders || {})
   new Headers(headers).forEach((value, key) => {
     headersObject.set(key, String(value))
   })
-  return plain ? Object.fromEntries(headersObject.entries()) : headersObject
+  return headersObject
 }
 
 export const prepareFetchBody = ({
   body,
   formData,
 }: {
-  body: Body
+  body: BodyInit
   formData: FormData
 }): BodyInit => {
-  if (body && typeof body === "string") {
-    return body
-  } else if (body && typeof body === "object" && Object.keys(body).length > 0) {
-    return JSON.stringify(body)
-  } else if (formData && Object.keys(formData).length > 0) {
-    return Object.keys(formData).reduce((data, key) => {
-      data.append(key, formData[key])
-      return data
-    }, new FormData())
-  } else if (formData) {
+  if (body !== undefined) {
+    if (typeof body === "string") return body
+    if (typeof body === "object" && Object.keys(body).length > 0)
+      return JSON.stringify(body)
+  }
+  // @TODO: support FormData in mp, https://github.com/zlyboy/wx-formdata
+  if (formData !== undefined && typeof FormData !== "undefined") {
+    if (Object.keys(formData).length > 0) {
+      return Object.keys(formData).reduce((data, key) => {
+        data.append(key, formData[key])
+        return data
+      }, new FormData())
+    }
     return formData
   }
 }
