@@ -2,7 +2,7 @@
  * @description {{&summary}}
  */
 {{#mergeParam}}
-export function {{name}} ({{parameters}}): Promise<
+export function {{name}} ({{parameters}}{{#parameters}},{{/parameters}} ctx?: any): Promise<
   {{#hasCustomReturnType}}CustomReturnType<{{&responseTypes}}>{{/hasCustomReturnType}}
   {{^hasCustomReturnType}}{{&responseTypes}}{{/hasCustomReturnType}}> {
   {{#payloadIn}}
@@ -11,12 +11,12 @@ export function {{name}} ({{parameters}}): Promise<
   return request(
     {{#hasPathParams}}`{{{path}}}`{{/hasPathParams}}
     {{^hasPathParams}}"{{{path}}}"{{/hasPathParams}},
-    { {{#parameters}}payload,{{/parameters}} {{#payloadIn}}payloadIn, {{/payloadIn}} {{#payloadInType}}payloadIn: "{{&payloadInType}}", {{/payloadInType}} method: '{{method}}' }
+    { {{#parameters}}payload,{{/parameters}} {{#payloadIn}}payloadIn, {{/payloadIn}} {{#payloadInType}}payloadIn: "{{&payloadInType}}", {{/payloadInType}} method: '{{method}}', ctx }
   )
 }
 {{/mergeParam}}
 {{^mergeParam}}
-export function {{name}} (payload: { {{parameters}} }): Promise<
+export function {{name}} (payload: { {{parameters}} }{{#parameters}},{{/parameters}} ctx?: any): Promise<
   {{#hasCustomReturnType}}CustomReturnType<{{&responseTypes}}>{{/hasCustomReturnType}}
   {{^hasCustomReturnType}}{{&responseTypes}}{{/hasCustomReturnType}}> {
   {{#hasPathParams}}
@@ -25,6 +25,6 @@ export function {{name}} (payload: { {{parameters}} }): Promise<
   return request(
     {{#hasPathParams}}`{{{path}}}`{{/hasPathParams}}
     {{^hasPathParams}}"{{{path}}}"{{/hasPathParams}},
-    { ...payload, method: '{{method}}' })
+    { ...payload, method: '{{method}}', ctx })
 }
 {{/mergeParam}}
