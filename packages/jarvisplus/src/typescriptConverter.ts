@@ -292,7 +292,7 @@ export class TypescriptConverter implements BaseConverter {
       name,
       // method parameters
       parameters: parameters.join(", "),
-      pathParams,
+      hasPathParams: path.includes("{") && path.includes("}"),
       payloadIn:
         Object.keys(payloadIn).length > 1
           ? JSON.stringify(payloadIn)

@@ -17,9 +17,11 @@ export function DeleteApiBasicAddressDeleteById(
 /**
  * @description 查询
  */
-export function GetApiBasicAddressList(): Promise<Array<收货地址>> {
+export function GetApiBasicAddressList(
+  payload: GetApiBasicAddressListParameters
+): Promise<Array<收货地址>> {
   const path = "/api/basic/address/list";
-  return request({ path, method: "GET" });
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
@@ -38,6 +40,16 @@ export function PostApiBasicAddressSave(
 export function GetApiBasicCacheCleanup(): Promise<void> {
   const path = "/api/basic/cache/cleanup";
   return request({ path, method: "GET" });
+}
+
+/**
+ * @description 查询行政区划父级路径
+ */
+export function GetApiBasicDistrictFindWithParent(
+  payload: GetApiBasicDistrictFindWithParentParameters
+): Promise<Array<行政区划>> {
+  const path = "/api/basic/district/find-with-parent";
+  return request({ path, payload, payloadIn: "query", method: "GET" });
 }
 
 /**
@@ -173,6 +185,44 @@ export function GetApiBasicRegionPage(
 }
 
 /**
+ * @description 查询默认
+ */
+export function GetApiBasicUserCertificationDefault(): Promise<UserCertificateVO> {
+  const path = "/api/basic/user/certification/default";
+  return request({ path, method: "GET" });
+}
+
+/**
+ * @description 删除
+ */
+export function DeleteApiBasicUserCertificationDeleteById(
+  payload: DeleteApiBasicUserCertificationDeleteByIdParameters
+): Promise<boolean> {
+  const path = `/api/basic/user/certification/delete/${payload["id"]}`;
+  return request({ path, payload, method: "DELETE" });
+}
+
+/**
+ * @description 查询列表
+ */
+export function GetApiBasicUserCertificationList(
+  payload: GetApiBasicUserCertificationListParameters
+): Promise<Array<UserCertificateVO>> {
+  const path = "/api/basic/user/certification/list";
+  return request({ path, payload, payloadIn: "query", method: "GET" });
+}
+
+/**
+ * @description 保存
+ */
+export function PostApiBasicUserCertificationSave(
+  payload: PostApiBasicUserCertificationSaveParameters
+): Promise<UserCertificateVO> {
+  const path = "/api/basic/user/certification/save";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
+}
+
+/**
  * @description 校验是否满足注销条件
  */
 export function PostApiBasicUserCheckDestroy(): Promise<boolean> {
@@ -220,17 +270,39 @@ export function PostApiBasicUserSendDestroySms(
   return request({ path, payload, payloadIn: "body", method: "POST" });
 }
 
+/**
+ * @description 微信分享签名
+ */
+export function PostApiBasicWechatSign(
+  payload: PostApiBasicWechatSignParameters
+): Promise<WechatSignVO> {
+  const path = "/api/basic/wechat/sign";
+  return request({ path, payload, payloadIn: "body", method: "POST" });
+}
+
 export type DeleteApiBasicAddressDeleteByIdParameters = {
   /** id in path */
   id: number;
 };
 
+export type GetApiBasicAddressListParameters = {
+  /** id in query */
+  id?: number;
+};
+
 export type PostApiBasicAddressSaveParameters =
   收货地址; /** addressTO in body */
+
+export type GetApiBasicDistrictFindWithParentParameters = {
+  /** id in query */
+  id: number;
+};
 
 export type GetApiBasicDistrictPageParameters = {
   /** 层级 in query */
   level?: number;
+  /** 行政区划名称 in query */
+  name?: string;
   /** 当前页码-默认1，从1开始 in query */
   pageNo?: number;
   /** 每页条数-默认20，最大1024 in query */
@@ -277,6 +349,8 @@ export type GetApiBasicMobileAppVersionParameters = {
 export type PostApiBasicNoticeSendParameters = NoticeParam; /** param in body */
 
 export type GetApiBasicNoticeStationLetterPageParameters = {
+  /** UGC通知业务类型 in query */
+  businessType?: string;
   /** 分组类型ID in query */
   typeId?: number;
   /** in query */
@@ -311,6 +385,19 @@ export type GetApiBasicRegionPageParameters = {
   "operationType.write"?: boolean;
 };
 
+export type DeleteApiBasicUserCertificationDeleteByIdParameters = {
+  /** id in path */
+  id: number;
+};
+
+export type GetApiBasicUserCertificationListParameters = {
+  /** id in query */
+  id?: number;
+};
+
+export type PostApiBasicUserCertificationSaveParameters =
+  UserCertificateVO; /** certificateVO in body */
+
 export type PostApiBasicUserDestroyByEmailParameters =
   UserDestroyRequest; /** request in body */
 
@@ -322,6 +409,9 @@ export type PostApiBasicUserSendDestroyEmailParameters =
 
 export type PostApiBasicUserSendDestroySmsParameters =
   UserDestroyCodeRequest; /** request in body */
+
+export type PostApiBasicWechatSignParameters =
+  WechatSignParam; /** param in body */
 
 export type APP版本 = {
   /** 数据版本  */
@@ -428,6 +518,25 @@ export type StationLetterVO = {
   isSystem?: boolean;
   /** 标题  */
   title?: string;
+  /** 消息时间  */
+  updatedAt?: string;
+};
+
+export type UserCertificateVO = {
+  /** 证件号码  */
+  certificateNumber: string;
+  /** 证件类型  */
+  certificateType?: string;
+  /** 证件正面图片  */
+  frontImage?: string;
+  /** 唯一标识  */
+  id?: number;
+  /** 是否默认  */
+  isDefault?: boolean;
+  /** 姓名  */
+  name: string;
+  /** 证件反面图片  */
+  reverseImage?: string;
 };
 
 export type UserDestroyCodeRequest = {
@@ -442,6 +551,20 @@ export type UserDestroyRequest = {
   emailCode?: string;
   /** 短信验证码  */
   smsCode?: string;
+};
+
+export type WechatSignParam = {
+  /** 签名url  */
+  url?: string;
+};
+
+export type WechatSignVO = {
+  /** 随机字符串  */
+  nonceStr?: string;
+  /** 签名  */
+  signature?: string;
+  /** 时间戳  */
+  timestamp?: string;
 };
 
 export type 发票 = {
@@ -540,6 +663,8 @@ export type 收货地址 = {
   _version?: number;
   /** 区号  */
   areacode?: string;
+  /** 区号ID  */
+  areacodeId?: string;
   /** 创建时间  */
   createdAt?: string;
   /** 详细地址  */

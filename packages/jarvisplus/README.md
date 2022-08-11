@@ -67,6 +67,11 @@ enableMock?: boolean
 
 ## Changelog
 
+### 2.3.2-beta.1
+
+- Fix
+  - 兼容 path param 字段被标记为其它位置的情况
+
 ### 2.3.1-beta.2
 
 - Fix

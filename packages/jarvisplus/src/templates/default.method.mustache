@@ -5,12 +5,12 @@
 export function {{name}} ({{parameters}}): Promise<
   {{#hasCustomReturnType}}CustomReturnType<{{&responseTypes}}>{{/hasCustomReturnType}}
   {{^hasCustomReturnType}}{{&responseTypes}}{{/hasCustomReturnType}}> {
-  {{#pathParams.length}}
+  {{#hasPathParams}}
     const path = `{{{path}}}`
-  {{/pathParams.length}}
-  {{^pathParams.length}}
+  {{/hasPathParams}}
+  {{^hasPathParams}}
     const path = "{{{path}}}"
-  {{/pathParams.length}}
+  {{/hasPathParams}}
   {{#payloadIn}}
       const payloadIn = {{&payloadIn}}
   {{/payloadIn}}
@@ -21,9 +21,9 @@ export function {{name}} ({{parameters}}): Promise<
 export function {{name}} (payload: { {{parameters}} }): Promise<
   {{#hasCustomReturnType}}CustomReturnType<{{&responseTypes}}>{{/hasCustomReturnType}}
   {{^hasCustomReturnType}}{{&responseTypes}}{{/hasCustomReturnType}}> {
-  {{#pathParams.length}}
+  {{#hasPathParams}}
   const path = payload.path
-  {{/pathParams.length}}
-  return request({ ...payload, path: {{#pathParams.length}} `{{{path}}}` {{/pathParams.length}} {{^pathParams.length}} "{{{path}}}" {{/pathParams.length}}, method: '{{method}}' })
+  {{/hasPathParams}}
+  return request({ ...payload, path: {{#hasPathParams}} `{{{path}}}` {{/hasPathParams}} {{^hasPathParams}} "{{{path}}}" {{/hasPathParams}}, method: '{{method}}' })
 }
 {{/mergeParam}}
