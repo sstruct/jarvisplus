@@ -23,7 +23,7 @@
   name: string
   // method parameters
   parameters: string // 请求参数
-  pathParams: array // 路径参数
+  hasPathParams: boolean // 是否有 path 参数，有的话 path 要用 string literal(``) 包裹，否则用单引号
   payloadIn: Record // 参数描述
   payloadInType: string | undefined // payload 类型
   // request arguments(payload | query, body, formData)
