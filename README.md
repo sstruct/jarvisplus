@@ -1,5 +1,7 @@
 # jarvisplus
 
+> A SwaggerAPI 2.0 TypeScript SDK generator inspired by [swagger-typescript-client-generator](https://github.com/psrebniak/swagger-typescript-client-generator)
+
 - `@terminus/jarvisplus` 根据 swagger 文档生成 `typescript` 客户端代码
 - `@terminus/jarvisplus-runtime` jarvisplus 运行时依赖
 
@@ -15,20 +17,11 @@ lerna run build
 lerna publish
 ```
 
-## TODO
+## Features
 
 - [x] 支持单个方法导出（用于 tree shaking 和解构赋值）
-- [x] 支持配置文件
-  - [x] 配置文件读取
-  - [x] 配置文件逻辑
-    - [x] swaggerUrl
-    - [x] api prefix 参考 nginx 字段名
-    - [x] outDir/targetPath
-    - [x] template type
-- [x] 支持 enum
-- [x] 支持 mustache 模版
-- [x] 支持 superagent runtime
-- [x] 函数参数格式兼容（Param in url）
+- [x] 支持 yaml 配置文件
+- [x] 支持 superagent、whatwg-fetch、自定义 runtime
 - [x] 支持模块分拆（包括相同类型提取）
 - [x] 支持旧版 name normalizer
 - [x] 保留函数/字段注释

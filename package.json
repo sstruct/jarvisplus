@@ -17,8 +17,8 @@
     "packages/jarvisplus",
     "packages/jarvisplus-runtime"
   ],
-  "author": "terminus",
-  "license": "ISC",
+  "author": "yangzi.cyz@alibaba-inc.com",
+  "license": "MIT",
   "dependencies": {
     "lerna": "^4.0.0"
   },
