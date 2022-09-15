@@ -1,7 +1,7 @@
 {
-  "name": "@terminus/jarvisplus-runtime",
+  "name": "jarvisplus-runtime",
   "version": "2.3.2-beta.0",
-  "description": "Runtime modules for @terminus/jarvisplus",
+  "description": "Runtime modules for jarvisplus",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "license": "MIT",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://git.terminus.io/cnooc/jarvisplus.git"
+    "url": "https://github.com/sstruct/jarvisplus.git"
   },
   "publishConfig": {
-    "registry": "https://registry.npm.terminus.io"
+    "registry": "https://registry.npmjs.com"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",

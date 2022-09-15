@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { default as requestFactory } from "@terminus/jarvisplus-runtime/lib/superagent-request";
+import { default as requestFactory } from "jarvisplus-runtime/lib/superagent-request";
 
 const request = requestFactory("", {});
 

@@ -1,5 +1,5 @@
 {
-  "name": "@terminus/jarvisplus",
+  "name": "jarvisplus",
   "version": "2.3.2-beta.2",
   "description": "Convert swagger 2.0 file to typescript client",
   "main": "lib/index.js",

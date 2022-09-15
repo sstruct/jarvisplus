@@ -2,8 +2,8 @@
 
 > A SwaggerAPI 2.0 TypeScript SDK generator inspired by [swagger-typescript-client-generator](https://github.com/psrebniak/swagger-typescript-client-generator)
 
-- `@terminus/jarvisplus` 根据 swagger 文档生成 `typescript` 客户端代码
-- `@terminus/jarvisplus-runtime` jarvisplus 运行时依赖
+- `jarvisplus` 根据 swagger 文档生成 `typescript` 客户端代码
+- `jarvisplus-runtime` jarvisplus 运行时依赖
 
 # 开发 & 发布
 

@@ -5,7 +5,7 @@
 ## 安装
 
 ```shell
-npm install --global @terminus/jarvisplus
+npm install --global jarvisplus
 ```
 
 ## 用法
@@ -48,7 +48,7 @@ swaggers:
           - /api/v2/pet
 # api client 生成的类型. 现在仅支持 ts（默认值）
 targetLanguage: ts
-# 所依赖的请求模块 superagent-request | whatwg-fetch | utils-request | dir_path(自定义模版路径，参考 templates 文件夹 README)
+# 所依赖的请求模块 superagent-request | whatwg-fetch | dir_path(自定义模版路径，参考 templates 文件夹 README)
 template: "superagent-request"
 # 自定义 superagent 路径，可自行添加 headers 或中间件，不传则使用默认 superagent (此配置仅当 template 为 superagent-request 时可用)
 customAgent?: string
@@ -90,7 +90,6 @@ enableMock?: boolean
 
 - Features
   - 支持用户自定义模版
-  - 新增支持 utils-request 模版
   - 新增支持更多的命名规范配置 nameConvention
     - 原 legacy: boolean 配置项后续会被废弃
 - Fixes

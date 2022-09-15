@@ -33,9 +33,6 @@ swaggers:
   - swaggerUrl: https://api.apis.guru/v2/specs/azure.com/EnterpriseKnowledgeGraph-EnterpriseKnowledgeGraphSwagger/2018-12-03/swagger.json
     targetPath: tests/snapshots/azure.com.ts
 
-  - swaggerUrl: https://bbc-mall-dev.app.terminus.io/v2/api-docs?group=default
-    targetPath: tests/snapshots/bbc.default.ts
-
   - swaggerUrl: https://api.apis.guru/v2/specs/1forge.com/0.0.1/swagger.json
     # 生成的 client 存放路径, 相对路径
     targetPath: tests/snapshots/1forge.com.ts
@@ -47,15 +44,12 @@ swaggers:
   - swaggerUrl: https://api.apis.guru/v2/specs/google.home/2.0/openapi.json
     # 生成的 client 存放路径, 相对路径
     targetPath: tests/snapshots/google.home.ts
-  - swaggerUrl: https://gaia-new-retail-uc-dev.app.terminus.io/v2/api-docs?group=draco
-    targetPath: tests/snapshots/bbc.draco.ts
 
 # api client 生成语言，目前仅支持 ts
 targetLanguage: ts
-# 所依赖的请求模块 superagent-request | whatwg-fetch(default) | utils-request | dir_path(自定义模版路径，参考 templates 文件夹 README)
+# 所依赖的请求模块 superagent-request | whatwg-fetch(default) | dir_path(自定义模版路径，参考 templates 文件夹 README)
 template: superagent-request
-#template: utils-request
-#template: "@terminus/mall-utils/lib/jarvisplus-templates"
+#template: "path_to_your_own_templates_folder/jarvisplus-templates"
 #customAgent: tests/snapshots/customAgent.example
 mergeParam: true
 # 函数命名风格 camelCase(default) | PascalCase | snake_case | camelSnake_case | legacy

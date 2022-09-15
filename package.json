@@ -1,5 +1,5 @@
 {
-  "name": "@terminus/jarvisplus",
+  "name": "jarvisplus",
   "private": true,
   "scripts": {
     "build": "lerna exec --stream -- yarn build",
